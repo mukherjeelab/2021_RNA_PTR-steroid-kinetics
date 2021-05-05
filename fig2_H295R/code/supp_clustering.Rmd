@@ -1,0 +1,101 @@
+---
+title: "clustering gene expression through time course with DPGP"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+```
+
+```{r load}
+load(here("data", "RNAseq", "clustGenes.R"))
+myTxi_H295R <- readRDS(here("data", "RNAseq", "myTxi_H295R.rds"))
+load(here("data", "accessories", "clusterCols"))
+
+res <- read_csv(here("data", "RNAseq", "edger.csv.gz"))
+degenes <- res %>% filter(FDR <= 0.001, maxabsfc >= 1) %>% pull(gene)
+input <- myTxi_H295R$abundance$matureGene %>% select_if(is.numeric)
+rownames(input) <- myTxi_H295R$abundance$matureGene$gene_id
+input <- input[degenes, order(as.numeric(str_remove(colnames(input) %>% str_remove("AngII_"), "_.+")))]
+timevec <- as.numeric(str_remove(colnames(input) %>% str_remove("AngII_"), "_.+"))
+input <- input %>% as.data.frame() %>% rownames_to_column("gene")
+colnames(input) <- c("gene", timevec)
+write_tsv(input, here("fig2_H295R", "tmp", "demat.txt"))
+```
+
+```{bash, eval = F}
+DP_GP_cluster.py -i tmp/demat.txt -o DPGP -p pdf -n 5000 --plot --fast --cluster_uncertainty_estimate --save_cluster_GPs -c h_clust_avg
+```
+
+```{r dpgp_processing}
+cluster_df <- read_tsv(here("fig2_H295R", "tmp", "DPGP_optimal_clustering.txt"))
+
+dpgp_df <- input %>% as.tibble() %>% left_join(cluster_df) %>% 
+  select(-probability) %>% 
+  group_by(cluster) %>% mutate(n = n()) %>% 
+  ungroup() %>% 
+  pivot_longer(-c(gene, cluster, n), names_to = "time", values_to = "expr") %>% 
+  separate(time, sep = "_", into = c("AngII", "time", "run"), ) %>% 
+  mutate(run = ifelse(is.na(run), 1, 2)) %>% 
+  mutate_at(vars(-gene), as.numeric) %>% 
+  group_by(gene, time, cluster, n) %>% 
+  summarize(expr = mean(expr)) %>% ungroup()
+```
+
+```{r merge}
+dpgp_df2 <- dpgp_df %>% group_by(cluster, time) %>% 
+  summarize(expr = median(expr, na.rm = TRUE)) %>%
+  pivot_wider(names_from = time, values_from = expr)
+dpgp_df3 <- cor(t(dpgp_df2[-1])) 
+rownames(dpgp_df3 ) <- dpgp_df2$cluster
+colnames(dpgp_df3 ) <- dpgp_df2$cluster
+dpgp_df4 <- dpgp_df3  %>% as_tibble(rownames = "cluster1") %>%
+  pivot_longer(-cluster1, names_to = "cluster2", values_to = "cor") %>%
+  filter(as.numeric(cluster1) > as.numeric(cluster2), cor >= 0.95)
+
+library(igraph)
+g <- graph_from_data_frame(dpgp_df4, directed = FALSE)
+cg <- max_cliques(g)
+v <- lapply(decompose.graph(g), function(x) vertex_attr(x)$name)
+names(v) <- str_c("new", seq_len(length(v)))
+v <- reshape2::melt(v)
+colnames(v) <- c("cluster", "newcluster")
+v <- v %>% mutate(cluster = as.numeric(as.character(cluster)))
+
+df3 <- cluster_df %>% 
+  left_join(v) %>% mutate(newcluster = ifelse(is.na(newcluster), 
+                                              as.character(cluster), 
+                                              newcluster)) %>% 
+  select(-probability, -cluster) %>% 
+  group_by(newcluster) %>%
+  mutate(n = n()) %>% 
+  ungroup() %>%
+  left_join(myClust_annotated %>% select(gene_id, cluster), by = c("gene" = "gene_id")) %>% 
+  group_by(cluster, newcluster) %>% 
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  mutate(cluster = factor(cluster, levels = sort(unique(as.character(myClust_annotated$cluster))))) %>% 
+  arrange(cluster, desc(n))
+df3 <- df3 %>% 
+  mutate(newcluster = factor(newcluster, levels = sort(unique(as.character(df3$newcluster))))) 
+
+library(ggalluvial)
+g <- ggplot(data = df3,
+       aes(axis1 = cluster, axis2 = newcluster,
+           y = n)) +
+  scale_x_discrete(limits = c("cluster", "DPGPcluster"), expand = c(.2, .05)) +
+  xlab("clustering") +
+  geom_alluvium(aes(fill = cluster)) +
+  geom_stratum() +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
+  scale_fill_manual(values = clusterCols)
+
+ggsave(here("fig2_H295R", "plots", "DPGP_clustering.pdf"), g, height = 8, width = 8)
+```
+

@@ -1,0 +1,431 @@
+---
+title: "exon intron split analysis"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+options(stringsAsFactors = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+library(ComplexHeatmap)
+library(rtracklayer)
+library(valr)
+```
+
+```{r load}
+load(here("data", "RNAseq", "clustGenes.R"))
+myTxi_H295R <- readRDS(here("data", "RNAseq", "myTxi_H295R.rds"))
+clustList <- myClust_annotated %>% pull(symbol) %>% split(myClust_annotated$cluster)
+load(here("data", "accessories", "clusterCols"))
+
+psum <- function(...,na.rm = FALSE) { 
+    rowSums(do.call(cbind,list(...)),
+            na.rm=na.rm) } 
+
+as.tbl_intervalcustom <- function(x) {
+  res <- tibble(
+    chrom = as.character(x@seqnames),
+    start = x@ranges@start - 1,
+    end = x@ranges@start - 1 + x@ranges@width,
+    name = x@elementMetadata$gene_name,
+    transcript = x@elementMetadata$transcript_id,
+    score = rep(".", length(x)),
+    strand = as.character(x@strand),
+    type = x@elementMetadata$type,
+    exon_number = as.numeric(x@elementMetadata$exon_number)
+  )
+  res <- mutate(res, strand = ifelse(strand == "*", ".", strand))
+  res
+}
+unzip(here("data", "accessories", "gencode.v26.primary.gtf.zip"))
+gtf <- import("gencode.v26.primary.gtf")
+file.remove("gencode.v26.primary.gtf")
+tbl_gtf <- as.tbl_intervalcustom(gtf) 
+tbl_exon <- tbl_gtf %>% filter(type == "exon") %>% 
+  mutate(length = end - start) %>% 
+  group_by(transcript) %>%
+  mutate(splicesite = cumsum(length))
+tbl_exon <- tbl_exon %>% group_by(transcript) %>%
+  arrange(exon_number, .by_group = T) %>%
+  mutate(length_intron = ifelse(strand == "+", end - lag(end) - length, lag(start) - start - length)) %>%
+  replace_na(list(length_intron = list(0))) %>% ungroup()
+tbl_stop <- tbl_gtf %>% filter(type == "stop_codon")
+```
+
+```{r genelevel}
+iso <- myTxi_H295R$abundance$mature %>%
+  mutate(max = purrr::reduce(select(., c(5:28)), pmax)) %>% 
+  mutate(mean = purrr::reduce(select(., c(5:28)), psum)) %>%
+  mutate(mean = mean/24) %>% select(-c(5:28)) %>% 
+  filter(max != 0) %>% 
+  group_by(symbol) %>% 
+  mutate(maxrank = rank(-max), meanrank = rank(-mean)) %>%
+  mutate(vague = ifelse(maxrank != meanrank & pmin(maxrank, meanrank) == 1, T, F))
+
+iso_high <- iso %>% #filter(mean >= 1) %>%
+  group_by(symbol) %>%
+  arrange(desc(max)) %>% dplyr::slice(1) %>%
+  ungroup()
+```
+
+```{r utrseq}
+library(BSgenome)
+library(BSgenome.Hsapiens.NCBI.GRCh38)
+get_utr3 <- function(transcript1, 
+                     chrom1, start1, end1, strand1, exon_number1, 
+                     bsgenome = "BSgenome.Hsapiens.NCBI.GRCh38"){
+  bsgenome = eval(parse(text = bsgenome))
+  stop_exon <- tbl_exon %>% filter(transcript == transcript1, exon_number == exon_number1)
+  stop_exon_utr <- data.frame(chrom = chrom1, 
+                              start = ifelse(strand1 == "+", end1, stop_exon$start),
+                              end = ifelse(strand1 == "+", stop_exon$end, start1),
+                              strand = strand1)
+  utr <- stop_exon_utr %>% bind_rows(tbl_exon %>%
+                                       filter(transcript == transcript1, exon_number > exon_number1) %>% 
+                                       select(chrom, start, end, strand))
+  tbl_gr <- GRanges(
+    seqnames = Rle(str_remove(utr$chrom, "chr")),
+    ranges = IRanges(utr$start + 1, end = utr$end),
+    strand = Rle(utr$strand)
+    )
+  allseq <- tryCatch(str_c(as.character(getSeq(bsgenome, tbl_gr)), collapse =""), 
+                     error = function(e){return("error")})
+  allseq
+}
+
+utr3s <- tbl_stop %>% filter(transcript %in% iso_high$transcript_id) %>%
+  filter(name %in% myClust_annotated$symbol)
+utr3s_seqs <- utr3s %>% mutate(seq = pbmcapply::pbmcmapply(get_utr3,
+                                                           transcript,
+                                                           chrom, 
+                                                           start, 
+                                                           end, 
+                                                           strand,
+                                                           exon_number, 
+                                                           mc.cores = 7))
+saveRDS(utr3s_seqs, "DE_utr3s_seqs.rds")
+utr3s_seqs <- readRDS("utr3s_seqs.rds")
+utr3s_seqs <- utr3s_seqs %>% left_join(myClust_annotated %>% select(name = symbol, cluster) %>% mutate(cluster = as.character(cluster))) %>%
+  replace_na(list(cluster = "nonDE"))
+nonDE <- utr3s_seqs %>% filter(cluster == "nonDE") %>% pull(name)
+```
+
+```{r transite_K}
+# km analysis via transite package
+DE_utr3s_seqs <- readRDS(here("fig4_pTR-H295R", "output", "DE_utr3s_seqs.rds"))
+utr3s_seqs <- readRDS(here("fig4_pTR-H295R", "output", "utr3s_seqs.rds"))
+utr3s_seqs <- utr3s_seqs %>% left_join(myClust_annotated %>% select(name = symbol, cluster) %>% mutate(cluster = as.character(cluster))) %>%
+  replace_na(list(cluster = "nonDE"))
+nonDE <- utr3s_seqs %>% filter(cluster == "nonDE") %>% pull(name)
+allseqs <- bind_rows(DE_utr3s_seqs, utr3s_seqs %>% filter(cluster == "nonDE")) %>% 
+  mutate(cluster = case_when(
+    name %in% delta_down ~ "down",
+    name %in% delta_up ~ "up",
+    name %in% delta_mix ~ "mix",
+    name %in% delta_non ~ "no",
+    TRUE ~ "nonDE"
+  ))
+
+library(transite)
+comp_kmer <- function(df = allseqs,
+                      gene_vec,
+                      gene_vec2,
+                      col = "seq",
+                      k = 6,
+                      cutoff = 50) {
+  enq <- df %>%
+    filter(name %in% gene_vec) %>%
+    pull(col) %>%
+    na.omit()
+  if (length(enq) == 0) {
+    return(NA)
+  }
+  enq <- enq[str_length(enq) >= cutoff]
+  enq <- enq[!str_detect(enq, "N")]
+  enq_res <- generate_kmers(enq, k)
+
+    bac <- df %>%
+      filter(name %in% gene_vec2) %>%
+      pull(col) %>%
+      na.omit()
+    bac <- bac[str_length(bac) >= cutoff]
+    bac <- generate_kmers(bac, k)
+    
+  res <- compute_kmer_enrichment(
+    enq_res,
+    bac,
+    permutation = FALSE,
+    chisq_p_value_threshold = 1,
+    p_adjust_method = "fdr"
+  )
+  res$kmer <- str_replace_all(names(enq_res), "T", "U")
+  res %>% arrange(adj_p_value)
+}
+# k_res <- map(clustList, function(x) comp_kmer(gene_vec = x, gene_vec2 = nonDE))
+k_res <- map(list(up = delta_up, down = delta_down), 
+             function(x) comp_kmer(df = allseqs, gene_vec = x, gene_vec2 = delta_non))
+k_res[[1]]
+saveRDS(k_res, "k_res_vs_nonDE.rds")
+
+# RBPs as annotated by transite
+k_ref <- get_motifs()
+k_ref2 <- data.frame()
+for (i in 1:length(k_ref)) {
+  temp <- expand_grid(RBP = k_ref[[i]]@rbps, 
+                      hexamer = k_ref[[i]]@hexamers)
+  k_ref2 <- bind_rows(k_ref2, temp)
+}
+
+# only picking 3 RBP names at most
+k_ref3_short <- k_ref2 %>% distinct() %>% group_by(hexamer) %>% 
+  arrange(RBP) %>% 
+  dplyr::slice(1:3) %>% 
+  summarize(RBP = str_c(RBP, collapse = ","))
+k_ref3 <- k_ref2 %>% distinct() %>% group_by(hexamer) %>% 
+  arrange(RBP) %>% 
+  summarize(RBP = str_c(RBP, collapse = ","))
+k_ref4 <- k_ref3_short %>% column_to_rownames("hexamer") 
+
+# if adj.p.value>0.05, consider as no enrichment
+k_final <- do.call(rbind, k_res) %>% 
+  rownames_to_column("cluster") %>% 
+  mutate(cluster = str_remove(cluster,  "\\..+")) %>% 
+  left_join(k_ref3_short, by = c("kmer" = "hexamer")) %>% 
+  mutate(log2fc = ifelse(adj_p_value <= 0.05, log2(enrichment), 0)) %>%
+  mutate(log2fc = ifelse(log2fc == -Inf, -5, log2fc)) %>% 
+  select(cluster, log2fc, kmer) %>% 
+  pivot_wider(names_from = kmer, values_from = log2fc) %>% column_to_rownames("cluster") %>% as.matrix()
+k_final <- k_final[, colSums(k_final != 0) > 0]
+
+rbp <- k_ref4[colnames(k_final), ]
+rbp[is.na(rbp)] <- ""
+ha = columnAnnotation(text = anno_text(rbp, 
+                                       gp = gpar(fontsize = 5)))
+h <- Heatmap(k_final, 
+             col = circlize::colorRamp2(c(-ceiling(max(abs(k_final))), 0, ceiling(max(abs(k_final)))), 
+                                        c("blue", "white", "red")),
+        cluster_columns = TRUE,
+        cluster_rows = FALSE,
+        # row_order = order(names(k_ref)),
+        # row_split = str_sub(names(k_ref), 1, 2),
+        show_column_dend = FALSE,
+        column_names_side = "top",
+        column_names_gp = gpar(fontsize = 5),
+        bottom_annotation = ha,
+        heatmap_legend_param = list(title = "log2enrichment"))
+
+pdf(here("fig4_PTR-H295R", "plots", "hexamer_heatmap_vsnonDE.pdf"), width = 12, height = 12)
+print(h)
+dev.off()
+
+# write full table
+write_csv(k_final <- do.call(rbind, k_res) %>% 
+            rownames_to_column("cluster") %>% 
+            mutate(cluster = str_remove(cluster,  "\\..+")) %>% 
+            left_join(k_ref3, by = c("kmer" = "hexamer")) %>% 
+            mutate(log2fc = ifelse(adj_p_value <= 0.05, log2(enrichment), 0)) %>%
+            mutate(log2fc = ifelse(log2fc == -Inf, -5, log2fc)),
+          here("fig4_PTR-H295R", "output", "kmer_rbp_vsnonDE.csv.gz"))
+```
+
+```{r transite_motif}
+# km analysis via transite package
+DE_utr3s_seqs <- readRDS(here("fig4_pTR-H295R", "output", "DE_utr3s_seqs.rds"))
+utr3s_seqs <- readRDS(here("fig4_pTR-H295R", "output", "utr3s_seqs.rds"))
+utr3s_seqs <- utr3s_seqs %>% left_join(myClust_annotated %>% select(name = symbol, cluster) %>% mutate(cluster = as.character(cluster))) %>%
+  replace_na(list(cluster = "nonDE"))
+nonDE <- utr3s_seqs %>% filter(cluster == "nonDE") %>% pull(name)
+allseqs <- bind_rows(DE_utr3s_seqs, utr3s_seqs %>% filter(cluster == "nonDE")) %>% 
+  mutate(cluster = case_when(
+    name %in% delta_down ~ "down",
+    name %in% delta_up ~ "up",
+    name %in% delta_mix ~ "mix",
+    name %in% delta_non ~ "no",
+    TRUE ~ "nonDE"
+  ))
+
+library(transite)
+comp_motif <- function(df = allseqs,
+                       gene_vec,
+                       gene_vec2,
+                       col = "seq",
+                       cutoff = 50) {
+  enq <- df %>%
+    filter(name %in% gene_vec) %>%
+    pull(col) %>%
+    na.omit()
+  if (length(enq) == 0) {
+    return(NA)
+  }
+  enq <- enq[str_length(enq) >= cutoff]
+  enq <- enq[!str_detect(enq, "N")]
+  enq_res <- score_transcripts(enq, cache = FALSE)
+
+    bac <- df %>%
+      filter(name %in% gene_vec2) %>%
+      pull(col) %>%
+      na.omit()
+    bac <- bac[str_length(bac) >= cutoff]
+    bac <- score_transcripts(bac, cache = FALSE)
+    
+  res <- calculate_motif_enrichment(
+    enq_res$df,
+    bac$df,
+    enq_res$total_sites,
+    bac$total_sites,
+    length(enq)
+  )
+  # res$kmer <- str_replace_all(names(enq_res), "T", "U")
+  res %>% arrange(adj_p_value)
+}
+# k_res <- map(clustList, function(x) comp_kmer(gene_vec = x, gene_vec2 = nonDE))
+k_res <- map(list(up = delta_up, down = delta_down), 
+             function(x) comp_motif(df = allseqs, gene_vec = x, gene_vec2 = delta_non))
+k_res[[1]]
+saveRDS(k_res, "motif_res_vs_nonDE.rds")
+
+# RBPs as annotated by transite
+k_ref <- get_motifs()
+k_ref2 <- data.frame()
+for (i in 1:length(k_ref)) {
+  temp <- expand_grid(RBP = k_ref[[i]]@rbps, 
+                      hexamer = k_ref[[i]]@hexamers)
+  k_ref2 <- bind_rows(k_ref2, temp)
+}
+
+# only picking 3 RBP names at most
+k_ref3_short <- k_ref2 %>% distinct() %>% group_by(hexamer) %>% 
+  arrange(RBP) %>% 
+  dplyr::slice(1:3) %>% 
+  summarize(RBP = str_c(RBP, collapse = ","))
+k_ref3 <- k_ref2 %>% distinct() %>% group_by(hexamer) %>% 
+  arrange(RBP) %>% 
+  summarize(RBP = str_c(RBP, collapse = ","))
+k_ref4 <- k_ref3_short %>% column_to_rownames("hexamer") 
+
+# if adj.p.value>0.05, consider as no enrichment
+k_final <- do.call(rbind, k_res) %>% 
+  rownames_to_column("cluster") %>% 
+  mutate(cluster = str_remove(cluster,  "\\..+")) %>% 
+  left_join(k_ref3_short, by = c("kmer" = "hexamer")) %>% 
+  mutate(log2fc = ifelse(adj_p_value <= 0.05, log2(enrichment), 0)) %>%
+  mutate(log2fc = ifelse(log2fc == -Inf, -5, log2fc)) %>% 
+  select(cluster, log2fc, kmer) %>% 
+  pivot_wider(names_from = kmer, values_from = log2fc) %>% column_to_rownames("cluster") %>% as.matrix()
+k_final <- k_final[, colSums(k_final != 0) > 0]
+
+rbp <- k_ref4[colnames(k_final), ]
+rbp[is.na(rbp)] <- ""
+ha = columnAnnotation(text = anno_text(rbp, 
+                                       gp = gpar(fontsize = 5)))
+h <- Heatmap(k_final, 
+             col = circlize::colorRamp2(c(-ceiling(max(abs(k_final))), 0, ceiling(max(abs(k_final)))), 
+                                        c("blue", "white", "red")),
+        cluster_columns = TRUE,
+        cluster_rows = FALSE,
+        # row_order = order(names(k_ref)),
+        # row_split = str_sub(names(k_ref), 1, 2),
+        show_column_dend = FALSE,
+        column_names_side = "top",
+        column_names_gp = gpar(fontsize = 5),
+        bottom_annotation = ha,
+        heatmap_legend_param = list(title = "log2enrichment"))
+
+pdf(here("fig4_PTR-H295R", "plots", "hexamer_heatmap_vsnonDE.pdf"), width = 12, height = 12)
+print(h)
+dev.off()
+
+# write full table
+write_csv(k_final <- do.call(rbind, k_res) %>% 
+            rownames_to_column("cluster") %>% 
+            mutate(cluster = str_remove(cluster,  "\\..+")) %>% 
+            left_join(k_ref3, by = c("kmer" = "hexamer")) %>% 
+            mutate(log2fc = ifelse(adj_p_value <= 0.05, log2(enrichment), 0)) %>%
+            mutate(log2fc = ifelse(log2fc == -Inf, -5, log2fc)),
+          here("fig4_PTR-H295R", "output", "kmer_rbp_vsnonDE.csv.gz"))
+```
+
+```{r ornament}
+cdna <- read_csv("http://rnabiology.ircm.qc.ca/BIF/oRNAment/static/Homo_sapiens_cDNA_oRNAment.csv.gz",
+                 col_names = c("ensembl_gene_id", "ensembl_transcript_id", "gene_biotype", "transcript_biotype", "transcript_position", "RBP", "score", "unpaired_probability", "chromosome", "region", "exon_start", "exon_end")) %>% filter(region == "3;3")
+
+conv <- read_csv("http://rnabiology.ircm.qc.ca/BIF/oRNAment/static/Homo_sapiens_string_to_int_ID_conversion.csv.gz",
+                 col_names = c("ensembl_transcript_id", "ensembl_gene_id", "external_gene_name", "ensembl_transcript_id_INT", "ensembl_gene_id,INT"))
+
+rbps <- read_csv("http://rnabiology.ircm.qc.ca/BIF/oRNAment/static/RBP_id_encoding.csv.gz", col_names = c("RBP", "RBPname"))
+```
+
+```{r}
+cdna <- cdna %>% filter(score >= 0.5) 
+
+cdna2 <- cdna %>% 
+  inner_join(conv, by = c("ensembl_transcript_id" = "ensembl_transcript_id_INT")) %>% 
+  inner_join(rbps %>% mutate(RBP = as.character(RBP)))
+
+target_t <- iso_high$transcript_id %>% as.character() %>% str_remove("\\..+")
+cdna2 <- cdna2 %>% filter(ensembl_transcript_id.y %in% target_t)
+cdna2 <- cdna2 %>% group_by(external_gene_name, RBPname) %>% 
+  summarize(n = n())
+
+write_csv(cdna2, here("fig4_PTR-H295R", "output", "oRNAament_rbp.csv.gz"))
+```
+
+```{r codonopt}
+# load cds info from ensemble
+library("Biostrings")
+download.file("http://ftp.ensembl.org/pub/release-76/fasta/homo_sapiens/cds/Homo_sapiens.GRCh38.cds.all.fa.gz", "Homo_sapiens.GRCh38.cds.all.fa.gz")
+fastaFile <- readDNAStringSet("Homo_sapiens.GRCh38.cds.all.fa.gz")
+seq_name = names(fastaFile)
+sequence = paste(fastaFile)
+cds_seqs <- data.frame(seq_name, sequence) %>% mutate(seq_name = str_remove(seq_name, "\\..+"))
+iso_high_seqs <- iso_high %>% mutate(transcript_id = str_remove(transcript_id, "\\..+")) %>%
+  left_join(cds_seqs, by = c("transcript_id" = "seq_name")) %>% rename(sequence = "cds") %>% 
+  left_join(utr3s_seqs %>% select(transcript_id = transcript, utr3 = seq) %>% 
+              mutate(transcript_id = str_remove(transcript_id, "\\..+")))
+
+# from https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0228730 tableS2
+download.file("https://doi.org/10.1371/journal.pone.0228730.s009", "TAIs.xlsx")
+tai <- readxl::read_xlsx("TAIs.xlsx", skip = 2, sheet = 2) %>% 
+  mutate(HEK293_IsOpt = ifelse(HEK293_IsOpt == "Opt", 1, 0))
+codons_tai <- setNames(tai$HEK293_tAI, tai$Codon)
+codons_opt <- setNames(tai$HEK293_IsOpt, tai$Codon)
+
+split_cds <- function(seq) {
+  if ((nchar(seq) == 0) | (nchar(seq)%%3 != 0) | is.na(seq)) {
+    return("")
+  }
+  sst <- strsplit(seq, "")[[1]]
+  out <- paste0(sst[c(TRUE, FALSE, FALSE)], sst[c(FALSE, TRUE, FALSE)], sst[c(FALSE, FALSE, TRUE)])
+  out
+}
+
+# just taking fraction of optimal codons
+score_codons <- function(seq, namedvec = codons_opt) {
+  codons <- split_cds(seq)
+  if (codons == "") {
+    return(NA)
+  }
+  codons <- codons[!(codons %in% c("TAA", "TAG", "TGA"))]
+  mean(namedvec[codons])
+}
+score_codons(iso_high_seqs$cds[3], codons_opt)
+
+opt <- iso_high_seqs %>% mutate(opt = pbmcapply::pbmcmapply(score_codons, cds)) %>% 
+  left_join(myClust_annotated %>% select(symbol, cluster)) %>%
+  mutate(cluster = as.character(cluster)) %>%
+  replace_na(list(cluster = "nonDE")) %>% 
+  mutate(cluster = factor(cluster, 
+                          levels = c(sort(as.character(unique(myClust_annotated$cluster))), "nonDE")))
+g <- ggplot(opt, aes(y = opt, x = cluster, color = cluster)) +
+      geom_violin() + 
+  geom_jitter(size = 0.5, alpha = 0.1) +
+  ylab("fraction_optimal_codon") +
+  scale_color_manual(values = clusterCols)
+ggsave(here("fig4_PTR-H295R", "plots", "opt_codon.pdf"), g, width = 10, height = 8)
+```
+

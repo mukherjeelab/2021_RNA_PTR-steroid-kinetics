@@ -1,0 +1,593 @@
+---
+title: "full analysis of all screen rounds"
+author: "Neelanjan Mukherjee"
+output: html_document
+---
+
+# Screen for regulators of Aldosterone
+
+
+```{r setup, include=TRUE, echo=TRUE }
+
+library(tidyverse) # your go to set of functions for messing w/data
+library(RColorBrewer) # to make color schemes
+#library(ggpubr) # publication quality ggplots ha ha ha
+library(ggthemes) # additional themes for ggplot-ing
+library(gridExtra) # allows arranging of plots (rows/columns...)
+library(ggpubr)
+library(here)
+
+```
+
+```{r files, include=TRUE, echo=TRUE}
+allData <- rbind(
+  read_csv(here("data","screen","processed","screen1.csv")),
+  read_csv(here("data","screen","processed","screen2.csv")),
+  read_csv(here("data","screen","processed","screen3.csv")),
+  read_csv(here("data","screen","processed","screen4.csv")),
+  read_csv(here("data","screen","processed","screen5.csv")),
+  read_csv(here("data","screen","processed","screen6.csv")),
+  read_csv(here("data","screen","processed","screenZFPfam.csv"))
+#  ,read_csv(here("data","screen","processed","BTG2_kd.csv"))
+  
+  
+)
+
+allData <- allData %>% filter(target!="ZFP36L1L2")
+
+```
+
+
+
+
+```{r basic plots}
+
+p_presto_24vs48_scatter <- ggscatter(allData,
+           x = "viability_48",  y = "viability_24", color = "target", fill = "target",
+           palette = "aaas") +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "",
+      y = "cells 24 hr",
+      x = "cells 48 hr") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+p_presto_24hr_boxplot <- ggboxplot(allData,
+           x = "siRNA",  y = "viability_24", color = "target",
+           palette = "aaas") +
+  theme_few(base_size = 14) +
+  labs(title = "Cells by zap:",
+      subtitle = "24 hrs",
+      y = "presto blue",
+      x = "") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+p_presto_48hr_boxplot <- ggboxplot(allData,
+           x = "siRNA",  y = "viability_48", color = "target",
+           palette = "aaas") +
+  theme_few(base_size = 14) +
+  labs(title = "Cells by zap:",
+      subtitle = "48 hrs",
+      y = "presto blue",
+      x = "") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+
+
+p_presto_legend <- get_legend(p_presto_24vs48_scatter + theme(legend.position="bottom"))
+
+p_presto_all <- cowplot::plot_grid(
+  p_presto_24vs48_scatter + theme(legend.position="none"),
+  p_presto_24hr_boxplot + theme(legend.position="none"),
+  p_presto_48hr_boxplot + theme(legend.position="none"),
+  align = 'vh',
+  labels = c("A", "B","C"),
+  hjust = -1,
+  nrow = 1
+  )
+
+p_presto_all <- cowplot::plot_grid( p_presto_all, p_presto_legend, ncol = 1, rel_heights = c(1, .1))
+
+p_presto_all
+
+waterData <- allData  %>% filter(target=="water")
+
+# Examine water only zap relationship between Aldo + Cells
+p_PB_OD_24_water <- ggscatter(waterData,  
+           x = "viability_24", y = "conc", color = "stim", shape = "batch",
+           palette = "aaas",
+           add = "reg.line", conf.int = TRUE) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "24 hr: water only",
+      y = "Aldo",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+p_PB_OD_48_water <- ggscatter(waterData,  
+           x = "viability_48", y = "conc", color = "stim", shape = "batch",
+           palette = "aaas",
+           add = "reg.line", conf.int = TRUE) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "48 hr: water only",
+      y = "Aldo",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+
+
+p_PB_OD_24_legend_water <- get_legend(p_PB_OD_24_water)
+
+p_PBvsOD_all_water <- cowplot::plot_grid( p_PB_OD_24_water + theme(legend.position="none"),
+           p_PB_OD_48_water + theme(legend.position="none"),
+           align = 'vh',
+           labels = c("A", "B"),
+           hjust = -1,
+           nrow = 1
+           )
+
+p_PBvsOD_all_water <- cowplot::plot_grid( p_PBvsOD_all_water, p_PB_OD_24_legend_water, rel_widths = c(2.5, .5))
+
+
+
+p_PB_OD_24 <- ggscatter(allData,  
+           x = "viability_24", y = "conc", color = "stim", shape = "batch",
+           palette = "aaas",
+           add = "reg.line", conf.int = TRUE) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "24 hr: all zaps",
+      y = "Aldo",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+p_PB_OD_48 <- ggscatter(allData,  
+           x = "viability_48", y = "conc", color = "stim", shape = "batch",
+           palette = "aaas",
+           add = "reg.line", conf.int = TRUE) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "48 hr: all zaps",
+      y = "Aldo",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+
+
+p_PB_OD_24_legend <- get_legend(p_PB_OD_24)
+
+p_PBvsOD_all <- cowplot::plot_grid( p_PB_OD_24 + theme(legend.position="none"),
+           p_PB_OD_48 + theme(legend.position="none"),
+           align = 'vh',
+           labels = c("A", "B"),
+           hjust = -1,
+           nrow = 1
+           )
+
+p_PBvsOD_all <- cowplot::plot_grid( p_PBvsOD_all, p_PB_OD_24_legend, rel_widths = c(2.5, .5))
+
+
+p_PBvsOD_all_water
+
+
+```
+
+```{r residuals unstimulated}
+# https://www.dataquest.io/blog/statistical-learning-for-predictive-modeling-r/
+# create a linear model
+# use only waterzap samples
+# use only unstimulated (will build separate model stimulated later)
+# predict aldo level from 48 hr presto blue values
+unstimData <- allData %>% filter(stim=="unstim")
+unstimData_all.lm <- lm(conc ~ viability_24, data=unstimData) 
+
+unstimData_water.lm <- lm(conc ~ viability_24, data=unstimData %>% filter(target=="water", stim=="unstim")) 
+
+unstimData$predicted <- predict(unstimData_water.lm,
+        data.frame(viability_24 = unstimData$viability_24))
+
+
+
+
+unstim_final.lm = lm(conc ~ predicted, data=unstimData) 
+unstimData$residuals <- resid(unstim_final.lm)
+
+
+
+unstim.Rsq <- signif(summary(unstimData_water.lm)$adj.r.squared, 4)
+
+p_unstim_model_water <- ggplot(data = unstimData %>% filter(target=="water"),
+       aes(x = viability_24, y = conc)) +
+  geom_point() +
+  stat_smooth(method = "lm", col = "black") +
+  theme_few() + 
+  labs(title ="unstim: water zap model aldo vs presto",
+       subtitle = bquote('Adj '~ R^2 ~ '=' ~ .(unstim.Rsq))
+         )
+  
+
+p_unstim_model_pred <- ggplot(data = unstimData,
+       aes(x = predicted, y = conc, color = target)) +
+  geom_point() +
+  scale_color_manual(values=get_palette("aaas", length(unique(unstimData$target)))) +
+  stat_smooth(method = "lm", col = "black") +
+  theme_few() + 
+  labs(title = "unstim aldo: predictions vs observed")
+
+
+
+
+
+unstim_water_resid_mean <- unstimData %>% filter(target=="water") %>% summarise(mean(residuals)) %>% pull()
+
+unstimData$residuals <- unstimData$residuals - unstim_water_resid_mean
+
+numberObs <- unstimData %>% filter(predicted > 0) %>% group_by(siRNA) %>% tally()
+keep_siRNA <- numberObs %>% filter(n>3) %>% pull(siRNA)
+
+
+p_unstim_bar_resid <- ggbarplot(unstimData %>% filter(siRNA %in% keep_siRNA & target != "water"), x = "siRNA", y = "residuals",
+          fill = "target", ylab = expression(paste(Delta, " Aldosterone pg/uL")),
+          palette =  get_palette("aaas", length(unique(unstimData$target))),
+          add = "mean_se",
+          sort.val = "desc",
+          sort.by.groups = T,
+          x.text.angle = 90,
+          rotate = F,
+          ggtheme = theme_classic(),
+          title = "Unstimulated"
+ )
+
+
+ggsave(plot = p_unstim_bar_resid, filename = here("fig5_screen","plots","unstimulatedAldo.pdf"), width = 10, height = 6)
+
+# align all plots vertically
+plots <- cowplot::align_plots(p_unstim_model_water + theme(legend.position="none"),
+                     p_unstim_model_pred + theme(legend.position="none"),
+                     p_unstim_bar_resid + theme(legend.position="none"),
+                     align = 'v', axis = 'l')
+
+
+legend <- get_legend(p_unstim_bar_resid + theme(legend.position="bottom",
+                                                legend.text = element_text(size = 8),
+                                                
+                                                legend.key.size = unit(.5, "cm")))
+
+# put together bottom row and then everything
+
+top_row <- cowplot::plot_grid(plots[[1]], plots[[2]],labels = c("A", "B"), rel_widths = c(1, 1, .3), nrow = 1)
+bottom_row <- cowplot::plot_grid(plots[[3]],labels = c("C"), rel_widths = c(1), nrow = 1)
+
+
+p_unstim_model <- cowplot::plot_grid(top_row, bottom_row, legend, rel_heights = c(5, 5, 1), ncol = 1)
+p_unstim_model
+```
+
+```{r residuals stimulated}
+# create a linear model
+# use only waterzap samples
+# use only stimulated 
+# predict aldo level from 48 hr presto blue values
+stimData <- allData %>% filter(stim=="stim")
+stimData_all.lm <- lm(conc ~ viability_24, data=stimData) 
+
+stimData_water.lm <- lm(conc ~ viability_24, data=stimData %>% filter(target=="water", stim=="stim")) 
+
+stimData$predicted <- predict(stimData_water.lm,
+        data.frame(viability_24 = stimData$viability_24))
+
+
+stim_final.lm = lm(conc ~ predicted, data=stimData) 
+stimData$residuals <- resid(stim_final.lm)
+
+
+
+stim.Rsq <- signif(summary(stimData_water.lm)$adj.r.squared, 4)
+
+p_stim_model_water <- ggplot(data = stimData %>% filter(target=="water"),
+       aes(x = viability_24, y = conc)) +
+  geom_point() +
+  stat_smooth(method = "lm", col = "black") +
+  theme_few() + 
+  labs(title ="stim: water zap model aldo vs presto",
+       subtitle = bquote('Adj '~ R^2 ~ '=' ~ .(stim.Rsq))
+         )
+  
+
+
+
+p_stim_model_pred <- ggplot(data = stimData,
+       aes(x = predicted, y = conc, color = target)) +
+  geom_point() +
+  scale_color_manual(values=get_palette("aaas", length(unique(stimData$target)))) +
+  stat_smooth(method = "lm", col = "black") +
+  theme_few() + 
+  labs(title = "stim aldo: predictions vs observed")
+
+p_model_water <- cowplot::plot_grid(
+  p_unstim_model_water,
+  p_stim_model_water,
+  align = 'vh',
+  hjust = -1,
+  nrow = 1
+)
+
+ggsave(p_model_water, filename = here("fig5_screen","plots","model_water.pdf"), width = 8, height = 4)
+
+stim_water_resid_mean <- stimData %>% filter(target=="water") %>% summarise(mean(residuals)) %>% pull()
+
+stimData$residuals <- stimData$residuals - stim_water_resid_mean
+numberObs <- stimData %>% filter(predicted > 0) %>% group_by(siRNA) %>% tally()
+keep_siRNA_stim <- numberObs %>% filter(n>3) %>% pull(siRNA)
+
+setdiff(keep_siRNA,keep_siRNA_stim)
+library(viridis)
+
+# UNSTIMULATED
+myunstim <-  unstimData %>% filter(siRNA %in% keep_siRNA & target != "water")
+
+rbp_func <- read_tsv(here("data","accessories","screen_rbp_function.txt"))
+
+myunstim <- left_join(myunstim, rbp_func, by="target") 
+
+myunstim$direction <- case_when(
+  myunstim$target %in% c("AKAP1","CPEB4","MBNL2","NR5A1") ~ "down",
+  myunstim$target %in% c("BTG2","ELAVL1","TRUB1","ZFP36L1","ZFP36L2") ~ "up",
+  myunstim$target %in% c("HNRNPL","MBNL1","MSI2","PEG10","PELO","PNRC2","ZFP36","ZFP36L1L2") ~ "mixed"
+)
+
+myunstim$rbp_siRNA <- paste(myunstim$target, myunstim$siRNA, sep = "_")
+
+mycols <- brewer.pal(length(unique(myunstim$Function)), "Dark2")
+
+names(mycols) <- unique(myunstim$Function)
+
+p_unstim_up <- ggbarplot(myunstim %>% filter(direction=="up"), x = "rbp_siRNA", y = "residuals", ylab = expression(paste(Delta, " Aldosteron pg/uL")), 
+                       order = sort(unique(myunstim$rbp_siRNA)),
+          fill = "Function",
+          palette =  c(mycols["RNAmod"],mycols["Stability"]),
+          add = "mean_se",
+          sort.val = "none",
+          sort.by.groups = F,
+          x.text.angle = 90,
+          rotate = FALSE,
+          ggtheme = theme_classic(),
+          title = "unstimulated: Up"
+ )
+
+
+p_unstim_mixed <- ggbarplot(myunstim %>% filter(direction=="mixed"), x = "rbp_siRNA", y = "residuals", ylab = expression(paste(Delta, " Aldosteron pg/uL")), order = sort(unique(myunstim$rbp_siRNA)),
+          fill = "Function",
+          palette =  c(mycols["Localization"],  mycols["Splicing"], mycols["Stability"], mycols["Translation"]),
+          add = "mean_se",
+          sort.val = "none",
+          sort.by.groups = F,
+          x.text.angle = 90,
+          rotate = FALSE,
+          ggtheme = theme_classic(),
+          title = "unstimulated: Mixed"
+ )
+
+p_unstim_down <- ggbarplot(myunstim %>% filter(direction=="down"), x = "rbp_siRNA", y = "residuals", ylab = expression(paste(Delta, " Aldosteron pg/uL")), order = sort(unique(myunstim$rbp_siRNA)),
+          fill = "Function",
+          palette =  c(mycols["Localization"],  mycols["Splicing"], mycols["Stability"], mycols["Transcription"]),
+          add = "mean_se",
+          sort.val = "none",
+          sort.by.groups = F,
+          x.text.angle = 90,
+          rotate = FALSE,
+          ggtheme = theme_classic(),
+          title = "unstimulated: Down"
+ )
+
+
+p_unstim_all <- cowplot::plot_grid(
+  p_unstim_up,
+  p_unstim_mixed,
+  p_unstim_down,
+  ncol = 1
+)
+
+
+ggsave(plot = p_unstim_all, filename = here("fig5_screen","plots","unstimulatedAldo.pdf"), width = 5, height = 8)
+
+
+
+# STIMULATED
+mystim <-  stimData %>% filter(siRNA %in% keep_siRNA & target != "water")
+
+rbp_func <- read_tsv(here("data","accessories","screen_rbp_function.txt"))
+
+mystim <- left_join(mystim, rbp_func, by="target") 
+
+mystim$direction <- case_when(
+  mystim$target %in% c("AKAP1","CPEB4","MBNL2","NR5A1") ~ "down",
+  mystim$target %in% c("BTG2","ELAVL1","TRUB1","ZFP36L1","ZFP36L2") ~ "up",
+  mystim$target %in% c("HNRNPL","MBNL1","MSI2","PEG10","PELO","PNRC2","ZFP36","ZFP36L1L2") ~ "mixed"
+)
+
+mystim$rbp_siRNA <- paste(mystim$target, mystim$siRNA, sep = "_")
+
+mycols <- brewer.pal(length(unique(mystim$Function)), "Dark2")
+
+names(mycols) <- unique(mystim$Function)
+
+p_stim_up <- ggbarplot(mystim %>% filter(direction=="up"), x = "rbp_siRNA", y = "residuals", ylab = expression(paste(Delta, " Aldosteron pg/uL")), 
+                       order = sort(unique(mystim$rbp_siRNA)),
+          fill = "Function",
+          palette =  c(mycols["RNAmod"],mycols["Stability"]),
+          add = "mean_se",
+          sort.val = "none",
+          sort.by.groups = F,
+          x.text.angle = 90,
+          rotate = FALSE,
+          ggtheme = theme_classic(),
+          title = "Ang II stimulated: Up"
+ )
+
+
+p_stim_mixed <- ggbarplot(mystim %>% filter(direction=="mixed"), x = "rbp_siRNA", y = "residuals", ylab = expression(paste(Delta, " Aldosteron pg/uL")), order = sort(unique(mystim$rbp_siRNA)),
+          fill = "Function",
+          palette =  c(mycols["Localization"],  mycols["Splicing"], mycols["Stability"], mycols["Translation"]),
+          add = "mean_se",
+          sort.val = "none",
+          sort.by.groups = F,
+          x.text.angle = 90,
+          rotate = FALSE,
+          ggtheme = theme_classic(),
+          title = "Ang II stimulated: Mixed"
+ )
+
+p_stim_down <- ggbarplot(mystim %>% filter(direction=="down"), x = "rbp_siRNA", y = "residuals", ylab = expression(paste(Delta, " Aldosteron pg/uL")), order = sort(unique(mystim$rbp_siRNA)),
+          fill = "Function",
+          palette =  c(mycols["Localization"],  mycols["Splicing"], mycols["Stability"], mycols["Transcription"]),
+          add = "mean_se",
+          sort.val = "none",
+          sort.by.groups = F,
+          x.text.angle = 90,
+          rotate = FALSE,
+          ggtheme = theme_classic(),
+          title = "Ang II stimulated: Down"
+ )
+
+
+p_stim_all <- cowplot::plot_grid(
+  p_stim_up,
+  p_stim_mixed,
+  p_stim_down,
+  labels = "AUTO", ncol = 1
+)
+
+
+ggsave(plot = p_stim_all, filename = here("fig5_screen","plots","stimulatedAldo.pdf"), width = 5, height = 8)
+
+
+# p_up_all <- cowplot::plot_grid(
+#   p_unstim_up,
+#   p_stim_up,
+#   labels = "AUTO", ncol = 1
+# )
+# 
+# 
+# ggsave(plot = p_up_all, filename = here("fig5_screen","plots","BTG2.png"), width = 5, height = 8)
+# 
+
+```
+
+```{r aldo fold change vs num cells}
+
+batch_allData <- allData %>% group_by(stim, siRNA, batch) %>% select(siRNA, target, stim,batch, conc) %>%
+summarise_if(is.numeric, mean)
+
+unstim <- batch_allData %>% filter(stim=="unstim")
+stim <- batch_allData %>% filter(stim=="stim")
+
+# colnames(stim)
+delta_all <- cbind.data.frame(
+  stim[,c("siRNA","batch")],
+  stim[,c("conc")]/unstim[,c("conc")]
+  )
+
+
+allPB_batch <- allData %>% group_by(siRNA,batch) %>% select(siRNA, batch,viability_24, viability_48) %>% summarise_all(list(avg=mean,std=sd))
+
+stopifnot(
+    identical(
+    paste(allPB_batch$siRNA, allPB_batch$batch),
+    paste(delta_all$siRNA, delta_all$batch)
+    )
+  )
+
+
+delta_all <- cbind.data.frame(delta_all,
+                              allPB_batch[,c("viability_24_avg",
+                                             "viability_48_avg",
+                                             "viability_24_std",
+                                             "viability_48_std")]
+                              )
+                              
+delta_all$type <- ifelse(delta_all$siRNA=="water","water","siRNA")
+
+                            
+p_aldofc_pb_all_24 <- ggscatter(delta_all,  
+           x = "viability_24_avg", y = "conc", color = "type",
+           palette = "aaas",
+           add = "reg.line", conf.int = F) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "24 hr: all",
+      y = "Aldo fold induction",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+
+p_aldofc_pb_all_48 <- ggscatter(delta_all,  
+           x = "viability_48_avg", y = "conc", color = "type",
+           palette = "aaas",
+           add = "reg.line", conf.int = F) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "48 hr: all",
+      y = "Aldo fold induction",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+
+
+p_aldofc_pb_water_24 <- ggscatter(delta_all %>% filter(siRNA=="water"),  
+           x = "viability_24_avg", y = "conc", 
+           palette = "aaas",
+           add = "reg.line", conf.int = F) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "24 hr: water only",
+      y = "Aldo fold induction",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+
+p_aldofc_pb_water_48 <- ggscatter(delta_all %>% filter(siRNA=="water"),  
+           x = "viability_48_avg", y = "conc", 
+           palette = "aaas",
+           add = "reg.line", conf.int = F) +
+  theme_few(base_size = 14) +
+  labs(title = "",
+      subtitle = "48 hr: water only",
+      y = "Aldo fold induction",
+      x = "presto blue") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+
+
+p_aldofc_pb_plots <- cowplot::plot_grid(
+  p_aldofc_pb_all_24 + theme(legend.position="none"),
+  p_aldofc_pb_all_48  + theme(legend.position="none"),
+  align = 'vh',
+  labels = c("A", "B"),
+           hjust = -1,
+           nrow = 1
+           )
+
+
+
+p_aldofc_pb_legend <- get_legend(p_aldofc_pb_all_24)
+
+
+p_aldofc_pb_plots <- cowplot::plot_grid( p_aldofc_pb_plots, p_aldofc_pb_legend, rel_widths = c(2.5, .5))
+
+
+
+p_aldofc_pb_plots
+
+
+```
+
+

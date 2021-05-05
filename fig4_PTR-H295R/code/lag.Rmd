@@ -1,0 +1,228 @@
+---
+title: "lag between exonic and intronic reads for H295R data"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+library(ggridges)
+```
+
+```{r load}
+load(here("data", "RNAseq", "clustGenes.R"))
+myTxi_H295R <- readRDS(here("data", "RNAseq", "myTxi_H295R.rds"))
+load(here("data", "accessories", "clusterCols"))
+```
+
+```{r TPMs}
+txInfo <- read_csv(here("data/accessories/gencode.v26.primary.info.csv.zip"), col_names = F)
+colnames(txInfo) <- c("gene_id","transcript_id","biotype","symbol")
+tx2gene <- txInfo[,c(2,1)]
+intronless <- tx2gene %>%  group_by(gene_id) %>% tally() %>% filter(n == 1) %>% pull(gene_id)
+geneKeep <- myTxi_H295R$abundance$precursor %>%
+  filter(gene_id %in% c(myClust_annotated$gene_id) | symbol %in% c("STAR", "CYP11A1", "HSD3B2", "CYP21A2", "CYP11B1", "CYP11B2")) %>%
+  filter(!gene_id %in% intronless) %>%
+  pull(gene_id)
+preTPM <- myTxi_H295R$abundance$precursor %>%
+  filter(gene_id %in% geneKeep) 
+preTPM$RNA <- rep("precursor",nrow(preTPM))
+matTPM <- myTxi_H295R$abundance$matureGene %>%
+  filter(gene_id %in% geneKeep) 
+matTPM$RNA <- rep("mature",nrow(matTPM))
+stopifnot(identical(colnames(preTPM),colnames(matTPM)))
+
+allTPM <- rbind(preTPM,matTPM)
+clustDataTPM <- allTPM %>% 
+  select_if(is.numeric) %>%
+  as.matrix()
+
+rownames(clustDataTPM) <- str_c(allTPM$symbol, allTPM$RNA, sep = "_")
+clustDataTPM <- clustDataTPM[,sort(colnames(clustDataTPM))]
+clustDataTPM <- clustDataTPM[,c(23:24,1:12,15:22,13:14)]
+colnames(clustDataTPM) <- gsub(pattern = "Mock_|AngII_", "", x = colnames(clustDataTPM)) 
+
+allRNAClustTPM <- cbind.data.frame(gene_id=rownames(clustDataTPM),clustDataTPM,RNA=allTPM$RNA)
+
+allRNAClustTPM <- dplyr::left_join(allRNAClustTPM, myClust_annotated[,c(1:2,15,16)], by="gene_id")
+
+clustData <- clustDataTPM
+colnames(clustData) <- gsub(x = colnames(clustData), pattern = "_A|_B", replacement = "")
+clustData <- limma::avearrays(clustData)
+
+clustData2 <- clustData %>% as.data.frame() %>%
+  rownames_to_column("gene") %>%
+  pivot_longer(-gene, names_to = "time", values_to = "expr") %>%
+  mutate(time = as.numeric(time)) %>% 
+  pivot_wider(names_from = "gene", values_from = "expr")
+```
+
+```{r interpolate}
+full_timevec <- data.frame(time = 0:(24/0.25) * 0.25)
+clustData2 <- zoo::na.approx(left_join(full_timevec, clustData2 %>% as.data.frame()))
+clustData <- clustData2 %>% as.data.frame() %>%
+  pivot_longer(-time, names_to = "gene", values_to = "expr") %>% 
+  pivot_wider(names_from = "time", values_from = "expr") %>% 
+  column_to_rownames("gene")
+
+clustData <- log2(clustData + 1) - log2(clustData[,1] +1)
+
+clustData <- cbind.data.frame(gene_id=rownames(clustData),clustData,RNA=allRNAClustTPM$RNA)
+
+allRNAClust <- dplyr::left_join(clustData, myClust_annotated[,c(1:2,15,16)], by="gene_id")
+precursor <- allRNAClust %>% filter(RNA=="precursor") %>% arrange(gene_id)
+mature <- allRNAClust %>% filter(RNA=="mature") %>% arrange(gene_id)
+
+precursorTPM <- allRNAClustTPM %>% filter(RNA=="precursor") %>%
+  arrange(gene_id) %>% 
+  select(-c("RNA", "cluster", "symbol", "biotype")) %>% 
+  rename(symbol = "gene_id")
+matureTPM <- allRNAClustTPM %>% filter(RNA=="mature") %>%
+  arrange(gene_id) %>% 
+  select(-c("RNA", "cluster", "symbol", "biotype")) %>% 
+  rename(symbol = "gene_id")
+```
+
+```{r cor_calculations}
+df <- data.frame(gene_id=character(),
+                 cor=numeric(), 
+                 crossCor=numeric(),
+                 stringsAsFactors=FALSE) 
+
+for (i in 1:length(geneKeep)) {
+  df[i,"gene_id"] <- precursor[i,"gene_id"]
+
+  x <- data.frame(t=as.numeric(gsub(x = colnames(precursor[i,2:98]), pattern = "_A|_B", replacement = "")),
+                y=as.numeric(t(precursor[i,2:98]))
+                )
+
+  y <- data.frame(t=as.numeric(gsub(x = colnames(mature[i,2:98]), pattern = "_A|_B", replacement = "")),
+                y=as.numeric(t(mature[i,2:98]))
+                )
+  t <- ccf(x = x$y, y = y$y, plot = F)
+  # df[i,"crossCor"] <- max(t$acf)
+  # df[i, "lag"] <- t$lag[min(which(t$acf == max(t$acf)))]
+  df[i,"cor"] <- cor(x$y,y$y)
+  df[i,"crossCor"] <- max(t$acf[which(t$lag <= 0)])
+  df[i, "lag"] <- t$lag[min(which(t$acf == df[i,"crossCor"]))]
+}
+
+corClusters <- left_join(df %>% mutate(symbol = str_remove(gene_id, "_precursor")) %>% select(-gene_id),
+                         myClust_annotated %>% select(symbol, biotype, cluster)) %>% 
+  mutate(lag_time = 0.25 * lag)
+write_csv(corClusters, here("fig4_PTR-H295R", "output", "lag.csv.gz"))
+```
+
+```{r plotting}
+sumcorClusters <- corClusters %>% filter(crossCor >= 0.5) %>%
+  group_by(cluster, lag_time) %>% 
+  summarize(n = n()) %>% 
+  group_by(cluster) %>% 
+  mutate(fraction = n/sum(n)) %>% 
+  ungroup() %>% 
+  mutate(cluster = factor(cluster, levels = sort(unique(as.character(corClusters$cluster)))))
+
+g <- ggplot(sumcorClusters, aes(x = lag_time, y = fraction, group = cluster, fill = cluster)) +
+  facet_wrap(.~cluster) +
+  geom_col(position = "dodge") +
+  cowplot::theme_cowplot() +
+  scale_fill_manual(values = clusterCols)
+ggsave(here("fig4_PTR-H295R", "plots", "lag_cluster.pdf"), g, height = 8, width = 8)
+
+
+
+corClusters$cluster <- factor(corClusters$cluster)
+
+p_dens <- ggplot(corClusters, aes(x = lag, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(corClusters$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, quantile_fun=function(x,...)median(x)) +
+  xlim(-20,5) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+
+ggsave(here("fig4_PTR-H295R", "plots", "lag_cluster_dens.pdf"), p_dens, height = 6, width = 2)
+```
+
+```{r plotmaxcor}
+clust_df <- myClust_annotated %>% select(symbol, gene_id, cluster)
+cor_df_cluster <- clust_df %>% left_join(corClusters) %>% 
+  mutate(cluster = factor(cluster, levels = sort(as.character(unique(clust_df$cluster)))))
+
+# cor_df_cluster %>% group_by(cluster) %>%
+#   summarise(crosscor = median(crossCor, na.rm = T)) %>%
+#   arrange(desc(crosscor))
+
+g <- ggplot(cor_df_cluster, aes(x = cluster, y = crossCor, color = cluster)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(size = 0.5, alpha = 0.3) +
+  scale_color_manual(values = clusterCols)
+
+ggsave(here("fig4_PTR-H295R", "plots", "crosscor_cluster.pdf"), g, width = 10, height = 8)
+
+
+
+cor_df_cluster$cluster <- factor(cor_df_cluster$cluster)
+
+p_dens_crossCor <- ggplot(cor_df_cluster, aes(x = crossCor, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(cor_df_cluster$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, quantile_fun=function(x,...)median(x)) +
+  xlim(-1,1) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+p_dens_cor <- ggplot(cor_df_cluster, aes(x = cor, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(cor_df_cluster$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, 
+                       quantile_fun = function(x,...)median(x)) +
+  xlim(-1,1) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+
+
+ggsave(here("fig4_PTR-H295R", "plots", "crosscor_cluster_dens.pdf"), p_dens_crossCor, height = 6, width = 2)
+
+ggsave(here("fig4_PTR-H295R", "plots", "cor_cluster_dens.pdf"), p_dens_cor,  height = 6, width = 2)
+
+```
+
+# peak time
+
+```{r}
+clustData <- clustDataTPM
+colnames(clustData) <- gsub(x = colnames(clustData), pattern = "_A|_B", replacement = "")
+clustData <- limma::avearrays(clustData)
+
+clustData2 <- clustData %>% as.data.frame() %>%
+  rownames_to_column("gene") %>%
+  pivot_longer(-gene, names_to = "time", values_to = "expr") %>%
+  mutate(time = as.numeric(time)) %>% 
+  pivot_wider(names_from = "gene", values_from = "expr")
+full_timevec <- data.frame(time = 0:(24/0.25) * 0.25)
+
+clustData2 <- 2^(zoo::na.spline(sqrt(left_join(full_timevec, clustData2 %>% as.data.frame()))))[,-1]
+rownames(clustData2) <- full_timevec$time
+peaks <- apply(clustData2, 2, function(x) which(x == max(x))[1]) %>%
+  as.data.frame() %>% 
+  rownames_to_column("gene") %>% 
+  mutate(peak_time = (`.`-1) * 0.25) %>% 
+  select(-`.`) %>% 
+  filter(!str_detect(gene, "_precursor"))
+write_csv(peaks, here("fig4_PTR-H295R", "output", "peak_times.csv.gz"))
+
+ggplot(clustData2 %>% as.data.frame() %>% rownames_to_column("time") %>% mutate(time = as.numeric(time)), aes(x = time, y = STAR_precursor)) + geom_point()
+```
+
+

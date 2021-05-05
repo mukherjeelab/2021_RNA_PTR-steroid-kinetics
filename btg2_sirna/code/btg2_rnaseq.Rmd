@@ -1,0 +1,471 @@
+---
+title: "btg2"
+author: "Neelanjan Mukherjee"
+date: "2/8/2021"
+output: html_document
+---
+
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(tidyverse)
+library(viridis)
+library(pheatmap)
+library(ggplot2)
+library(ggthemes)
+library(ggrepel)
+library(scales)
+library(limma)
+library(reshape2)
+library(msigdbr)
+library(GeneOverlap)
+library(tximport)
+library(DESeq2)
+library(ggpubr)
+# you will need to install all these packages before you can run this.
+
+# list of functions 
+
+## function for plotting changes
+plotgeneFC <- function(deseq_object, goi) {
+  
+
+
+  mygene <- annotation %>% filter(symbol==goi)
+  d <- plotCounts(deseq_object, gene = mygene$gene, intgroup = c("Treatment","Time"), returnData = TRUE) 
+  n <- d %>% filter(Time==0) %>% summarise(mean(count)) %>% pull() # unstimulated average
+  
+  d <- d %>% mutate(fc = count/n)
+  
+  d$Time <- as.numeric(as.character(d$Time))
+
+  ggplot(d, aes(x = Time, y = fc, color = Treatment, group = Treatment)) + 
+    geom_point() + stat_summary(fun=mean, geom="line") +
+    scale_color_manual(values = c("black","red")) +
+    ggtitle(mygene$symbol) +
+    ylab("Fold change vs unstimulated") +
+    xlab("Hours after AngII stimulation") +
+    theme_few() 
+
+
+}
+
+
+
+
+plotgeneTPM <- function(goi) {
+
+  myG <- geneInfo %>% filter(symbol==goi) %>% pull(gene) %>% unique()
+
+tmp <- data.frame(myTxi$abundance[myG,]) %>% rownames_to_column(var ="SampleID")
+colnames(tmp)[2] <- "TPM"
+
+tmp$SampleID <- gsub(pattern = "Water_", "Water_Water_",tmp$SampleID)
+
+
+tmp <- separate(tmp, col =  SampleID, into = c("treatment","sirna","time","rep"))
+
+tmp$sirna <- relevel(as.factor(tmp$sirna), "Water")
+
+
+ggbarplot(data = tmp %>% filter(sirna!="s15386"), x = "time", y = "TPM", fill = "sirna", merge = T, add = c("mean_sd"), title = goi, palette = c("grey","darkred","red"))
+
+}
+
+
+
+plotgeneTPMall <- function(goi) {
+myG <- geneInfo %>% filter(symbol==goi) %>% pull(gene) %>% unique()
+
+tmp <- data.frame(myTxi$abundance[myG,]) %>% rownames_to_column(var ="SampleID")
+colnames(tmp)[2] <- "TPM"
+
+tmp <- left_join(tmp, mData)
+
+
+
+ggbarplot(data = tmp, x = "Time", y = "TPM", fill = "sirna", merge = T, add = c("mean_sd"), title = goi, palette = c("grey","darkred","red"))
+
+}
+
+
+
+        
+
+```
+
+
+
+```{r get expression}
+geneInfo <- read_csv(here("data","accessories","gencode.v26.primary.info.csv.zip"), col_names = F) 
+
+colnames(geneInfo) <- c("gene","transcript","biotype","symbol")
+
+
+geneInfo <- geneInfo[grep('^pre_', geneInfo$transcript , invert = T),]
+
+tx2gene <- geneInfo %>% select(transcript, gene)
+
+
+btg_metadata <- readxl::read_xlsx(here("data","accessories","NMLabLibrarySummary.xlsx"), sheet = 1, skip = 1) %>% filter(Project == "BTG2") %>%
+  select(SampleID, Treatment1, Time_hr, Treatment2)
+
+btg_metadata <- as.data.frame(btg_metadata)
+
+colnames(btg_metadata) <- c("SampleID", "Treatment", "Time", "Rep")
+
+
+
+myquantfiles <- paste("data/RNAseq/",
+                      btg_metadata$SampleID,
+                      "/quant.sf.gz",
+                      sep = "")
+  
+
+
+names(myquantfiles) <- paste(btg_metadata$Treatment, str_pad(btg_metadata$Time, 2, pad = "0"), btg_metadata$Rep, sep = "_")
+
+myTxi <- tximport(myquantfiles, type = "salmon", tx2gene = tx2gene)
+
+
+plotgeneTPM("BTG2")
+plotgeneTPM("MC2R")
+
+plotgeneTPM("STAR")
+plotgeneTPM("CYP11B2")
+
+
+
+```
+
+
+
+```{r clustering qc, eval=FALSE}
+# use mature gene level (sum of all mature transcripts) estimates for QC EDA
+qcinput <- myTxi$abundance
+
+
+qcinput <- log2(qcinput[rowSums(qcinput) > 100,] + 1)
+
+qcCor <- cor(qcinput)
+
+colnames(qcCor) <- gsub("_Rep[1|2|3|4]","",colnames(qcCor))
+
+rownames(qcCor) <- colnames(qcCor)
+
+
+nCut <- 3 
+pheatmap::pheatmap(qcCor, clustering_distance_rows = "euclidean",clustering_distance_cols = "euclidean", clustering_method = "complete", 
+                   cutree_cols = nCut, cutree_rows = nCut, 
+                   color = viridis(10, option = "E", direction = -1), border_color = "black")
+                   
+      
+dev.off()
+
+```
+
+
+```{r unstim}
+
+mData <- btg_metadata %>% select(SampleID, Treatment, Time, Rep) 
+
+mData <- separate(mData,col =  Treatment, into = c("Treatment","sirna"))
+
+mData$sirna[is.na(mData$sirna)] <- "mock"
+
+mData <- mData %>% filter(sirna!="s15386" & Time=="0")
+
+mData$Treatment <- relevel(x = as.factor(mData$Treatment), ref = "Water")
+
+
+mData$Time <- factor(mData$Time, levels = c("0", "6", "24"))
+
+
+myquantfiles <- paste("data/RNAseq/",
+                      mData$SampleID,
+                      "/quant.sf.gz",
+                      sep = "")
+  
+rownames(mData) <- paste(mData$Treatment,
+                          str_pad(mData$Time, 2, pad = "0"),
+                          mData$Rep, sep = "_")
+
+names(myquantfiles) <- rownames(mData)
+
+myTxiFilt <- tximport(myquantfiles, type = "salmon", tx2gene = tx2gene)
+
+
+dds <- DESeqDataSetFromTximport(txi = myTxiFilt,
+                         colData = mData,
+                         design =  ~Treatment)
+
+keep <- rowSums(counts(dds)) >= 10
+
+dds <- dds[keep,]
+
+
+dds <- DESeq(dds)
+
+
+res_0hr <- left_join(
+
+results(dds,
+        name="Treatment_BTG2_vs_Water") %>% as.data.frame() %>% rownames_to_column(var = "gene"),
+geneInfo %>% 
+  select(gene, symbol, biotype) %>% unique()
+) 
+
+
+
+
+
+```
+
+
+```{r 6hr}
+
+mData <- btg_metadata %>% select(SampleID, Treatment, Time, Rep) 
+
+mData <- separate(mData,col =  Treatment, into = c("Treatment","sirna"))
+
+mData$sirna[is.na(mData$sirna)] <- "mock"
+
+mData <- mData %>% filter(sirna!="s15386" & Time=="6")
+
+mData$Treatment <- relevel(x = as.factor(mData$Treatment), ref = "Water")
+
+
+mData$Time <- factor(mData$Time, levels = c("0", "6", "24"))
+
+
+myquantfiles <- paste("data/RNAseq/",
+                      mData$SampleID,
+                      "/quant.sf.gz",
+                      sep = "")
+  
+rownames(mData) <- paste(mData$Treatment,
+                          str_pad(mData$Time, 2, pad = "0"),
+                          mData$Rep, sep = "_")
+
+names(myquantfiles) <- rownames(mData)
+
+myTxiFilt <- tximport(myquantfiles, type = "salmon", tx2gene = tx2gene)
+
+
+dds <- DESeqDataSetFromTximport(txi = myTxiFilt,
+                         colData = mData,
+                         design =  ~Treatment)
+
+keep <- rowSums(counts(dds)) >= 10
+
+dds <- dds[keep,]
+
+
+dds <- DESeq(dds)
+
+
+res_6hr <- left_join(
+
+results(dds,
+        name="Treatment_BTG2_vs_Water") %>% as.data.frame() %>% rownames_to_column(var = "gene"),
+geneInfo %>% 
+  select(gene, symbol, biotype) %>% unique()
+) 
+
+
+
+
+
+```
+
+
+```{r 24hr}
+
+mData <- btg_metadata %>% select(SampleID, Treatment, Time, Rep) 
+
+mData <- separate(mData,col =  Treatment, into = c("Treatment","sirna"))
+
+mData$sirna[is.na(mData$sirna)] <- "mock"
+
+mData <- mData %>% filter(sirna!="s15386" & Time=="24")
+
+mData$Treatment <- relevel(x = as.factor(mData$Treatment), ref = "Water")
+
+
+mData$Time <- factor(mData$Time, levels = c("0", "6", "24"))
+
+
+myquantfiles <- paste("data/RNAseq/",
+                      mData$SampleID,
+                      "/quant.sf.gz",
+                      sep = "")
+  
+rownames(mData) <- paste(mData$Treatment,
+                          str_pad(mData$Time, 2, pad = "0"),
+                          mData$Rep, sep = "_")
+
+names(myquantfiles) <- rownames(mData)
+
+myTxiFilt <- tximport(myquantfiles, type = "salmon", tx2gene = tx2gene)
+
+
+dds <- DESeqDataSetFromTximport(txi = myTxiFilt,
+                         colData = mData,
+                         design =  ~Treatment)
+
+keep <- rowSums(counts(dds)) >= 10
+
+dds <- dds[keep,]
+
+
+dds <- DESeq(dds)
+
+
+res_24hr <- left_join(
+
+results(dds,
+        name="Treatment_BTG2_vs_Water") %>% as.data.frame() %>% rownames_to_column(var = "gene"),
+geneInfo %>% 
+  select(gene, symbol, biotype) %>% unique()
+) 
+
+colnames(myClust_annotated)[1] <- "gene"
+
+inner_join(
+res_24hr %>% filter(pvalue <.05),
+myClust_annotated %>% select(gene,cluster)
+) %>% filter(log2FoldChange > 0) %>% View()
+
+
+my24 <- left_join(
+res_24hr,
+myClust_annotated %>% select(gene,cluster)
+)  
+
+my24$sig <- ifelse(my24$log2FoldChange >0 & my24$pvalue <.05, 
+                   "up",
+                   ifelse(my24$log2FoldChange < 0 & my24$pvalue <.05,
+                   "down",
+                   "notsig")
+)
+
+
+library(GeneOverlap)
+myClust <- split(my24$gene, my24$cluster)
+myBTG <- split(my24$gene, my24$sig)
+# create own gene list
+
+
+# genes in universe
+gsize <- nrow(my24)
+                
+# calculate overlaps                
+gom.clust_btg <- newGOM(myClust, myBTG, genome.size = gsize)
+
+clust_btg <- getMatrix(gom.clust_btg, "odds")
+clust_btg[is.infinite(clust_btg)] <- NA
+
+library(viridis)
+clust_btg <- clust_btg[sort(rownames(clust_btg)),]
+
+pheatmap(clust_btg, cluster_rows = F, cluster_cols = F, color = viridis(12, option = "E", direction = 1), border_color = "black", filename = here("fig4_PTR-H295R","plots","btg2_clust_overlap.pdf"))
+dev.off()
+
+p_genes <- cowplot::plot_grid(
+plotgeneTPM("BTG2") + theme(legend.position="none"),
+plotgeneTPM("ELAVL1") + theme(legend.position="none"),
+plotgeneTPM("STAR")+ theme(legend.position="none"),
+plotgeneTPM("CYP11B1")+ theme(legend.position="none"),
+plotgeneTPM("CYP11B2")+ theme(legend.position="none"),
+plotgeneTPM("VGF") + theme(legend.position="none"),
+ncol = 2
+)
+
+
+ggsave(plot = p_genes, filename = here("fig4_PTR-H295R","plots","btg_genes.pdf"),  device = "pdf", height = 6, width = 4)
+my24 %>% filter(sig!="notsig") %>% pull(sig) %>% length()
+
+```
+
+
+```{r analysis lfc}
+
+load(here("data","RNAseq","clustGenes.R"))
+
+
+
+
+standard_error <- function(x) sd(x) / sqrt(length(x)) # Create own function
+ 
+
+tmp <- dplyr::left_join(myClust_annotated[,1:2],
+  myTxiFilt$abundance %>% as.data.frame() %>% rownames_to_column(.data = ., var="gene_id"), by = "gene_id") 
+
+
+
+tmp_avg <- as.matrix(tmp[,-c(1:2)])
+tmp_avg <- tmp_avg[,sort(colnames(tmp_avg))]
+
+tmp <- data.frame(tmp[,1:2],tmp_avg) 
+
+colnames(tmp_avg) <- gsub("_Rep[1|2]","", colnames(tmp_avg))
+rownames(tmp_avg) <- tmp$gene_id
+
+clust_btg2 <- 
+  data.frame(
+  "gene_id"=tmp$gene_id,
+  "cluster"=tmp$cluster,
+  limma::avearrays(x = tmp_avg)
+  )
+# rm(tmp, tmp_avg)
+ps <- 1
+delta_clust_btg2 <- clust_btg2 %>% 
+  mutate(BTG2_00 = log2(BTG2_00 + ps) - log2(BTG2_00 + ps),
+         BTG2_06 = log2(BTG2_06 + ps) - log2(BTG2_00 + ps),
+         BTG2_24 = log2(BTG2_24 + ps) - log2(BTG2_00 + ps),
+         Water_00 = log2(Water_00 + ps) - log2(Water_00 + ps),
+         Water_06 = log2(Water_06 + ps) - log2(Water_00 + ps),
+         Water_24 = log2(Water_24 + ps) - log2(Water_00 + ps)) 
+
+
+sumData <- delta_clust_btg2 %>% reshape2::melt(value.name = "lfc") %>% 
+  separate(col = variable, into = c("tx","time")) 
+
+sumData$cluster <- factor(sumData$cluster, sort(levels(sumData$cluster)))
+
+sumData$tx <- relevel(x = sumData$tx, ref = "Water")
+
+
+sumData <- left_join(sumData,
+                     geneInfo %>% select(gene, symbol) %>% unique() %>% mutate(gene_id=gene) %>% select(gene_id,symbol))
+
+
+
+ggplot(sumData, aes(x = time, y = lfc, fill = tx)) +
+  geom_boxplot(outlier.shape = NA) + theme_few() + facet_wrap(~cluster, scales = "free_y")
+
+
+ggboxplot(data = sumData %>% filter(cluster %in% c("as1","as2","as3","as4","aw1","aw2","aw3","aw4","aw5")), x = "time", y = "lfc", fill = "tx", outlier.shape = NA) %>%  facet(facet.by = "cluster", scales = "free_y")
+
+
+ggplot(sumData, aes(x = time, y = lfc, fill = tx)) +
+  geom_violin(scale = "width") + theme_few() + facet_wrap(~cluster, scales = "free_y")
+
+
+sumData <- left_join(sumData,
+          read_tsv(here("fig4_PTR-H295R","output","eisa_call.csv.gz")) %>% mutate(symbol = gene) %>% select(symbol,call)
+)
+
+ggviolin(data = sumData %>% filter(cluster %in% c("as1","as2","as3","as4","aw1","aw2","aw3","aw4","aw5") & call=="down"), x = "time", y = "lfc", fill = "tx", outlier.shape = NA) %>%  facet(facet.by = "cluster", scales = "free_y")
+
+
+ggplot(sumData, aes(x = time, y = lfc, fill = tx)) +
+  geom_boxplot(outlier.shape = NA) + theme_few() +
+  facet_wrap(~cluster, scales = "free_y")
+          
+
+
+```
+

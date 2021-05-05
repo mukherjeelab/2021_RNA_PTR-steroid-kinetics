@@ -1,0 +1,143 @@
+---
+title: "decay_clusters"
+author: "Neelanjan Mukherjee"
+date: "4/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+library(ggridges)
+
+load(here("data", "accessories", "clusterCols"))
+
+```
+
+
+```{r rates by clusters}
+rates <- read_tsv(file = here("data","labeling","all_rates.tsv.gz"))
+colnames(rates) <- c("gene_id","gene_name","synthesis","decay","processing","total","premRNA")
+
+filtRates <- rates %>% drop_na() %>%
+  reshape2::melt() %>% 
+  filter(variable %in% c("synthesis","decay","processing" )) 
+
+
+
+synth_dist <- ggplot(filtRates %>% filter(variable=="synthesis"), aes(value)) +
+  geom_density() +
+  scale_x_log10(limits = c(.01, 1000)) +
+  xlab("synthesis (TPM/min)")
+
+proc_dist <- ggplot(filtRates %>% filter(variable=="processing"), aes(value)) +
+  geom_density() +
+  scale_x_log10(limits = c(.1, 1000)) +
+  xlab("processing (1/min)")
+
+decay_dist <- ggplot(filtRates %>% filter(variable=="decay"), aes(value)) +
+  geom_density() +
+  scale_x_log10(limits = c(.01, 10)) +
+  xlab("decay (1/min)")
+
+ggplot(filtRates %>% filter(variable=="decay"), aes(log(2)/value)) +
+  geom_density() +
+  scale_x_log10(limits = c(.5, 10)) +
+  xlab("half-life (hrs)") +
+  theme_few()
+
+ggsave(here("fig4_PTR-H295R", "plots", "rate_distributions.pdf"), cowplot::plot_grid(synth_dist, proc_dist, decay_dist, nrow = 1)
+, height = 2, width = 8)
+
+load(here("data","RNAseq","clustGenes.R"))
+rates <- inner_join(rates, myClust_annotated[,1:2], by="gene_id")
+
+
+rates$cluster <- factor(rates$cluster, levels = sort(levels(rates$cluster)))
+
+p_syn_dens <- ggplot(rates, aes(x = synthesis, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(rates$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, quantile_fun=function(x,...)median(x)) +
+  xlim(0,50) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+
+p_proc_dens <- ggplot(rates, aes(x = processing, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(rates$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, quantile_fun=function(x,...)median(x)) +
+  xlim(0,80) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+p_decay_dens <- ggplot(rates, aes(x = decay, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(rates$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, quantile_fun=function(x,...)median(x)) +
+  xlim(0,7) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+p_decay_violin <- ggplot(rates, aes(y = decay, x = cluster, fill=cluster)) +
+  geom_violin(scale = "width") +
+  stat_summary(fun.y=median, geom="point", shape=23, size=1, color="white") +
+  ylim(0,6) +
+  scale_fill_manual(values = clusterCols) +
+  theme(legend.position = "none")
+
+
+ggsave(here("fig4_PTR-H295R", "plots", "decay_unstim_violin.pdf"), p_decay_violin, height = 4, width = 8)
+
+
+
+ggsave(here("fig4_PTR-H295R", "plots", "synthesis_unstim_dens.pdf"), p_syn_dens, height = 6, width = 2)
+
+ggsave(here("fig4_PTR-H295R", "plots", "processing_unstim_dens.pdf"), p_proc_dens, height = 6, width = 2)
+ggsave(here("fig4_PTR-H295R", "plots", "decay_unstim_dens.pdf"), p_decay_dens, height = 6, width = 2)
+```
+  
+```{r}
+peaky <- read_csv(here("fig4_PTR-H295R", "output", "peakiness.csv.gz"))
+names(peaky)[1] <- "gene_name"
+
+
+se <- function(x) sqrt(var(x)/length(x))
+
+peakyDecay <- reshape2::melt(peakyRates, id.vars=c("cluster")) %>%
+  drop_na() %>%
+  group_by(cluster, variable) %>% 
+  summarise(median=median(value), se=se(value)) %>%
+  pivot_wider(names_from  = variable, values_from = c(median,se))
+
+peakyDecay$cat <- substr(peakyDecay$cluster, start = 1, stop = 2)
+
+
+p <- ggplot(peakyDecay %>% filter(cluster %in% levels(peakyDecay$cluster)[1:9]), aes(y = median_decay, x =  median_peakiness, color = cluster, label=cluster)) +
+  geom_point(size=3) +
+  ggrepel::geom_text_repel(color="black") +
+  ylab("Decay rate") +
+  xlab("Peakiness") +
+  scale_color_manual(values = clusterCols) +
+  theme(legend.position = "none")
+
+
+
+ggsave(here("fig4_PTR-H295R", "plots", "decay_peaky.pdf"), p + facet_wrap(~cat, scales = "free_x") , height = 3, width = 3)
+
+```
+
+
+```{r}
+
+myTxi_H295R <- readRDS("data/RNAseq/myTxi_H295R.rds")
+myTxi_H295R$abundance$matureGene %>% filter(symbol %in% keygenes)
+myTxi_H295R$abundance$matureGene %>% filter(symbol=="CYP11A1")
+```
+

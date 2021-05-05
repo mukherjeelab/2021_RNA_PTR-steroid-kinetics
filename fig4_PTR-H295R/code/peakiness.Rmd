@@ -1,0 +1,180 @@
+---
+title: "Peakinees of H295R data"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(ggridges)
+library(here)
+```
+
+```{r load}
+load(here("data", "RNAseq", "clustGenes.R"))
+myTxi_H295R <- readRDS(here("data", "RNAseq", "myTxi_H295R.rds"))
+load(here("data", "accessories", "clusterCols"))
+```
+
+```{r smoothing}
+ex_mat <- myTxi_H295R$counts$matureGene %>% select(-1,-3) %>% 
+  group_by(symbol) %>%
+  summarize_all(sum) %>%
+  remove_rownames() %>%
+  column_to_rownames("symbol")
+timevec_mat <- colnames(ex_mat) %>% str_remove(".+?_") %>%
+  str_remove("_.+") %>%
+  as.numeric()
+ex_smoothed <- apply(ex_mat, 1, function(x) smooth.spline(x = timevec_mat, y = x)$y) %>%
+  t()
+colnames(ex_smoothed) <- unique(timevec_mat)
+```
+
+```{r peakiness_funs}
+peakiness <- function(y, x, target, window = 1) {
+  vec <- setNames(y, x)
+  
+  prev_diff <- tryCatch({
+    prev_x <- as.numeric(names(target)) - window
+    prev_target <- max(which(x <= as.numeric(names(target)) - window))
+    prev_val <- (vec[target] - vec[prev_target]) / (x[target] - x[prev_target]) * (x[target] - window - x[prev_target]) + vec[prev_target]
+    vec[target] - prev_val}, error = function(e) {NA})
+  
+  next_diff <- tryCatch({
+    next_x <- as.numeric(names(target)) + window
+    next_target <- min(which(x >= as.numeric(names(target)) + window))
+    next_val <- (vec[next_target] - vec[target]) / (x[next_target] - x[target]) * window + vec[target]
+    vec[target] - next_val}, error = function(e) {NA})
+  
+  if (is.na(next_diff) + is.na(prev_diff) == 0) {
+    sum(next_diff, prev_diff)
+  } else {
+    sum(next_diff, prev_diff, na.rm = TRUE) * 2
+  }
+}
+
+max_peakiness <- function(y, x, window = 1, norm = T) {
+  vec <- setNames(y, x)
+  res <- max(sapply(1:length(vec), function(n) peakiness(y, x, setNames(n, x[n]), window)))
+  if (norm) {
+    res <- res/mean(y)
+  }
+  res
+}
+```
+
+```{r calculate}
+peakiness <- apply(ex_smoothed, 1, 
+                   function(x) suppressWarnings(max_peakiness(x = unique(timevec_mat), y = x)))
+peaks_df <- data.frame(peakiness) %>% rownames_to_column("symbol") %>%
+  arrange(desc(peakiness))
+write_csv(peaks_df, here("fig4_PTR-H295R", "output", "peakiness.csv.gz"))
+```
+
+```{r figure}
+clust_df <- myClust_annotated %>% select(symbol, gene_id, cluster)
+peaks_df_cluster <- clust_df %>% left_join(peaks_df) %>% 
+  mutate(cluster = factor(cluster, levels = sort(as.character(unique(clust_df$cluster)))))
+peaks_df_cluster %>% group_by(cluster) %>%
+  summarise(peakiness = median(peakiness)) %>%
+  arrange(desc(peakiness))
+
+g <- ggplot(peaks_df_cluster, aes(x = cluster, y = peakiness, color = cluster)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(size = 0.5, alpha = 0.3) +
+  scale_color_manual(values = clusterCols)
+
+ggsave(here("fig4_PTR-H295R", "plots", "peakiness_cluster.pdf"), g, width = 10, height = 8)
+
+p_dens_peaky <- ggplot(peaks_df_cluster, aes(x = peakiness, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(peaks_df_cluster$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, quantile_fun=function(x,...)median(x)) +
+  xlim(0,6) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+
+ggsave(here("fig4_PTR-H295R", "plots", "peakiness_cluster_dens.pdf"), p_dens_peaky, height = 6, width = 2)
+
+```
+
+
+```{r}
+peaktimes <- read_csv(here("fig4_PTR-H295R","output","peak_times.csv.gz"))
+peaktimes$gene <- gsub("_mature","",x = peaktimes$gene)
+colnames(peaktimes)[1] <- "symbol"
+
+rates <- read_tsv(file = here("data","labeling","all_rates.tsv.gz"))
+colnames(rates) <- c("gene_id","gene_name","synthesis","decay","processing","total","premRNA")
+
+colnames(rates)[2] <- "symbol"
+
+peaktime_decay <- peaktimes %>% 
+  left_join(., myClustGenes, by = "symbol") %>%
+  left_join(., rates %>% select(symbol,decay), by = "symbol")
+
+ggplot(peaktime_decay, aes(x=peak_time, color=cluster)) +
+  geom_density() 
+
+
+peaktime_decay_long <- peaktime_decay %>% select(-symbol)  %>% reshape2::melt()
+
+peaktime_decay_long$cluster <- factor(peaktime_decay_long$cluster, levels=sort(levels(peaktime_decay_long$cluster)))
+
+
+
+
+
+p_dens_peaktime <- ggplot(peaktime_decay_long %>% filter(variable=="peak_time") %>%  drop_na(), aes(x = value, y = cluster, fill=cluster)) +
+  scale_y_discrete(limits = rev(levels(peaktime_decay_long$cluster))) +
+  geom_density_ridges2(scale=.95, rel_min_height = 0.01, quantile_lines=TRUE, quantile_fun=function(x,...)median(x)) +
+  xlim(0,24) +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = clusterCols)
+
+
+ggsave(here("fig4_PTR-H295R", "plots", "peaktime_cluster_dens.pdf"), p_dens_peaktime, height = 6, width = 2)
+
+se <- function(x) sqrt(var(x, na.rm = T)/length(x))
+
+
+summary_time_decay <- peaktime_decay %>% group_by(cluster) %>%
+  summarise(median_pt=median(peak_time, na.rm = T),
+            median_decay=median(decay, na.rm = T),
+            se_pt=se(peak_time),
+            se_decay=se(decay)
+            
+            ) %>%
+  drop_na()
+
+
+summary_time_decay$cluster <- factor(summary_time_decay$cluster, levels=sort(levels(summary_time_decay$cluster)))
+
+summary_time_decay$cluster_cat <- factor(substr(summary_time_decay$cluster, 1,2))
+
+
+p_d_pt <- ggplot(summary_time_decay %>% filter(cluster_cat %in% c("aw","as")), aes(x=median_pt, y=median_decay, color = cluster, label=cluster)) +
+  geom_point() +
+  scale_color_manual(values = clusterCols) +
+   geom_point(size=3) +
+  ggrepel::geom_text_repel(color="black") +
+  ylab("Decay rate") +
+  xlab("Peak time") +
+  scale_color_manual(values = clusterCols) +
+  theme(legend.position = "none")
+
+  
+
+ggsave(here("fig4_PTR-H295R", "plots", "decay_peaktime.pdf"), p_d_pt + facet_wrap(~cluster_cat, scales = "free_x") , height = 3, width = 3)
+
+```
+
+

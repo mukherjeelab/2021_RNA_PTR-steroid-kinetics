@@ -1,0 +1,104 @@
+---
+title: "20201012 PTR steroidogenesis paper: figure 2 heatmap mature genes with transcription factors"
+author: "Kim Wellman"
+date: '20201012'
+output:
+  html_document:
+    code_folding: hide
+---
+## INTRODUCTION
+This script generates the heatmap portion of figure 2 of the post-transcriptional regulation in steroidogenesis paper. Our goal is to show peaks in expression shift as steps in steroidogenesis progress. We want this figure to imply that expression timing is regulated and coordinated.
+
+Example sketch: https://github.com/mukherjeelab/2020_PTR_steroidogenesis_paper/issues/8#issuecomment-685181650
+
+We want to limit the genes shown to STAR, plus the key enzymes & transcription factors only. This keeps the information recognizable to an endocrine audience and it also bridges the gap between what is known (AngII --> txn upreg) and unknown (PTR). Furthermore, an aldosterone-specific steroidogenesis pathway narrows our claims and better matches the body of the paper. It's also easier to follow one lineage as opposed to three entangled lineages.The metric we want to report is fold change to make it easier to compare across genes.
+
+### benchling entry
+ 
+
+### File containing RNA-seq information
+https://github.com/mukherjeelab/2020_PTR_steroidogenesis_paper/blob/master/data/RNAseq/myTxi_H295R.rds
+
+
+### Setup
+Packages I'll be using in this analysis.
+
+```{r setup,echo=TRUE}
+
+rm(list=ls()) # clean slate
+
+# library(drc) 
+library(tidyverse) 
+library(RColorBrewer)
+library(ggpubr) 
+library(ggthemes) 
+# library(gridExtra) 
+# library(splitstackshape)
+library(pheatmap)
+library(limma)
+
+R.version.string
+
+# The following working directory contains 
+# myTxi_H295R.rds
+# This script '20200914_fig2_Rmd'
+wdir <- "~/Documents/kim_R/ptr_steroidogenesis/figure_2/mature/"
+setwd(wdir)
+
+```
+
+### myTxi Input file
+
+```{r myTxi File, echo = TRUE}
+
+# CYP11A1 did not make it into the clusters, go to different data set.
+# pull from myTxi, but still need to normalize to time zero.
+# mean of 4hr star, divide by time 0. or log2 - log 2.
+
+# This file contains unclustered, unnormalized RNAseq data.
+myTxi_H295R <- readRDS("myTxi_H295R.rds")
+
+maturegenes <- myTxi_H295R$abundance$matureGene
+
+```
+
+### Data cleaning and normalization
+
+```{r clean data for select genes, echo = TRUE}
+# STAR and key enzymes
+# later add associated transcription factors.
+keygenes <- c("AGTR1", "MC2R", "CREB1", "NR0B1", "NR5A1", "STAR","NR4A2", "NR4A1", "NR2F1", "CYP11B2")
+
+keygenes_mature <- maturegenes %>%
+  filter(symbol %in% keygenes)
+
+keygenes_mature <- keygenes_mature %>%
+  arrange(match(symbol, keygenes))
+
+mat_keygenes <- data.matrix(keygenes_mature[,4:27])
+
+# average by gene and timepoint
+# note: avearrays generates a matrix of characters.
+colnames(mat_keygenes) <- gsub(pattern = "_A|_B|AngII_", replacement = "", x = colnames(mat_keygenes))
+
+# double check input class type.
+# 'If x is of mode "character", then the replicate values are assumed to be equal and the first is taken as the average. '
+ave_keygenes <- avearrays(x = mat_keygenes)
+ave_keygenes_norm <- log(ave_keygenes[,1:12]) - log(ave_keygenes[,1])
+
+# add gene symbols back as row names.
+rownames(ave_keygenes_norm) = sapply(keygenes_mature$symbol,function(x) strsplit(as.character(x),split = "\\\\")[[1]][1])
+
+```
+
+### Heatmap generation
+
+```{r generate heatmap, echo = TRUE}
+range <- max(abs(ave_keygenes_norm))
+
+pheatmap(ave_keygenes_norm, breaks = seq(-range, range, length.out = 100), cluster_cols = F, cluster_rows = F, gaps_row = c(3,6), main = "Normalized mature RNA levels for transcription factors in aldosterone production", angle_col = c("0"), color = rev(colorRampPalette(brewer.pal(n = 5, name = "RdBu"))(100)))
+
+dev.off()
+
+```
+

@@ -1,0 +1,322 @@
+---
+title: "Compute Rates"
+author: "Kent Riemondy RBI"
+date: "`r Sys.Date()`"
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_dir = "html") })
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: false
+    theme: cosmo
+    highlight: tango
+    fig_caption: true
+    code_folding: hide
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+## Compute rates using INSPEcT
+
+```{r load_libs}
+library(tidyverse, warn.conflicts = FALSE, quietly = TRUE)
+library(here, quietly = TRUE)
+library(INSPEcT, quietly = TRUE)
+library(rtracklayer, quietly = TRUE)
+library(ComplexHeatmap, quietly = TRUE)
+```
+
+```{r paths}
+project_dir <- here()
+data_dir <- file.path(project_dir, "data")
+
+gtf_tmp_dir <- tempdir()
+gtf_fn <- file.path(data_dir,
+                    "accessories", 
+                    "gencode.v26.primary.gtf.zip")
+unzip(gtf_fn, exdir = gtf_tmp_dir)
+gtf_fn <- file.path(gtf_tmp_dir, "gencode.v26.primary.gtf")
+
+salmon_fns <- dir("salmon",
+                  recursive = TRUE,
+                  pattern = "*quant.sf$",
+                  full.names = TRUE)
+
+metadata_fn <- "metaData.tsv"
+```
+
+
+Compute the degradation rates using the zero hour metabolic labeling data.
+
+## Preprocess data 
+
+This could be cleaned up, but works. 
+
+```{r generate_rates}
+dat <- map(salmon_fns, read_tsv)
+
+# name with libraryID
+names(dat) <- str_remove(dirname(salmon_fns), 
+                         str_c("salmon", "\\/")) %>% 
+  str_remove("\\/quant")
+
+dat <- bind_rows(dat, .id = "libraryID")
+
+mdata <- read_tsv(metadata_fn)
+
+#simplify mdata
+mdata <- dplyr::select(mdata,
+                       libraryID, 
+                       RNA:prepBatch)
+
+#join with main data
+dat <- left_join(dat, 
+                 mdata,
+                by = "libraryID")
+
+dat <- mutate(dat,
+              unique_id = paste(RNA, 
+                                treatment,
+                                time, 
+                                prepBatch,
+                                libraryID,
+                                sep = "_"))
+# drop unneeded meta data
+dat <- dplyr::select(dat,
+                     -c(Length,
+                        EffectiveLength,
+                        NumReads))
+
+# classify transcripts as primary or mature
+dat <- mutate(dat,
+         type = ifelse(str_detect(Name, "^pre_"), 
+                       "primary", 
+                       "mature"))
+
+zero_hr <- 0.00
+
+gtf_tbl <- import(gtf_fn) %>% as.data.frame()
+
+gid2tid <- gtf_tbl[c("gene_id", "transcript_id")] %>% unique()
+
+dat <- left_join(dat, 
+                 gid2tid, 
+                 by = c("Name" = "transcript_id")) 
+
+# replace gene_ids with transcript ids for special genes
+dat <- mutate(dat,
+              gene_id = ifelse(str_detect(Name, "ERCC"),
+                               Name,
+                               ifelse(Name == "NR_046235.3",
+                                      "NR_046235.3",
+                                      gene_id)))
+
+stopifnot(!any(is.na(dat$gene_id)))
+```
+
+
+
+```{r}
+# sum primary and mature TPMs for each gene 
+summary_dat <- dplyr::select(dat, TPM, gene_id, unique_id, type, RNA) %>% 
+  group_by(gene_id, unique_id, type, RNA) %>% 
+  summarize(total_tpm = sum(TPM)) %>% 
+  ungroup()
+
+# select total and labeled libraries
+total_dat <- dplyr::filter(summary_dat, RNA == "total")
+label_dat <- dplyr::filter(summary_dat, RNA == "lab")
+
+#convert long data to wide
+generate_tpm_matrix <- function(df,
+                                transcript_type = "primary"){
+  res <- dplyr::filter(df,
+               type == transcript_type)    
+  res <- dplyr::select(res, 
+                       gene_id, 
+                       total_tpm,
+                       unique_id)
+  res <- spread(res, 
+                unique_id, 
+                total_tpm)
+  res
+}
+
+primary_txs <- map(list(total_dat, label_dat),
+                   ~generate_tpm_matrix(.x, transcript_type = "primary"))
+
+mature_txs <- map(list(total_dat, label_dat),
+                   ~generate_tpm_matrix(.x, transcript_type = "mature"))
+
+names(primary_txs) <- c("total", "labeled")
+names(mature_txs) <- c("total", "labeled")
+
+# extract out timepoint designations
+primary_tpts <- map(primary_txs,
+            ~colnames(.x)[-1] %>% 
+              str_split(., "_", simplify = T) %>% 
+              .[, 3] %>% 
+              as.numeric())
+names(primary_tpts) <- c("total", "labeled")
+
+mature_tpts <- map(mature_txs,
+            ~colnames(.x)[-1] %>% 
+              str_split(., "_", simplify = T) %>% 
+              .[, 3] %>% 
+              as.numeric())
+names(mature_tpts) <- c("total", "labeled")
+
+# sanity check that there are the same points in all datasets
+check_tpts <- all(c(all(primary_tpts$total == primary_tpts$labeled),
+                    all(primary_tpts$total == mature_tpts$labeled),
+                    all(primary_tpts$total == mature_tpts$total)))
+
+if(!check_tpts){
+  message("Not all timepoints are identical in datasets")
+}
+
+# convert to real matrices
+conv_to_matrix <- function(df){
+  df <- as.data.frame(df)
+  rownames(df) <- df[, 1]
+  df[, 1] <- NULL
+  mat <- as.matrix(df)
+  mat
+}
+
+mature_txs <- map(mature_txs, conv_to_matrix)
+primary_txs <- map(primary_txs, conv_to_matrix)
+
+tpm_filter <- function(mat, 
+                       min_samples = 1, 
+                       min_tpm = 0.1){
+  gene_idx <- rowSums(mat >= min_tpm) >= min_samples
+  mat <- mat[gene_idx, ]
+  mat
+}
+
+ good_genes <- tpm_filter(mature_txs$total, 
+           min_samples = 3, 
+           min_tpm = 1) %>% 
+  rownames(.) 
+
+#filter for genes detected in total rna libs mature gene TPM values
+mature_txs <- map(mature_txs, ~.x[rownames(.x) %in% good_genes, ]) 
+
+primary_txs <- map(primary_txs, ~.x[rownames(.x) %in% good_genes, ]) 
+
+# add pre and mature to get total for modeling
+tidy_mature_txs <- map(mature_txs, 
+  ~as.data.frame(.x) %>% 
+  tibble::rownames_to_column("gene") %>%
+  gather(lib, tpm, -gene) %>% 
+  as_tibble())
+
+tidy_pre_txs <- map(primary_txs, 
+  ~as.data.frame(.x) %>% 
+  tibble::rownames_to_column("gene") %>%
+  gather(lib, tpm, -gene) %>% 
+  as_tibble())
+
+mature_total_txs <- map2(tidy_mature_txs,
+     tidy_pre_txs, 
+     ~left_join(.x, .y, by = c("gene", "lib"), suffix = c("_mat", "_pre")) %>% 
+       mutate(tpm = rowSums(.[, c(3, 4)], na.rm = T)) %>% 
+       dplyr::select(-tpm_mat, -tpm_pre) %>% 
+       spread(lib, tpm) %>% 
+       as.data.frame() %>% 
+       tibble::column_to_rownames("gene") %>% 
+       as.matrix()
+     )
+```
+
+```{r}
+exon_rmean <- map(mature_total_txs, 
+    function(x){
+      rmeans <- rowMeans(x)
+      data.frame(row.names = names(rmeans),
+                 tpt_0 = rmeans) %>% 
+        as.matrix()
+    })
+
+exon_rvar <- map(mature_total_txs, 
+    function(x){
+      rvars <- matrixStats::rowVars(x)
+      data.frame(row.names = rownames(x),
+                 tpt_0 = rvars) %>% 
+        as.matrix()
+    })
+
+
+intron_rmean <- map(primary_txs, 
+    function(x){
+      rmeans <- rowMeans(x)
+      data.frame(row.names = names(rmeans),
+                 tpt_0 = rmeans) %>% 
+        as.matrix()
+    })
+
+intron_rvar <- map(primary_txs, 
+    function(x){
+      rvars <- matrixStats::rowVars(x)
+      data.frame(row.names = rownames(x),
+                 tpt_0 = rvars) %>% 
+        as.matrix()
+    })
+
+
+nascent_expr <- list(
+  exonsExpressions = exon_rmean$labeled,
+  intronsExpressions = intron_rmean$labeled,
+  exonsVariance = exon_rvar$labeled,
+  intronsVariance = intron_rvar$labeled
+)
+
+mature_expr <- list(
+  exonsExpressions = exon_rmean$total,
+  intronsExpressions = intron_rmean$total,
+  exonsVariance = exon_rvar$total,
+  intronsVariance = intron_rvar$total
+)
+```
+
+## Estimate rates with Inspect
+
+```{r}
+# initialize first rate estimates
+timepoints <- primary_tpts$total
+label_time <- 20 / 60 # expressed in hours
+
+inspect_obj <- newINSPEcT(c("tpt_0"),
+                          label_time,  
+                          nascentExpressions = nascent_expr,
+                          matureExpressions = mature_expr,
+                          degDuringPulse = T)
+
+rates <- c("synthesis",
+           "degradation",
+           "processing",
+           "total",
+           "preMRNA")
+
+rate_estimates <- map(rates, ~ratesFirstGuess(inspect_obj, .x))
+names(rate_estimates) <- rates
+
+geneid2symbol <- gtf_tbl[c("gene_id", "gene_name")] %>% unique()
+
+rates_output <- do.call(cbind, rate_estimates) %>% 
+  as.data.frame() %>% 
+  rownames_to_column("gene_id") %>% 
+  left_join(geneid2symbol, by = "gene_id") %>% 
+  dplyr::select(gene_id, gene_name, everything())
+
+write_tsv(rates_output, "all_rates.tsv.gz")
+saveRDS(rates_output, "all_rates.rds")
+```
+

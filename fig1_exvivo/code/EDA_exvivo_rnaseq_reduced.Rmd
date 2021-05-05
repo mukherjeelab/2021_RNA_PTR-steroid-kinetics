@@ -1,0 +1,246 @@
+---
+title: "exvivo_stimulation_rnaseq"
+author: "Neelanjan Mukherjee"
+date: "5/9/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(tidyverse)
+library(viridis)
+library(pheatmap)
+library(ggplot2)
+library(ggthemes)
+library(ggrepel)
+library(scales)
+library(limma)
+library(reshape2)
+library(msigdbr)
+library(GeneOverlap)
+library(ggVennDiagram)
+# you will need to install all these packages before you can run this.
+
+# list of functions 
+
+
+
+
+```
+
+
+
+```{r get expression}
+# 'preRNA_RNA-seq_data.Rmd' saves RNA-seq matrices as an rds file
+
+myTxi_exvivo <- readRDS(here("data", "RNAseq","myTxi_exvivo.rds"))
+
+# use mature gene level (sum of all mature transcripts) estimates for QC EDA
+qcinput <- myTxi_exvivo$abundance$matureGene %>% select_if(is.numeric)
+
+qcinput <- qcinput[,grep(pattern = "_3_|_24_", x = colnames(qcinput), value = T)]
+
+#qcinput <- qcinput[matrixStats::rowSds(as.matrix(log2(1+qcinput))) > .2,]
+
+qcinput <- log2(qcinput[rowSums(qcinput) > 50,] + 1)
+
+qcCor <- cor(qcinput)
+
+colnames(qcCor) <- gsub("_A|_B|_C","",colnames(qcCor))
+colnames(qcCor) <- gsub("basal","Basal",colnames(qcCor))
+
+rownames(qcCor) <- colnames(qcCor)
+
+
+nCut <- 5
+
+pheatmap::pheatmap(qcCor, clustering_distance_rows = "euclidean",clustering_distance_cols = "euclidean", clustering_method = "ward.D2", cutree_cols = nCut, cutree_rows = nCut, color = viridis(10, option = "E", direction = -1), treeheight_row = 15, treeheight_col = 15, fontsize = 10, width = 5, height = 4, filename = here("fig1_exvivo","plots","qcHeatmap_exvivo_reduced.pdf"), silent = T)
+dev.off()
+
+
+
+```
+
+
+
+```{r pca plots}
+
+
+# perform pca
+pca_data <- prcomp(qcinput, center = T, scale. = T) 
+
+pca_data_info <- summary(pca_data) # summarize the PCs by variance and save object
+
+pca_plot_data <- data.frame(pca_data$rotation) # we make a dataframe out of the rotations and will use this to plot
+
+pca_plot_data$ID <- rownames(pca_plot_data)
+
+pca_plot_data <- pca_plot_data %>% separate(col = ID, sep = "_", into = c("tx","time","rep"))
+
+myLev <- unique(pca_plot_data$time)
+
+pca_plot_data$time <- factor(pca_plot_data$time, levels = myLev)
+
+pca_plot_data$condition <- factor(paste(pca_plot_data$tx,pca_plot_data$time, sep = "_"))
+
+myLC <- levels(pca_plot_data$condition)[c(6,5,4,3,2,1)]
+
+pca_plot_data$condition <- factor(pca_plot_data$condition, levels = myLC)
+
+
+labelPosition <- pca_plot_data %>% group_by(tx, time,rep) %>% select(PC1, PC2) %>% summarise(mPC1=mean(PC1), mPC2=mean(PC2))
+
+
+
+
+myCols <- c(RColorBrewer::brewer.pal(n = 6, name = "Greys")[c(2,5)],
+            RColorBrewer::brewer.pal(n = 6, name = "Reds")[c(2,5)],
+            RColorBrewer::brewer.pal(n = 6, name = "Blues")[c(2,5)])
+
+
+
+p_pca <- ggplot(pca_plot_data, aes(x=-PC2, y=-PC1, color=condition, shape= rep)) +
+  geom_point(size=1) + 
+  theme_classic() + #xlim(.4,-.2) +
+  ylab(paste("PC1 (%",100*round(pca_data_info$importance[2,1], digits = 3),")", sep = "")) +
+  xlab(paste("PC2 (%",100*round(pca_data_info$importance[2,2], digits = 3),")", sep = "")) +
+  scale_color_manual(values = myCols)
+
+p_pca
+
+ggsave(plot = p_pca, filename = here("fig1_exvivo","plots","qcPCA_exvivo.pdf"), device = "pdf", units = "in", width = 6, height = 4, dpi = 320)
+
+# Yikes - replicate "B" of AngII 3 hr PCA and correlation analysis 
+
+#### Now the same analysis except on the mean of the replicates
+
+colnames(qcinput) <- gsub(pattern = "_A|_B|_C", replacement = "", x = colnames(qcinput))
+qc_mean <- limma::avearrays(x = qcinput)
+
+pca_data_mean <- prcomp(qc_mean, center = T, scale. = T) 
+
+# summarize the PCs by variance and save object
+pca_data_info_mean <- summary(pca_data_mean) 
+
+# we make a dataframe out of the rotations and will use this to plot
+pca_plot_data_mean <- data.frame(pca_data_mean$rotation) 
+pca_plot_data_mean$ID <- rownames(pca_plot_data_mean)
+pca_plot_data_mean <- pca_plot_data_mean %>% separate(col = ID, sep = "_", into = c("tx","time"))
+
+
+labelPosition <- pca_plot_data_mean %>% group_by(tx, time) %>% select(PC1, PC2) %>% summarise(mPC1=mean(PC1), mPC2=mean(PC2))
+
+p_pca_mean <- ggplot(pca_plot_data_mean, aes(x=-PC1, y=PC2, color = tx, label=time)) +
+  geom_point(size=2) + 
+  theme_classic() + # ylim(.2835,.291) + xlim(-.3,.59) +
+  ylab(paste("PC1 (%",100*round(pca_data_info_mean$importance[2,1], digits = 3),")", sep = "")) +
+  xlab(paste("PC2 (%",100*round(pca_data_info_mean$importance[2,2], digits = 3),")", sep = "")) +
+  scale_color_viridis(discrete = T) +
+  geom_text_repel(color="black") 
+
+ggsave(plot = p_pca_mean, filename = here("fig1_exvivo","plots","qcPCA_exvivo_mean_reduced.pdf"), device = "pdf", units = "in", width = 4, height = 3, dpi = 320)
+
+
+```
+
+
+```{r PCA on FCvsBasal}
+
+# import angII DEG results
+ang <- read_csv(here("data", "RNAseq", "edger_AngIIvsbasal.csv.gz")) %>% janitor::clean_names() 
+colnames(ang)
+
+ang <- rename_with(ang, ~ gsub("log_fc_avsb", "ang", .x, fixed = TRUE))
+
+ang_genes <- ang %>%  filter(fdr < .05) %>% pull(gene_id)
+
+
+acth <- read_csv(here("data", "RNAseq", "edger_ACTHvsbasal.csv.gz")) %>% janitor::clean_names() 
+
+acth <- rename_with(acth, ~ gsub("log_fc_avsb", "acth", .x, fixed = TRUE))
+
+acth_genes <- acth %>%  filter(fdr < .05) %>% pull(gene_id)
+
+bothgenes <- union(ang_genes, acth_genes)
+
+
+inputFC <- inner_join(ang %>% select(gene_id, contains("ang")) %>% filter(gene_id %in% bothgenes),
+           acth %>% select(gene_id, contains("acth")) %>% filter(gene_id %in% bothgenes),
+           ) %>% select(-gene_id)
+
+
+
+pca_data_inputFC <- prcomp(inputFC, center = T, scale. = T) 
+
+# summarize the PCs by variance and save object
+pca_data_inputFC_info <- summary(pca_data_inputFC) 
+
+# we make a dataframe out of the rotations and will use this to plot
+pca_data_inputFC_data <- data.frame(pca_data_inputFC$rotation) 
+
+pca_data_inputFC_data$ID <- rownames(pca_data_inputFC_data)
+
+pca_data_inputFC_data <- pca_data_inputFC_data %>% separate(col = ID, sep = "_", into = c("tx","time"))
+
+
+ggplot(pca_data_inputFC_data, aes(x=PC2, y=PC1, color = tx, label=time)) +
+  geom_point(size=2) + 
+  theme_classic() + # ylim(.2835,.291) + xlim(-.3,.59) +
+   ylab(paste("PC1 (%",100*round(pca_data_inputFC_info$importance[2,1], digits = 3),")", sep = "")) +
+   xlab(paste("PC2 (%",100*round(pca_data_inputFC_info$importance[2,2], digits = 3),")", sep = "")) +
+  scale_color_viridis(discrete = T, end = .8) +
+  geom_text_repel(color="black") 
+
+# ggsave(plot = p_pca_mean, filename = here("fig1_exvivo","plots","qcPCA_exvivo_mean.pdf"), device = "pdf", units = "in", width = 6, height = 4, dpi = 320)
+
+
+```
+
+
+```{r}
+
+corInputFC <- reshape2::melt(cor(inputFC))
+corInputFC <- corInputFC[if_else(condition = corInputFC$Var1!=corInputFC$Var2, T,F),]
+
+colnames(corInputFC) <- c("Condition","Condition2","Cor")
+
+
+corInputFC <- corInputFC %>% filter(str_detect(Condition, "^ang") & str_detect(Condition2, "^acth") ) %>% arrange(Condition)
+
+
+
+corInputFC <- corInputFC %>% droplevels()
+p_bar <- ggplot(corInputFC, aes(y=Cor,x=Condition)) +
+  geom_bar(stat = "identity", orientation = "x") + 
+  #scale_y_discrete(limits = rev(levels(corInputFC$Condition))) +
+  facet_wrap(~Condition2, nrow = 1) +
+  theme_classic()
+
+
+ggsave(plot = p_bar, filename = here("fig1_exvivo","plots","bar_ang_acth.pdf"), device = "pdf", units = "in", width = 8, height = 4, dpi = 320)
+
+
+wide_corInputFC <- pivot_wider(data = corInputFC, names_from = Condition2, values_from = Cor) %>% as.data.frame()
+
+rownames(wide_corInputFC) <- wide_corInputFC$Condition
+wide_corInputFC <- wide_corInputFC[,-1]
+
+pheatmap(wide_corInputFC, cluster_rows = F, cluster_cols = F, color = viridis(10, option = "E", direction = 1), border_color = "black", treeheight_row = 15, treeheight_col = 15, fontsize = 10, width = 4, height = 4, filename = here("fig1_exvivo","plots","corFC_ang_acth.pdf"), silent = T)
+
+
+x <- list(AngII=ang_genes, ACTH=acth_genes)
+
+p_venn <- ggVennDiagram::ggVennDiagram(x, label = "count") + theme(legend.position = "none")
+
+ggsave(plot = p_venn, filename = here("fig1_exvivo","plots","venn_ang_acth.pdf"), device = "pdf", units = "in", width = 3, height = 2, dpi = 320)
+ 
+
+
+```
+

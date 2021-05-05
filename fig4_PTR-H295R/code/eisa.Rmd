@@ -1,0 +1,648 @@
+---
+title: "exon intron split analysis"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+library(ComplexHeatmap)
+library(eisaR)
+library(gganimate)
+```
+
+```{r load}
+load(here("data", "RNAseq", "clustGenes.R"))
+myTxi_H295R <- readRDS(here("data", "RNAseq", "myTxi_H295R.rds"))
+clustList <- myClust_annotated %>% pull(symbol) %>% split(myClust_annotated$cluster)
+load(here("data", "accessories", "clusterCols"))
+
+corClusters <- read_csv(here("fig4_PTR-H295R", "output", "lag.csv.gz"))
+```
+
+```{r intro-and-exons}
+intron <- myTxi_H295R$counts$precursor %>% 
+  select(-c(gene_id, biotype)) %>% 
+  group_by(symbol) %>%
+  summarize_all(sum) %>%
+  remove_rownames() %>%
+  column_to_rownames("symbol")
+exon <- myTxi_H295R$counts$matureGene %>% 
+  select(-c(gene_id, biotype)) %>%
+  group_by(symbol) %>%
+  summarize_all(sum) %>% 
+  remove_rownames() %>%
+  column_to_rownames("symbol")
+shared <- intersect(rownames(exon), rownames(intron))
+no_intron = setdiff(rownames(exon), rownames(intron))
+intron <- intron[shared, ] %>% as.matrix() %>% round()
+exon <- exon[shared, ] %>% as.matrix() %>% round()
+```
+
+```{r eisa}
+# create condition factor (contrast will be TN - ES)
+cond <- rep(c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8, 24), 2)
+
+# run EISA
+pair_eisa <- function(exon, intron, cond, pair1, pair2) {
+  pair1_index <- which(cond == pair1)
+  pair2_index <- which(cond == pair2)
+  Rex <- exon[, c(pair1_index, pair2_index)]
+  Rin <- intron[, c(pair1_index, pair2_index)]
+  Rcond <- factor(cond[c(pair1_index, pair2_index)])
+  res <- runEISA(Rex, Rin, Rcond)
+  res
+}
+
+res <- sapply(unique(cond[cond != 0]),
+              function(x) pair_eisa(exon, intron, cond, 0, x),
+              simplify = FALSE)
+names(res) <- str_c(unique(cond[cond != 0]), "__")
+```
+
+```{r deltaintron}
+res2_in <- sapply(res, 
+               function(x) {x$contrasts[,"Din", drop = FALSE] %>% as.data.frame()},
+               simplify = FALSE)
+res3_in <- do.call(rbind, res2_in) %>% rownames_to_column("gene") %>% 
+  separate(gene, "__.", into = c("time", "gene")) %>% 
+  mutate(time = as.numeric(time))
+
+mat_in <- res3_in %>% pivot_wider(names_from = time, values_from = Din) %>% 
+  mutate(`0` = 0) %>% 
+  select(`0`, everything()) %>% 
+  na.omit() %>% 
+  column_to_rownames("gene")
+
+res2_ex <- sapply(res, 
+               function(x) {x$contrasts[,"Dex", drop = FALSE] %>% as.data.frame()},
+               simplify = FALSE)
+res3_ex <- do.call(rbind, res2_ex) %>% rownames_to_column("gene") %>% 
+  separate(gene, "__.", into = c("time", "gene")) %>% 
+  mutate(time = as.numeric(time))
+
+mat_ex <- res3_ex %>% pivot_wider(names_from = time, values_from = Dex) %>% 
+  mutate(`0` = 0) %>% 
+  select(`0`, everything()) %>% 
+  na.omit() %>% 
+  column_to_rownames("gene")
+
+colnames(mat_in) <- str_c(colnames(mat_in), "_delta_intron")
+colnames(mat_ex) <- str_c(colnames(mat_ex), "_delta_exon")
+mat <- cbind(mat_in, mat_ex)
+
+delta_up <- res_full %>% filter(FDR <= 0.01) %>%
+  filter(logFC > 0) %>%
+  pull(gene) %>% 
+  unique() %>%
+  intersect(rownames(mat))
+delta_down <- res_full %>% filter(FDR <= 0.01) %>%
+  filter(logFC < 0) %>%
+  pull(gene) %>% 
+  unique() %>%
+  intersect(rownames(mat))
+
+h <- Heatmap(mat[c(delta_up, delta_down), ],
+             cluster_columns = FALSE, 
+             row_split = c(rep("up", length(delta_up)), 
+                           rep("down", length(delta_down))),
+             heatmap_legend_param = list(title = "logFC")
+             )
+pdf(here("fig4_PTR-H295R", "plots", "eisa_delta.pdf"),
+    height = 20, width = 20)
+h
+dev.off()
+
+write_csv(res3_in %>% pivot_wider(names_from = time, values_from = Din) %>% 
+  mutate(`0` = 0) %>% 
+  select(gene, `0`, everything()),
+  here("fig4_PTR-H295R", "output", "eisa_deltaintron.csv.gz"))
+```
+
+```{r delta-delta}
+res2 <- sapply(res, 
+               function(x) {x$tab.ExIn %>% 
+                   rownames_to_column("gene") %>%
+                   select(gene, logFC) %>% 
+                   column_to_rownames("gene")
+                 },
+               simplify = FALSE)
+res3 <- do.call(rbind, res2) %>% rownames_to_column("gene") %>% 
+  separate(gene, "__.", into = c("time", "gene")) %>% 
+  mutate(time = as.numeric(time))
+
+mat <- res3 %>% pivot_wider(names_from = time, values_from = logFC) %>% 
+  mutate(`0` = 0) %>% 
+  select(`0`, everything()) %>% 
+  na.omit() %>% 
+  column_to_rownames("gene")
+
+goi <- rownames(mat)[apply(abs(mat), 1, max) >= 0.75]
+goi_lab <- ifelse(str_detect(goi, "ZFP36"), goi, "")
+h <- Heatmap(mat[goi, ],
+             cluster_columns = FALSE, 
+             row_labels = goi_lab)
+pdf(here("fig4_PTR-H295R", "plots", "eisa_overLog0.75.pdf"),
+    height = 20, width = 20)
+h
+dev.off()
+
+write_csv(res3 %>% pivot_wider(names_from = time, values_from = logFC) %>% 
+  mutate(`0` = 0) %>% 
+  select(gene, `0`, everything()),
+  here("fig4_PTR-H295R", "output", "eisa_deltadelta.csv.gz"))
+```
+
+```{r timepoints}
+dir.create(here("fig4_PTR-H295R", "plots", "eisa_time"))
+saveEISAplot <- function(res, string) {
+  pdf(here("fig4_PTR-H295R", "plots", "eisa_time", paste0(string, ".pdf")))
+  plotEISA(res[[string]])
+  dev.off()
+}
+sapply(names(res), function(x) saveEISAplot(res, x))
+```
+
+```{r by-cluster}
+res_stat <- sapply(res, 
+               function(x) {x$tab.ExIn %>% 
+                   rownames_to_column("gene") %>%
+                   select(gene, logFC, FDR) %>% 
+                   column_to_rownames("gene")
+                 },
+               simplify = FALSE)
+res_stat <- do.call(rbind, res_stat) %>% rownames_to_column("gene") %>% 
+  separate(gene, "__.", into = c("time", "gene")) %>% 
+  mutate(time = as.numeric(time))
+
+res_exin <- sapply(res, 
+               function(x) {x$contrasts %>% 
+                   as.data.frame() %>% 
+                   rownames_to_column("gene") %>%
+                   column_to_rownames("gene")
+                 },
+               simplify = FALSE)
+res_exin <- do.call(rbind, res_exin) %>% rownames_to_column("gene") %>% 
+  separate(gene, "__.", into = c("time", "gene")) %>% 
+  mutate(time = as.numeric(time))
+
+res_full <- full_join(res_stat, res_exin) %>% 
+  mutate(call = ifelse(FDR > 0.05, "insig",
+                       ifelse(logFC > 0, "up", "down")))
+
+lim <- max(max(abs(res_full$Dex)), max(abs(res_full$Din)))
+
+plot_exin_cluster <- function(res, t, genes, name) {
+  ggplot(res %>% filter(time == t, gene %in% genes), aes(x = Din, y = Dex, color = call)) +
+  geom_point(size = 0.23) +
+  xlim(-lim, lim) +
+  ylim(-lim, lim) +
+  ggtitle(paste0(t, "-", name)) +
+  scale_color_manual(values = c("up" = "red", "down" = "blue", "insig" = "grey"))
+}
+
+g <- sapply(1:length(clustList), function(x) {
+  sapply(res_full$time %>% unique(), function(y) {
+    plot_exin_cluster(res_full, y, clustList[[x]], names(clustList)[x]) +
+      theme(legend.position = "none")
+  }, simplify = F)
+}, simplify = F)
+names(g) <- names(clustList)
+# saveRDS(g, here("fig4_PTR-H295R", "output", "eisa_scatter_cluster.rds"))
+
+dir.create(here("fig4_PTR-H295R", "plots", "eisa_cluster"))
+library(cowplot)
+sapply(names(g), function(x) {
+  ggsave(here("fig4_PTR-H295R", "plots", "eisa_cluster", paste0(x, ".pdf")), plot_grid(plotlist = g[[x]]), width = 10, height = 8)
+})
+  
+```
+
+```{r gganimate}
+lim <- max(max(abs(res_full$Dex)), max(abs(res_full$Din)))
+
+res_full2 <- myClust_annotated %>% select(symbol, cluster) %>% 
+  left_join(res_full, by = c("symbol" = "gene")) %>% 
+  na.omit()
+
+g <- ggplot(res_full2, aes(x = Din, y = Dex, color = call)) +
+  facet_wrap(.~cluster) +
+  geom_point(size = 0.3, alpha = 0.5) +
+  xlim(-lim, lim) +
+  ylim(-lim, lim) +
+  scale_color_manual(values = c("up" = "red", "down" = "blue", "insig" = "grey")) +
+  labs(title = 'Time: {next_state}', x = 'delta_intron', y = 'delta_exon') +
+  transition_states(time) +
+  ease_aes('linear')
+g_plt <- animate(g, renderer = gifski_renderer())
+anim_save(here("fig4_PTR-H295R", "plots", "eisa.gif"), g_plt)
+```
+
+```{r groups}
+write_tsv(res_full, here("fig4_PTR-H295R", "output", "eisa_call.csv.gz"))
+delta_up <- res_full %>% filter(FDR <= 0.05) %>% filter(logFC > 0) %>% pull(gene) %>% unique()
+delta_down <- res_full %>% filter(FDR <= 0.05) %>% filter(logFC < 0) %>% pull(gene) %>% unique()
+delta_mix <- intersect(delta_down, delta_up)
+delta_non <- setdiff(res_full$gene %>% unique(), c(delta_up, delta_down))
+```
+
+```{r groups_vs_clusters}
+res_full <- read_tsv(here("fig4_PTR-H295R", "output", "eisa_call.csv.gz"))
+delta_up <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC > 0) %>% pull(gene) %>% unique()
+delta_down <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC < 0) %>% pull(gene) %>% unique()
+delta_mix <- intersect(delta_down, delta_up)
+delta_non <- setdiff(res_full$gene %>% unique(), c(delta_up, delta_down))
+low_intron <- rownames(intron)[rowSums(intron) <= 125]
+# low_intron <- setdiff(rownames(intron)[rowSums(intron) < 100], rownames(intron)[rowSums(intron) == 0])
+intronless <- tx2gene %>% mutate(type = ifelse(str_detect(GENEID, "pre"), "pre", "mat")) %>% 
+  mutate(GENEID = str_remove(GENEID, "pre_")) %>%
+  select(GENEID, type) %>% 
+  distinct() %>% group_by(GENEID) %>% tally() %>% filter(n == 1) %>% pull(GENEID)
+
+anno <- myClust_annotated %>% mutate(eisa = case_when(
+  symbol %in% delta_mix ~ "mix",
+  symbol %in% delta_up ~ "up",
+  symbol %in% delta_down ~ "down",
+  symbol %in% delta_non ~ "insig",
+  gene_id %in% intronless ~ "no_intron",
+  symbol %in% low_intron ~ "low_intron",
+  TRUE ~ "NA"
+)) %>% mutate(eisa = factor(eisa, levels = c("up", "down", "mix", "insig", "no_intron", "low_intron", "NA"))) %>% 
+  mutate(cluster = factor(cluster, levels = sort(as.character(unique(myClust_annotated$cluster)))))
+
+
+g <- ggplot(anno, aes(x = cluster, fill = eisa)) +
+  geom_bar() + scale_fill_viridis_d(direction = -1, option = "C")
+
+ggsave(here("fig4_PTR-H295R", "plots", "eisa_cluster.pdf"), g, width = 10, height = 8)
+```
+
+```{r crosscor}
+res_full <- read_tsv(here("fig4_PTR-H295R", "output", "eisa_call.csv.gz"))
+delta_up <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC > 0) %>% pull(gene) %>% unique()
+delta_down <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC < 0) %>% pull(gene) %>% unique()
+delta_mix <- intersect(delta_down, delta_up)
+delta_non <- setdiff(res_full$gene %>% unique(), c(delta_up, delta_down))
+
+corClusters <- read_csv(here("fig4_PTR-H295R", "output", "lag.csv.gz"))
+res_cor <- inner_join(res_full, corClusters, by = c("gene" = "symbol")) %>%
+  mutate(cor_bin = case_when(
+    crossCor > 0.85 ~ "(0.85,1]",
+    crossCor > 0.78 ~ "(0.78,0.85]",
+    crossCor > 0.66 ~ "(0.66,0.0.78]",
+    crossCor <= 0.66 ~ "(-1,0.66]",
+  )) %>% mutate(eisa = case_when(
+  gene %in% delta_mix ~ "mix",
+  gene %in% delta_up ~ "up",
+  gene %in% delta_down ~ "down",
+  gene %in% delta_non ~ "insig",
+  TRUE ~ "NA"
+)) %>% mutate(eisa = factor(eisa, levels = c("up", "down", "mix", "insig"))) %>% 
+  group_by(gene) %>% 
+  filter(n() == 11) %>% 
+  ungroup()
+res_cor %>% select(gene, crossCor) %>% distinct() %>% summary()
+g <- ggplot(res_cor %>% na.omit() %>% filter(eisa != "insig"),
+            aes(x = time, y = logFC, color = eisa, group = gene)) +
+  facet_wrap(.~cor_bin, nrow = 1) +
+  geom_line(size = 0.3, alpha = 0.5) +
+  scale_color_manual(values = c("up" = "red", "down" = "blue", "insig" = "grey", "mix" = "black")) 
+ggsave(here("fig4_PTR-H295R", "plots", "eisa_crosscor.pdf"), g, width = 10, height = 8)
+```
+
+
+
+```{r insig-exon}
+insig_genes <- res_full %>% anti_join(myClust_annotated %>% select(cluster, gene = symbol)) %>%
+  group_by(gene) %>% 
+  summarize_if(is.numeric, ~ max(abs(.x))) %>% 
+  filter(abs(Dex) <= 0.5, abs(Dex.Din) >= 1) %>%
+  pull(gene) %>% 
+  unique()
+inin_genes <- ((intron[insig_genes, ] %>% rowSums()) >= 15*24) %>% 
+  as.data.frame() %>% 
+  rownames_to_column("gene") %>%
+  filter(`.` == TRUE) %>% 
+  pull(gene)
+exex_genes <- ((exon[insig_genes, ] %>% rowSums()) >= 15*24) %>% 
+  as.data.frame() %>% 
+  rownames_to_column("gene") %>%
+  filter(`.` == TRUE) %>% 
+  pull(gene)
+res_full3 <- res_full %>% filter(gene %in% intersect(inin_genes, exex_genes))
+mat_ex <- res_full3 %>% select(time, gene, Dex) %>% 
+  pivot_wider(names_from = time, values_from = Dex) %>% 
+  mutate(`0` = 0) %>% 
+  select(`0`, everything()) %>% 
+  na.omit() %>% 
+  column_to_rownames("gene")
+
+mat_in <- res_full3 %>% select(time, gene, Din) %>% 
+  pivot_wider(names_from = time, values_from = Din) %>% 
+  mutate(`0` = 0) %>% 
+  select(`0`, everything()) %>% 
+  na.omit() %>% 
+  column_to_rownames("gene")
+
+colnames(mat_in) <- str_c(colnames(mat_in), "_delta_intron")
+colnames(mat_ex) <- str_c(colnames(mat_ex), "_delta_exon")
+mat <- cbind(mat_in, mat_ex)
+
+h <- Heatmap(mat,
+             cluster_columns = FALSE,
+             row_names_gp = gpar(fontsize = 5))
+```
+
+```{r check}
+res_full2 <- res_full %>% left_join(myClust_annotated %>% select(cluster, gene = symbol)) %>% 
+  na.omit() %>% 
+  group_by(cluster, time) %>% 
+  summarize_if(is.numeric, mean) %>% 
+  ungroup() %>% 
+  arrange(cluster)
+
+g1 <- ggplot(res_full2, aes(x = time, y = Dex, color = cluster)) +
+  geom_line()
+
+g2 <- ggplot(res_full2, aes(x = time, y = Din, color = cluster)) +
+  geom_line()
+
+g3 <- ggplot(res_full2, aes(x = time, y = Dex.Din, color = cluster)) +
+  geom_line()
+```
+
+```{r rembrandts_prep}
+df <- data.frame(Label = rep(colnames(intron), 2),
+                 ReadType = c(rep("exonic", 24), rep("intronic", 24)), 
+                 Batch = 1) %>% 
+  mutate(File = str_c("fig4_PTR-H295R/tmp/tabs/", Label, "_", ReadType, ".tab")) %>% 
+  select(Label, File, ReadType, Batch)
+write_tsv(df, here("fig4_PTR-H295R", "tmp", "bias_cor.tsv"))
+
+dir.create(here("fig4_PTR-H295R/tmp/tabs/"))
+sapply(colnames(exon), function(x) {
+  exon[, x] %>%
+  as.data.frame() %>%
+  rownames_to_column("gene") %>% 
+  write_tsv(here(str_c("fig4_PTR-H295R/tmp/tabs/", x, "_", "exonic", ".tab")), col_names = F)
+})
+
+sapply(colnames(intron), function(x) {
+  intron[, x] %>%
+  as.data.frame() %>%
+  rownames_to_column("gene") %>% 
+  write_tsv(here(str_c("fig4_PTR-H295R/tmp/tabs/", x, "_", "intronic", ".tab")), col_names = F)
+})
+```
+
+```{bash, eval = F}
+./REMBRANDTS.sh H295R bias_cor.tsv ./ 0.99 linear
+```
+
+```{r rembrandts_process}
+rem <- read_tsv(here("fig4_PTR-H295R/tmp/stability.filtered.mx.txt")) %>% 
+  column_to_rownames("GeneID")
+colnames(rem) <- str_remove(colnames(rem), "\\.x")
+goi_lab <- ifelse(str_detect(rownames(rem), "ZFP36"), rownames(rem), "")
+h <- Heatmap(rem,
+             cluster_columns = FALSE, 
+             row_labels = goi_lab)
+pdf(here("fig4_PTR-H295R/plots/rem_cutoff99.pdf"),
+    height = 20, width = 20)
+h
+dev.off()
+
+tbl <- rem %>% rownames_to_column("gene") %>%
+  filter(str_detect(gene, "ZFP36")) %>% 
+  pivot_longer(-gene, names_to = "time", values_to = "stability") %>% 
+  separate(time, sep = "_", into = c("treat", "time", "batch")) %>% 
+  mutate(time = as.numeric(time))
+g <- ggplot(tbl, aes(x = time, y = stability, color = batch, group = batch)) +
+  facet_wrap(.~gene) +
+  geom_line()
+
+g
+```
+
+```{r as4}
+res_full <- read_tsv(here("fig4_PTR-H295R", "output", "eisa_call.csv.gz"))
+delta_up <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC > 0) %>% pull(gene) %>% unique()
+delta_down <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC < 0) %>% pull(gene) %>% unique()
+delta_mix <- intersect(delta_down, delta_up)
+delta_non <- setdiff(res_full$gene %>% unique(), c(delta_up, delta_down))
+
+anno <- myClust_annotated %>% mutate(eisa = case_when(
+  symbol %in% delta_mix ~ "mix",
+  symbol %in% delta_up ~ "up",
+  symbol %in% delta_down ~ "down",
+  symbol %in% delta_non ~ "insig",
+  TRUE ~ "NA"
+)) %>% mutate(eisa = factor(eisa, levels = c("up", "down", "mix", "insig", "NA"))) %>% 
+  mutate(cluster = factor(cluster, levels = sort(as.character(unique(myClust_annotated$cluster)))))
+
+intron_temp <- intron %>% as.data.frame() %>%
+  rownames_to_column("symbol") %>% 
+  pivot_longer(-symbol, names_to = "time", values_to = "expr") %>% 
+  mutate(time = as.numeric(str_remove(str_remove(time, "_A|_B"), "AngII_"))) %>%
+  group_by(symbol, time) %>% 
+  summarize(expr = mean(expr)) %>% 
+  arrange(time, .by_group = TRUE) %>% 
+  mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+  ungroup()
+exon_temp <- exon %>% as.data.frame() %>%
+  rownames_to_column("symbol") %>% 
+  pivot_longer(-symbol, names_to = "time", values_to = "expr") %>% 
+  mutate(time = as.numeric(str_remove(str_remove(time, "_A|_B"), "AngII_"))) %>%
+  group_by(symbol, time) %>% 
+  summarize(expr = mean(expr)) %>% 
+  arrange(time, .by_group = TRUE) %>% 
+  mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+  ungroup()
+intron_filter_genes <- intron_temp %>% filter(abs(expr) == Inf | is.nan(expr) | expr == 0) %>%
+  pull(symbol) %>%
+  unique()
+exon_filter_genes <- exon_temp %>% filter(abs(expr) == Inf | is.nan(expr) | expr == 0) %>%
+  pull(symbol) %>%
+  unique()
+filter_genes <- c(intron_filter_genes, exon_filter_genes) %>% unique()
+intron_temp <- intron_temp %>% filter(!(symbol %in% filter_genes))
+exon_temp <- exon_temp %>% filter(!(symbol %in% filter_genes))
+
+targ <- "as4"
+
+split_exon_intron_plot <- function(target, intron_temp, exon_temp, df) {
+  df_temp <- df %>% filter(cluster == targ) %>% 
+    select(symbol, cluster, eisa)
+
+  intron_temp <- intron_temp %>% filter(!(symbol %in% filter_genes))  %>% 
+    inner_join(df_temp) %>%
+    group_by(eisa, time) %>% 
+    summarise(sd = sd(expr), expr = mean(expr), n = n()) %>% 
+    mutate(sem = sd/sqrt(n)) %>% 
+    mutate(type = "intron") %>% 
+    ungroup()
+  exon_temp <- exon_temp %>% filter(!(symbol %in% filter_genes)) %>% 
+    arrange(time, .by_group = TRUE) %>% 
+    mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+    inner_join(df_temp) %>%
+    group_by(eisa, time) %>% 
+    summarise(sd = sd(expr), expr = mean(expr), n = n()) %>% 
+    mutate(sem = sd/sqrt(n)) %>% 
+    mutate(type = "exon") %>% 
+    ungroup()
+  temp <<- bind_rows(intron_temp, exon_temp) %>% 
+    filter(eisa %in% c("down", "insig"))
+  ggplot(temp, aes(x = time, y = expr, color = type)) +
+    facet_grid(.~eisa) +
+    geom_line() +
+    geom_errorbar(aes(x = time, ymin = expr - sem, ymax = expr + sem), width = 0.2) +
+    geom_text(data = temp %>% filter(time == 24) %>% select(-c(time)) %>% distinct(), 
+              aes(y = expr, x = 30, label = n)) +
+    theme_classic() +
+    ylab("median fold change") + 
+    scale_x_continuous(breaks = c(0,4,8,24)) +
+    scale_y_continuous(trans = scales::log2_trans())
+}
+
+g <- split_exon_intron_plot(targ, intron_temp, exon_temp, anno)
+
+ggsave(here("fig4_PTR-H295R", "plots", paste0("exon_intron_", targ, "_sem_spliteisa.pdf")), g, width = 10, height = 8)
+```
+
+```{r plot_split}
+res_full <- read_tsv(here("fig4_PTR-H295R", "output", "eisa_call.csv.gz"))
+delta_up <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC > 0) %>% pull(gene) %>% unique()
+delta_down <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC < 0) %>% pull(gene) %>% unique()
+delta_mix <- intersect(delta_down, delta_up)
+delta_non <- setdiff(res_full$gene %>% unique(), c(delta_up, delta_down))
+
+anno <- myClust_annotated %>% mutate(eisa = case_when(
+  symbol %in% delta_mix ~ "mix",
+  symbol %in% delta_up ~ "up",
+  symbol %in% delta_down ~ "down",
+  symbol %in% delta_non ~ "insig",
+  TRUE ~ "NA"
+)) %>% mutate(eisa = factor(eisa, levels = c("up", "down", "mix", "insig", "NA"))) %>% 
+  mutate(cluster = factor(cluster, levels = sort(as.character(unique(myClust_annotated$cluster)))))
+
+intron_temp <- intron %>% as.data.frame() %>%
+  rownames_to_column("symbol") %>% 
+  pivot_longer(-symbol, names_to = "time", values_to = "expr") %>% 
+  mutate(time = as.numeric(str_remove(str_remove(time, "_A|_B"), "AngII_"))) %>%
+  group_by(symbol, time) %>% 
+  summarize(expr = mean(expr)) %>% 
+  arrange(time, .by_group = TRUE) %>% 
+  mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+  ungroup()
+exon_temp <- exon %>% as.data.frame() %>%
+  rownames_to_column("symbol") %>% 
+  pivot_longer(-symbol, names_to = "time", values_to = "expr") %>% 
+  mutate(time = as.numeric(str_remove(str_remove(time, "_A|_B"), "AngII_"))) %>%
+  group_by(symbol, time) %>% 
+  summarize(expr = mean(expr)) %>% 
+  arrange(time, .by_group = TRUE) %>% 
+  mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+  ungroup()
+intron_filter_genes <- intron_temp %>% filter(abs(expr) == Inf | is.nan(expr) | expr == 0) %>%
+  pull(symbol) %>%
+  unique()
+exon_filter_genes <- exon_temp %>% filter(abs(expr) == Inf | is.nan(expr) | expr == 0) %>%
+  pull(symbol) %>%
+  unique()
+filter_genes <- c(intron_filter_genes, exon_filter_genes) %>% unique()
+intron_temp <- intron_temp %>% filter(!(symbol %in% filter_genes))
+exon_temp <- exon_temp %>% filter(!(symbol %in% filter_genes))
+
+targ <- "aw3"
+
+split_exon_intron_plot <- function(target, intron_temp, exon_temp, df) {
+  df_temp <- df %>% filter(cluster == targ) %>% 
+    select(symbol, cluster, eisa)
+
+  intron_temp <- intron_temp %>% filter(!(symbol %in% filter_genes))  %>% 
+    inner_join(df_temp) %>%
+    group_by(eisa, time) %>% 
+    summarise(sd = sd(expr), expr = mean(expr), n = n()) %>% 
+    mutate(sem = sd/sqrt(n)) %>% 
+    mutate(type = "intron") %>% 
+    ungroup()
+  
+  exon_temp <- exon_temp %>% filter(!(symbol %in% filter_genes)) %>% 
+    arrange(time, .by_group = TRUE) %>% 
+    mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+    inner_join(df_temp) %>%
+    group_by(eisa, time) %>% 
+    summarise(sd = sd(expr), expr = mean(expr), n = n()) %>% 
+    mutate(sem = sd/sqrt(n)) %>% 
+    mutate(type = "exon") %>% 
+    ungroup()
+  
+  temp <- bind_rows(intron_temp, exon_temp) %>% 
+    filter(eisa %in% c("down", "insig"))
+  
+  ggplot(temp, aes(x = time, y = expr, color = eisa)) +
+    facet_grid(.~type) +
+    geom_line() +
+    geom_errorbar(aes(x = time, ymin = expr - sem, ymax = expr + sem), width = 0.2) +
+    geom_text(data = temp %>% filter(time == 24) %>% select(-c(time)) %>% distinct(), 
+              aes(y = expr, x = 30, label = n)) +
+    theme_classic() +
+    ylab("median fold change") + 
+    scale_x_continuous(breaks = c(0,4,8,24)) +
+    scale_y_continuous(trans = scales::log2_trans())
+}
+
+g <- split_exon_intron_plot(targ, intron_temp, exon_temp, anno)
+
+ggsave(here("fig4_PTR-H295R", "plots", paste0("exon_intron_", targ, "_sem_splitintronexon.pdf")), g, width = 10, height = 8)
+```
+
+# spot check
+
+```{r}
+intron_temp <- intron %>% as.data.frame() %>%
+  rownames_to_column("symbol") %>% 
+  pivot_longer(-symbol, names_to = "time", values_to = "expr") %>% 
+  mutate(time = as.numeric(str_remove(str_remove(time, "_A|_B"), "AngII_"))) %>%
+  group_by(symbol, time) %>% 
+  summarize(expr = mean(expr)) %>% 
+  arrange(time, .by_group = TRUE) %>% 
+  mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+  ungroup()
+exon_temp <- exon %>% as.data.frame() %>%
+  rownames_to_column("symbol") %>% 
+  pivot_longer(-symbol, names_to = "time", values_to = "expr") %>% 
+  mutate(time = as.numeric(str_remove(str_remove(time, "_A|_B"), "AngII_"))) %>%
+  group_by(symbol, time) %>% 
+  summarize(expr = mean(expr)) %>% 
+  arrange(time, .by_group = TRUE) %>% 
+  mutate(expr = expr/sum((row_number() == 1)*expr)) %>% 
+  ungroup()
+
+getvalues <- function(gene) {
+  exon1 <- exon_temp %>% filter(symbol == gene) %>% mutate(cat = "exon", lfc = expr)
+  intron1 <- intron_temp %>% filter(symbol == gene) %>% mutate(cat = "intron", lfc = expr)
+  bind_rows(exon1, intron1)
+}
+# p_STAR <- ggpubr::ggline(data = getvalues("STAR"), x = "time", y = "lfc", group = "cat", numeric.x.axis = T, add = "mean", error.plot = "errorbar", color = "cat", palette = c("red","black"), title = "STAR")
+
+ps <- sapply(simplify = F, 
+       c("STAR", "CYP11A1", "HSD3B2", "CYP21A2", "CYP11B1", "CYP11B2"), 
+       function(x) {
+         ggpubr::ggline(data = getvalues(x), 
+                        x = "time", y = "lfc", group = "cat", 
+                        numeric.x.axis = T, add = "mean", 
+                        error.plot = "errorbar", color = "cat", 
+                        palette = c("red","black"), 
+                        title = paste0(x, ": ", corClusters %>% filter(symbol == x) %>% pull(cor) %>% round(digits = 3))) + ggpubr::rremove("y.text")})
+
+g <- cowplot::plot_grid(plotlist = ps, ncol = 1)
+
+ggsave(here("fig4_PTR-H295R", "plots", "pathwaygenes_noylab.pdf"), g, width = 3, height = 15)
+```
+

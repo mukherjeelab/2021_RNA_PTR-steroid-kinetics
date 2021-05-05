@@ -1,0 +1,17 @@
+target	Function
+MSI2	Translation
+NR5A1	Transcription
+ZFP36	Stability
+BTG2	Stability
+CPEB4	Stability
+ELAVL1	Stability
+PEG10	Localization
+PELO	Translation
+TRUB1	RNAmod
+AKAP1	Localization
+MBNL2	Splicing
+PNRC2	Stability
+HNRNPL	Splicing
+MBNL1	Splicing
+ZFP36L1	Stability
+ZFP36L2	Stability

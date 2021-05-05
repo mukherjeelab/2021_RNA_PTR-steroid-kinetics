@@ -1,0 +1,85 @@
+---
+title: "20201012 PTR steroidogenesis paper: figure 3 heatmap ACTH stimluated vs. basal FC"
+author: "Kim Wellman"
+date: '20201012'
+output:
+  html_document:
+    code_folding: hide
+---
+## INTRODUCTION
+
+
+### benchling entry
+ 
+
+### File containing RNA-seq information
+https://github.com/mukherjeelab/2020_PTR_steroidogenesis_paper/blob/master/data/RNAseq/edger_ACTHvsbasal.csv.gz
+
+### Setup
+Packages I'll be using in this analysis.
+
+```{r setup,echo=TRUE}
+
+rm(list=ls()) # clean slate
+
+# library(drc) 
+library(tidyverse) 
+library(RColorBrewer)
+library(ggpubr) 
+library(ggthemes) 
+# library(gridExtra) 
+# library(splitstackshape)
+library(pheatmap)
+library(limma)
+
+R.version.string
+
+wdir <- "~/Documents/kim_R/ptr_steroidogenesis/"
+setwd(wdir)
+
+```
+
+###  Input file
+
+```{r ACTHvsbasal File, echo = TRUE}
+
+# This ACTHvsbasal file contains FC RNAseq data.
+edger_ACTHvsbasal <- read_csv("edger_ACTHvsbasal.csv")
+
+```
+
+### Data cleaning and normalization
+
+```{r clean data for select genes, echo = TRUE}
+# STAR and key enzymes
+# later add associated transcription factors.
+keygenes <- c("STAR","CYP11A1", "HSD3B2", "CYP21A2", "CYP11B1", "CYP11B2")
+
+keygenes_acthvsb <- edger_ACTHvsbasal %>%
+  filter(symbol %in% keygenes)
+
+keygenes_acthvsb <- keygenes_acthvsb %>%
+  arrange(match(symbol, keygenes))
+
+mat_keygenes <- data.matrix(keygenes_acthvsb[,3:7])
+
+# average by gene and timepoint
+# note: avearrays generates a matrix of characters.
+colnames(mat_keygenes) <- gsub(pattern = "logFC.Avsb.", replacement = "", x = colnames(mat_keygenes))
+
+# add gene symbols back as row names.
+rownames(mat_keygenes) = sapply(keygenes_acthvsb$symbol,function(x) strsplit(as.character(x),split = "\\\\")[[1]][1])
+
+```
+
+### Heatmap generation
+
+```{r generate heatmap, echo = TRUE}
+range <- max(abs(mat_keygenes))
+
+pheatmap(mat_keygenes, breaks = seq(-range, range, length.out = 100), cluster_cols = F, cluster_rows = F, gaps_row = c(1,2,3,4,5), main = "Log fold change of RNA expression levels for key enzymes in ACTH induced aldosterone production", angle_col = c("0"), color = rev(colorRampPalette(brewer.pal(n = 7, name = "RdBu"))(100)))
+
+dev.off()
+
+```
+

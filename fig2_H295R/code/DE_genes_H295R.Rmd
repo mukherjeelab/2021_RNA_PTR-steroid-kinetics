@@ -1,0 +1,75 @@
+---
+title: "Determining differentially expressed genes"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+```
+
+```{r load}
+files <- list.files(here("data", "RNAseq"))
+files <- files[str_detect(files, "NM2019")][1:24]
+files_full <- here("data", "RNAseq", files, "quant.sf.gz")
+names(files_full) <- files
+
+unzip(here("data", "accessories", "gencode.v26.primary.gtf.zip"))
+txdb <- GenomicFeatures::makeTxDbFromGFF("gencode.v26.primary.gtf")
+file.remove("gencode.v26.primary.gtf")
+
+k <- AnnotationDbi::keys(txdb, keytype = "TXNAME")
+tx2gene <- AnnotationDbi::select(txdb, k, "GENEID", "TXNAME") %>%
+  mutate(GENEID = ifelse(str_detect(TXNAME, "^pre_"), TXNAME, GENEID))
+
+txi.salmon <- tximport::tximport(files_full, type = "salmon", tx2gene = tx2gene)
+```
+
+```{r exon}
+ex <- txi.salmon$counts[!str_detect(rownames(txi.salmon$counts), "^pre_"), ]
+row0s <- rowSums(ex) >= 3*ncol(ex)
+ex <- ex[row0s, ]
+
+samp <- read_tsv(here("data/accessories/sampleMetaData.txt"), col_names = TRUE) %>% 
+  select(SampleID, Time_hr) %>% group_by(Time_hr) %>% mutate(name = str_c(Time_hr, row_number(), sep = "_")) %>% 
+  ungroup() %>% 
+  dplyr::slice(1:24)
+renamevec <- samp$name
+names(renamevec) <- samp$SampleID
+colnames(ex) <- as.character(renamevec[colnames(ex)])
+ex <- ex[, order(as.numeric(str_remove(colnames(ex), "_.+")))]
+ex_df <- ex %>% as.data.frame() %>% rownames_to_column("gene")
+timevec <- as.numeric(str_remove(colnames(ex), "_.+"))
+colnames(ex_df) <- c("gene", timevec)
+
+timevec <- as.numeric(str_remove(colnames(ex), "AngII_") %>% str_remove("_.+"))
+```
+
+```{r edger}
+library(edgeR)
+y <- DGEList(counts = ex, group = timevec)
+keep <- filterByExpr(y)
+y <- y[keep, , keep.lib.sizes=FALSE]
+y <- calcNormFactors(y)
+
+df <- data.frame(Sample = colnames(ex)) %>%
+  separate(Sample, sep = "_", into = c("Time", "Rep"), remove = FALSE)
+
+design <- model.matrix(~Time, data = df)
+rownames(design) <- colnames(y)
+y <- estimateDisp(y, design)
+fit <- glmFit(y, design)
+lrt <- glmLRT(fit, coef = 2:ncol(design))
+res <- topTags(lrt, n = 100000)$table %>% rownames_to_column("gene")
+res <- res %>% mutate(maxabsfc = res %>% select(contains("logFC")) %>%
+  abs() %>% as.matrix() %>%
+  matrixStats::rowMaxs()) %>% 
+  select(gene, FDR, maxabsfc, everything())
+write_csv(res, here("data", "RNAseq", "edger.csv.gz"))
+
+degenes <- res %>% filter(FDR <= 0.001, maxabsfc >= 1) %>% pull(gene)
+```

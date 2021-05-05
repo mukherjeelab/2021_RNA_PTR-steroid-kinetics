@@ -1,0 +1,189 @@
+---
+title: "pathways_exvivo"
+author: "Neelanjan Mukherjee"
+date: "9/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(clusterProfiler)
+library(enrichplot)
+library(msigdbr)
+library(here)
+library(tidyverse)
+library(viridis)
+library(pheatmap)
+library(GeneOverlap)
+
+
+`%notin%` <- Negate(`%in%`)
+```
+
+
+```{r gsea c2 ang}
+
+
+# import angII DEG results
+ang <- read_csv(here("data", "RNAseq", "edger_AngIIvsbasal.csv.gz")) %>% janitor::clean_names() 
+
+# remove duplicated gene symbols
+dups <- ang %>%  pull(symbol)
+dups <- dups[duplicated(dups)==T]
+
+ang <- ang %>% filter(symbol %notin% dups & log_cpm > 2) %>% filter(biotype=="protein_coding")
+
+
+
+# identify significantly enriched gene sets for each time point
+
+# using C2 from MsigDb
+m_df <- msigdbr(species = "Homo sapiens")
+
+m_t2g <-m_df %>% filter(gs_cat == "C2") %>% 
+  dplyr::select(gs_name, gene_symbol)
+
+# define columns of Ang that contain fold-change values that  will be used for gsea
+myLists <- select(ang,contains("log_fc")) %>% names
+
+# empty tibble that will store all enriched gene sets
+my_enrichments <- tribble()
+
+for (i in 1:length(myLists))  {
+  geneList <- ang %>% pull(myLists[i])
+  names(geneList) <- ang$symbol
+  geneList <- sort(geneList, decreasing = TRUE)
+
+  
+  edo2 <- GSEA(geneList = geneList, pAdjustMethod = "fdr", 
+               pvalueCutoff = 1,
+               minGSSize = 10,
+               maxGSSize = 400,
+               TERM2GENE = m_t2g)
+  tmp <- edo2@result
+  
+  tmp$genelist <- rep(myLists[i],nrow(tmp))
+  my_enrichments <- bind_rows(my_enrichments, tmp)
+  
+  }
+
+
+gsea_C2vsExvivo_ang <- my_enrichments
+
+
+write_csv(x = gsea_C2vsExvivo_ang, path = here("fig1_exvivo","output","gsea_C2vsExvivo_ang.csv.gz"))
+
+
+gsea_C2vsExvivo_ang <- my_enrichments %>% 
+  select(ID,NES,genelist) %>%
+  pivot_wider(names_from = ID, values_from = NES)
+  
+myDF <- data.frame(gsea_C2vsExvivo_ang)[,-1]
+
+rownames(myDF) <- gsub(pattern = "log_fc_avsb_", replacement = "", x = gsea_H295RvsExvivo_acth$genelist)
+
+myDF <- myDF[order(colnames(myDF))]
+myDF <- t(myDF)
+
+tmp <- my_enrichments %>% 
+  select(ID,p.adjust,genelist) %>%
+  pivot_wider(names_from = ID, values_from = p.adjust)
+
+tmp <- data.frame(tmp)[,-1]
+
+rownames(tmp) <- gsub(pattern = "log_fc_avsb_", replacement = "", x = gsea_H295RvsExvivo_acth$genelist)
+
+tmp <- tmp[order(colnames(tmp))]
+tmp <- t(tmp)
+
+
+myDF[tmp > .1 ] <- NA
+myDF <- myDF[rowSums(is.na(myDF)) != ncol(myDF), ]
+rownames(myDF)
+pheatmap::pheatmap(mat = myDF, cluster_rows = F, cluster_cols = F, color = viridis(40, option = "E", direction = 1, begin = 0, end = 1), border_color = "black", angle_col = 0, na_col = "black", number_color = "black", fontsize = 10, width = 20, height = 40, filename = here("fig1_exvivo","plots","C2_Ang_exvivo.pdf"), silent = T)
+
+```
+
+
+
+
+```{r RBP_TF}
+# import RBP and TF data from https://www.nature.com/articles/nrg3813
+RBPs <- readxl::read_xls(here("data","accessories","41576_2014_BFnrg3813_MOESM25_ESM.xls"), sheet = 2) %>% janitor::clean_names()
+
+TFs <- readxl::read_xlsx(here("data","accessories","41576_2014_BFnrg3813_MOESM26_ESM.xlsx"), sheet = 1) %>% janitor::clean_names()
+
+regulators <- list(RBP=RBPs$gene_name,TF=TFs$gene_name)
+
+# import angII DEG results
+ang <- read_csv(here("data", "RNAseq", "edger_AngIIvsbasal.csv.gz")) %>% janitor::clean_names() 
+colnames(ang)
+
+ang <- rename_with(ang, ~ gsub("log_fc_avsb", "ang", .x, fixed = TRUE))
+
+ang_genes <- ang %>%  filter(fdr < .05) %>% pull(symbol)
+
+
+acth <- read_csv(here("data", "RNAseq", "edger_ACTHvsbasal.csv.gz")) %>% janitor::clean_names() 
+
+acth <- rename_with(acth, ~ gsub("log_fc_avsb", "acth", .x, fixed = TRUE))
+
+acth_genes <- acth %>%  filter(fdr < .05) %>% pull(symbol)
+
+bothgenes <- list(ang=gsub(pattern = "\\.\\d+",replacement = "",ang_genes), acth=gsub(pattern = "\\.\\d+",replacement = "",acth_genes))
+
+
+  
+  
+go.obj <- GeneOverlap::newGOM(gsetA = bothgenes, gsetB = regulators, genome.size=length(unique(c(acth$gene_id,ang$gene_id))))
+getMatrix(go.obj, "p")
+
+
+
+overlaps <- getNestedList(object = go.obj)
+
+
+
+
+Stim_RBP <- list(RBP=RBPs$gene_name, ang=gsub(pattern = "\\.\\d+",replacement = "",ang_genes), acth=gsub(pattern = "\\.\\d+",replacement = "",acth_genes)
+                )
+
+Stim_TF <- list(TF=TFs$gene_name, ang=gsub(pattern = "\\.\\d+",replacement = "",ang_genes), acth=gsub(pattern = "\\.\\d+",replacement = "",acth_genes)
+                )
+
+
+p_RBP <- ggVennDiagram::ggVennDiagram(x = Stim_RBP, label = "count", color="black")
+
+p_TF <- ggVennDiagram::ggVennDiagram(x = Stim_TF, label = "count")
+
+ggsave(plot = p_RBP, filename = here("fig1_exvivo","plots","RBP_ang_acth.pdf"), device = "pdf", units = "in", width = 3, height = 2, dpi = 320)
+
+ggsave(plot = p_TF, filename = here("fig1_exvivo","plots","TF_ang_acth.pdf"), device = "pdf", units = "in", width = 3, height = 2, dpi = 320)
+
+
+## Plot heatmap of RBP ang + acth intsersct in acth data
+acth_rbp <- acth %>% filter(symbol %in% intersect(overlaps$RBP$ang,overlaps$RBP$acth)) %>% select(symbol,acth_3:acth_48) %>% as.data.frame()
+
+acth_rbp <- acth_rbp[duplicated(acth_rbp$symbol)==F,]
+
+rownames(acth_rbp) <- acth_rbp$symbol
+acth_rbp <- acth_rbp[,-1]
+
+pheatmap(mat = t(acth_rbp), cluster_rows = F, scale = "column", color = viridis(40, option = "E", direction = 1, begin = 0, end = 1), border_color = "black", angle_col = 90, treeheight_col = 25, clustering_distance_cols  = "euclidean", clustering_method = "ward.D2", fontsize = 10, cellheight = 15, cellwidth = 10, filename = here("fig1_exvivo","plots","RBP_acth_exvivo_heatmap.pdf"), silent = T)
+
+pheatmap(mat = acth_rbp, cluster_cols = F, scale = "row", color = viridis(40, option = "E", direction = 1, begin = 0, end = 1), border_color = "black", angle_col = 90, treeheight_row = 15, clustering_distance_rows  = "euclidean", clustering_method = "ward.D2", fontsize = 10, cellheight = 10, cellwidth = 15, filename = here("fig1_exvivo","plots","RBP_acth_exvivo_heatmap_v.pdf"), silent = T)
+
+
+## Plot heatmap of TF ang + acth intsersct in acth data
+acth_tf <- acth %>% filter(symbol %in% intersect(overlaps$TF$ang,overlaps$TF$acth)) %>% select(symbol,acth_3:acth_48) %>% as.data.frame()
+
+acth_tf <- acth_tf[duplicated(acth_tf$symbol)==F,]
+
+rownames(acth_tf) <- acth_tf$symbol
+acth_tf <- acth_tf[,-1]
+
+pheatmap(mat = t(acth_tf), cluster_rows = F, scale = "column", color = viridis(40, option = "E", direction = 1, begin = 0, end = 1), border_color = "black", angle_col = 90, treeheight_col = 25, clustering_distance_cols  = "euclidean", clustering_method = "ward.D2", fontsize = 8,cellheight = 15, cellwidth = 8, filename = here("fig1_exvivo","plots","TF_acth_exvivo_heatmap.pdf"), silent = T)
+```
+
+

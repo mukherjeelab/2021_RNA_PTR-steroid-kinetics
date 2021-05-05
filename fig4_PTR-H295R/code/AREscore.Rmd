@@ -1,0 +1,76 @@
+---
+title: "AREscore"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+options(stringsAsFactors = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+library(ComplexHeatmap)
+library(rtracklayer)
+library(valr)
+```
+
+```{r load}
+load(here("data", "RNAseq", "clustGenes.R"))
+myTxi_H295R <- readRDS(here("data", "RNAseq", "myTxi_H295R.rds"))
+clustList <- myClust_annotated %>% pull(symbol) %>% split(myClust_annotated$cluster)
+load(here("data", "accessories", "clusterCols"))
+utr3s <- readRDS(here("fig4_PTR-H295R", "output", "DE_utr3s_seqs.rds"))
+```
+
+```{r writefasta}
+write_fasta <- function(df, out_path,
+                        header_col = "header",
+                        seq_col = "seq",
+                        gz = FALSE,
+                        cutoff = 20, 
+                        remove = "N") {
+
+  stopifnot(all(c(header_col, seq_col) %in% colnames(df)))
+  
+  hc <- df[[header_col]]
+  sc <-  df[[seq_col]]
+  
+  cutfrom <- str_length(sc) < cutoff
+  hc2 <- hc[!cutfrom]
+  sc2 <- sc[!cutfrom]
+  
+  removefrom <- str_detect(sc2, remove)
+  hc3 <- hc2[!removefrom]
+  sc3 <- sc2[!removefrom]
+  
+
+  res <- paste0(">", hc2, "\n", sc2)
+  write_lines(res, path.expand(out_path))
+
+  if(gz) R.utils::gzip(path.expand(out_path), remove = T, overwrite = T)
+}
+write_fasta(utr3s %>% inner_join(myClust_annotated, by = c("name" = "symbol")), 
+            here("fig4_PTR-H295R", "output", "H295R_utr3.fa"), "name", "seq")
+```
+
+```{r score}
+scores<- read_tsv(here("fig4_PTR-H295R", "tmp", "AREscore_result_H295R.txt"))
+
+clust_df <- myClust_annotated %>% select(symbol, gene_id, cluster)
+scores_df_cluster <- clust_df %>% inner_join(scores, by = c("symbol" = "Name")) %>% 
+  mutate(cluster = factor(cluster, levels = sort(as.character(unique(clust_df$cluster)))))
+scores_df_cluster %>% group_by(cluster) %>%
+  summarise(score = median(Score)) %>%
+  arrange(desc(score))
+
+g <- ggplot(scores_df_cluster, aes(x = cluster, y = Score, color = cluster)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(size = 0.5, alpha = 0.3) +
+  scale_color_manual(values = clusterCols)
+
+ggsave(here("fig4_PTR-H295R", "plots", "AREscore_cluster.pdf"), g, width = 10, height = 8)
+```
+

@@ -1,0 +1,167 @@
+---
+title: "Determining differentially expressed genes"
+author: "Rui Fu"
+date: ""
+output: html_document
+---
+
+```{r setup}
+# Import R packages that we will need in the analysis
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(edgeR)
+```
+
+```{r load}
+myTxi_exvivo <- readRDS(here("data", "RNAseq","myTxi_exvivo.rds"))
+txInfo <- read_csv(here("data/accessories/gencode.v26.primary.info.csv.zip"), col_names = F)
+colnames(txInfo) <- c("gene_id","transcript_id","biotype","symbol")
+ex <- myTxi_exvivo$counts$matureGene
+```
+
+```{r angii}
+ex_a <- ex[, colnames(ex)[str_detect(colnames(ex), "basal|AngII")]]
+rownames(ex_a) <- ex$gene_id
+colnames(ex_a) <- str_replace_all(colnames(ex_a), "_", ".")
+y <- DGEList(counts = ex_a, group = str_remove(colnames(ex_a), "\\.[ABC]$"))
+keep <- filterByExpr(y)
+y <- y[keep, , keep.lib.sizes=FALSE]
+y <- calcNormFactors(y)
+
+df <- data.frame(Sample = colnames(ex_a)) %>%
+  separate(Sample, sep = "\\.", into = c("tx", "Time", "Rep"), remove = FALSE) %>% 
+  mutate(Time = as.numeric(Time)) %>% 
+  mutate(Time = as.factor(Time))
+df <- df %>% 
+  mutate(tx = factor(tx, levels = c("basal", df %>% filter(tx != "basal") %>% pull(tx) %>% unique()))) %>% 
+  mutate(Group = factor(str_c(tx, Time, sep = "."))) %>% 
+  column_to_rownames("Sample")
+
+design <- model.matrix(data = df, ~0+Group)
+colnames(design) <- levels(df$Group)
+y <- estimateDisp(y,design)
+fit <- glmQLFit(y, design)
+my.contrasts <- makeContrasts(
+  Avsb.3 = AngII.3-basal.3,
+  Avsb.6 = AngII.6-basal.6,
+  Avsb.12 = AngII.12-basal.12,
+  Avsb.24 = AngII.24-basal.24,
+  Avsb.48 = AngII.48-basal.48,
+levels = design)
+qlf <- glmQLFTest(fit, contrast = my.contrasts)
+res <- topTags(qlf, n = 100000000)$table
+res_a <- res %>% rownames_to_column("gene_id") %>%
+  left_join(txInfo %>% 
+              select(gene_id, everything(), -transcript_id) %>%
+              unique(), 
+            by = "gene_id") %>%  
+  select(symbol, everything())
+
+
+ex_A <- ex[, colnames(ex)[str_detect(colnames(ex), "basal|ACTH")]]
+colnames(ex_A) <- str_replace_all(colnames(ex_A), "_", ".")
+rownames(ex_A) <- ex$gene_id
+y <- DGEList(counts = ex_A, group = str_remove(colnames(ex_A), "\\.[ABC]$"))
+keep <- filterByExpr(y)
+y <- y[keep, , keep.lib.sizes=FALSE]
+y <- calcNormFactors(y)
+
+df <- data.frame(Sample = colnames(ex_A)) %>%
+  separate(Sample, sep = "\\.", into = c("tx", "Time", "Rep"), remove = FALSE) %>% 
+  mutate(Time = as.numeric(Time)) %>% 
+  mutate(Time = as.factor(Time))
+df <- df %>% 
+  mutate(tx = factor(tx, levels = c("basal", df %>% filter(tx != "basal") %>% pull(tx) %>% unique()))) %>% 
+  mutate(Group = factor(str_c(tx, Time, sep = "."))) %>% 
+  column_to_rownames("Sample")
+
+design <- model.matrix(~0+Group, data=df)
+colnames(design) <- levels(df$Group)
+y <- estimateDisp(y,design)
+fit <- glmQLFit(y, design)
+my.contrasts <- makeContrasts(
+  Avsb.3 = ACTH.3-basal.3,
+  Avsb.6 = ACTH.6-basal.6,
+  Avsb.12 = ACTH.12-basal.12,
+  Avsb.24 = ACTH.24-basal.24,
+  Avsb.48 = ACTH.48-basal.48,
+levels = design)
+qlf <- glmQLFTest(fit, contrast = my.contrasts)
+res <- topTags(qlf, n = 100000000)$table
+res_A <- res %>% rownames_to_column("gene_id") %>%
+  left_join(txInfo %>% 
+              select(gene_id, everything(), -transcript_id) %>%
+              unique(), 
+            by = "gene_id") %>%  
+  select(symbol, everything())
+
+write_csv(res_a, here("data", "RNAseq", "edger_AngIIvsbasal.csv.gz"))
+write_csv(res_A, here("data", "RNAseq", "edger_ACTHvsbasal.csv.gz"))
+```
+
+# paired
+
+```{r}
+sampleData <- read_tsv(here("data", "accessories", "sampleMetaData.txt")) %>% filter(Project == "Rainey") %>% select(SampleID, Treatment2, Treatment1,	Time_hr)
+sampleData$rep <- c(rep(c("A", "B", "C"), times=15))
+colnames(sampleData)[1:4] <- c("id","sample","tx","time")
+rownames(sampleData) <- sampleData$id
+
+edger_time <- function(ex_a, time) {
+  ex_a_temp <- ex_a[, str_detect(colnames(ex_a), paste0("_", time, "_"))]
+  
+  y <- DGEList(counts = ex_a_temp, group = str_remove(colnames(ex_a_temp), "_[ABC]$"))
+  keep <- filterByExpr(y)
+  y <- y[keep, , keep.lib.sizes=FALSE]
+  y <- calcNormFactors(y)
+
+  df <- data.frame(Sample = colnames(ex_a_temp)) %>%
+    separate(Sample, sep = "_", into = c("tx", "Time", "Rep"), remove = FALSE)
+  df <- df %>% 
+    mutate(tx = factor(tx, levels = c("basal", df %>% filter(tx != "basal") %>% pull(tx) %>% unique())))
+  design <- model.matrix(~tx, data = df)
+  rownames(design) <- colnames(y)
+  y <- estimateDisp(y, design)
+  fit <- glmFit(y, design)
+  lrt <- glmLRT(fit, coef = 2:ncol(design))
+  res <- topTags(lrt, n = 100000)$table %>% rownames_to_column("gene")
+  res <- res %>% mutate(maxabsfc = res %>% select(contains("logFC")) %>%
+    abs() %>% as.matrix() %>%
+    matrixStats::rowMaxs()) %>% 
+    select(gene, FDR, logFC)
+}
+
+# basal vs angii
+ex_a <- ex[, colnames(ex)[str_detect(colnames(ex), "basal|AngII")]]
+res_a <- lapply(sampleData$time %>% unique(),
+                function(x) edger_time(ex_a, x))
+names(res_a) <- sampleData$time %>% unique()
+# basal vs ACTH
+ex_A <- ex[, colnames(ex)[str_detect(colnames(ex), "basal|ACTH")]]
+res_A <- lapply(sampleData$time %>% unique(),
+                function(x) edger_time(ex_A, x))
+names(res_A) <- sampleData$time %>% unique()
+
+reorg_edger <- function(res) {
+  ns <- names(res)
+  res2 <- lapply(ns, function(x) {
+    temp <- res[[x]]
+    colnames(temp) <- c("gene", paste0("FDR_", x), paste0("logFC_", x))
+    temp
+  })
+  print(length(res2))
+  Reduce(function(...) full_join(..., by='gene', all.x=TRUE), res2)
+}
+
+res_a2 <- reorg_edger(res_a) %>%
+  left_join(txInfo %>% select(gene_id, everything(), -transcript_id) %>% unique(), by = c("gene" = "gene_id")) %>%  
+  select(symbol, everything())
+
+res_A2 <- reorg_edger(res_A) %>%
+  left_join(txInfo %>% select(gene_id, everything(), -transcript_id) %>% unique(), by = c("gene" = "gene_id")) %>%  
+  select(symbol, everything())
+
+write_tsv(res_a2, here("data", "RNAseq", "AngIIvsbasal_pertimepoint.tsv"))
+write_tsv(res_A2, here("data", "RNAseq", "ACTHvsbasal_pertimepoint.tsv"))
+```

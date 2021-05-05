@@ -1,0 +1,484 @@
+---
+title: "H295R EDA"
+author: "Neelanjan Mukherjee"
+date: ""
+output: html_document
+---
+
+## EDA on AngII stimulation timecourse
+
+
+```{r setup}
+library(here)
+library(tidyverse)
+library(viridis)
+library(pheatmap)
+library(ggplot2)
+library(ggthemes)
+library(ggrepel)
+library(scales)
+library(limma)
+library(reshape2)
+library(msigdbr)
+library(GeneOverlap)
+
+# determine clustering distances
+wss <- function(knum, data2clust) {
+  ph <- pheatmap(mat = data2clust, kmeans_k = knum, scale = "none", cluster_cols = F, silent = T)
+  ph$kmeans$tot.withinss
+}
+```
+
+```{r prep for EDA, include=FALSE, echo=FALSE}
+
+# 'preRNA_RNA-seq_data.Rmd' saves RNA-seq matrices as an rds file
+myTxi_H295R <- readRDS("data/RNAseq/myTxi_H295R.rds")
+
+
+# g <- "ZFP36L2"
+# myTxi_H295R$abundance$matureGene %>%
+#   filter(symbol==g) %>%
+#   select(-c(gene_id, biotype)) %>%
+#   reshape2::melt(value.name = "TPM", variable.name = "sample") %>%
+#   separate(data = ., col = sample, into = c("Tx","Time","Rep"), sep = "_", remove = T) %>%
+#   ggplot(data = ., aes(x=as.numeric(Time), y=TPM, color=Rep)) +
+#   geom_point() +
+#   ggtitle(label = g) +
+#   theme_few()
+  
+# use mature gene level (sum of all mature transcripts) estimates for QC EDA
+qcinput <- myTxi_H295R$abundance$matureGene %>% select_if(is.numeric)
+
+# log2-transform and filter out lowly expressed genes
+qcinput <- log2(qcinput[rowSums(qcinput) > 50,] + 1)
+```
+
+```{r correlation heatmap}
+# calculates pearson correlation
+qcCor <- cor(qcinput)
+
+# clean up names
+colnames(qcCor) <- gsub("AngII_|Mock_","",colnames(qcCor))
+colnames(qcCor) <- gsub("_A|_B","",colnames(qcCor))
+rownames(qcCor) <- colnames(qcCor)
+
+nCut <- 6
+pheatmap::pheatmap(qcCor, clustering_distance_rows = "correlation",clustering_distance_cols = "correlation", clustering_method = "centroid", cutree_cols = nCut, cutree_rows = nCut, color = viridis(10, option = "E", direction = -1), border_color = "black", fontsize = 14, width = 8, height = 6, filename = "fig2_H295R/plots/qcHeatmap.pdf", silent = T)
+dev.off()
+
+```
+
+```{r PCA}
+# perform pca
+pca_data <- prcomp(qcinput, center = T, scale. = T) 
+
+# summarize the PCs by variance and save object
+pca_data_info <- summary(pca_data) 
+
+# we make a dataframe out of the rotations and will use this to plot
+pca_plot_data <- data.frame(pca_data$rotation) 
+pca_plot_data$ID <- rownames(pca_plot_data)
+pca_plot_data <- pca_plot_data %>% separate(col = ID, sep = "_", into = c("tx","time","rep"))
+myLev <- unique(pca_plot_data$time)
+pca_plot_data$time <- factor(pca_plot_data$time, levels = myLev)
+labelPosition <- pca_plot_data %>% group_by(tx, time) %>% select(PC1, PC2) %>% summarise(mPC1=mean(PC1), mPC2=mean(PC2))
+
+p_pca <- ggplot(pca_plot_data, aes(x=-PC2, y=-PC1, color=time, shape=rep)) +
+  geom_point(size=2) + 
+  theme_classic() + #xlim(.4,-.2) +
+  ylab(paste("PC1 (%",100*round(pca_data_info$importance[2,1], digits = 3),")", sep = "")) +
+  xlab(paste("PC2 (%",100*round(pca_data_info$importance[2,2], digits = 3),")", sep = ""))
+
+
+p_pca <- p_pca +
+  scale_color_viridis(discrete = T) +
+  annotate("text", x = -labelPosition$mPC2, y = -labelPosition$mPC1, label = labelPosition$time) 
+
+ggsave(plot = p_pca, filename = "fig2_H295R/plots/qcPCA.pdf", device = "pdf", units = "in", width = 6, height = 4, dpi = 320)
+
+
+#### Now the same analysis except on the mean of the two replicates
+qcinput_t <- as.data.frame(t(qcinput))
+
+qcinput_t$sample <- factor(gsub(pattern = "_A|_B", replacement = "", x = rownames(qcinput_t)))
+
+qcinput_t_mean <- qcinput_t %>% 
+  group_by(sample) %>%
+  summarise_all(mean)
+
+qc_mean <- qcinput_t_mean %>% select(-sample) %>% t()
+colnames(qc_mean) <- qcinput_t_mean$sample
+
+
+pca_data_mean <- prcomp(qc_mean, center = T, scale. = T) 
+
+# summarize the PCs by variance and save object
+pca_data_info_mean <- summary(pca_data_mean) 
+
+# we make a dataframe out of the rotations and will use this to plot
+pca_plot_data_mean <- data.frame(pca_data_mean$rotation) 
+pca_plot_data_mean$ID <- rownames(pca_plot_data_mean)
+pca_plot_data_mean <- pca_plot_data_mean %>% separate(col = ID, sep = "_", into = c("tx","time"))
+myLev <- unique(pca_plot_data_mean$time)
+myLev <- myLev[c(1:7,9:12,8)]
+pca_plot_data_mean$time <- factor(pca_plot_data_mean$time, levels = myLev)
+labelPosition <- pca_plot_data_mean %>% group_by(tx, time) %>% select(PC1, PC2) %>% summarise(mPC1=mean(PC1), mPC2=mean(PC2))
+
+p_pca_mean <- ggplot(pca_plot_data_mean, aes(x=-PC2, y=-PC1, color=time, label = time)) +
+  geom_point(size=2) + 
+  theme_classic() + ylim(.2835,.291) + xlim(-.3,.59) +
+  ylab(paste("PC1 (%",100*round(pca_data_info_mean$importance[2,1], digits = 3),")", sep = "")) +
+  xlab(paste("PC2 (%",100*round(pca_data_info_mean$importance[2,2], digits = 3),")", sep = "")) +
+  scale_color_viridis(discrete = T) +
+  geom_text_repel(color="black") 
+
+
+ggsave(plot = p_pca_mean, filename = "fig2_H295R/plots/qcPCA_mean.pdf", device = "pdf", units = "in", width = 6, height = 4, dpi = 320)
+
+
+```
+
+```{r DEG characteristics}
+sig <- read_csv("data/RNAseq/edger.csv.gz")
+colnames(sig)[1] <- "gene_id"
+subTxinfo <- read_csv("data/accessories/subTxinfo.csv.gz")
+sig <- left_join(sig, subTxinfo, by="gene_id")
+
+colnames(sig) <- gsub("logFC.Time","LFC_",colnames(sig))
+
+LFCplot <- sig %>%  filter( maxabsfc > 1, FDR < .001 ) %>%  select(contains("LFC_"),biotype) %>% reshape2::melt()
+
+colnames(LFCplot) <- c("Biotype","Time","LFC")
+
+LFCplot$Time <- factor(as.numeric(gsub("LFC_","",LFCplot$Time)))
+
+# recategorize biotypes in to simpler categories
+LFCplot$Biotype <- recode(LFCplot$Biotype,
+                          "3prime_overlapping_ncRNA" = "lncRNA",
+                          "antisense" = "lncRNA",
+                          "bidirectional_promoter_lncRNA" = "lncRNA",
+                          "lincRNA" = "lncRNA",
+                          "macro_lncRNA" = "lncRNA",
+                          "non_coding" = "lncRNA",
+                          "processed_pseudogene" = "pseudogene",
+                          "processed_transcript" = "lncRNA",
+                          "protein_coding" = "coding",
+                          "sense_intronic" = "lncRNA",
+                          "sense_overlapping" = "lncRNA",
+                          "TEC" = "lncRNA",
+                          "transcribed_processed_pseudogene" = "pseudogene",
+                          "transcribed_unitary_pseudogene" = "pseudogene",
+                          "transcribed_unprocessed_pseudogene" = "pseudogene",
+                          "unitary_pseudogene" = "pseudogene",
+                          "unprocessed_pseudogene" = "pseudogene") %>% as.factor()
+
+# note that for the sake of visualizing the majority of the changes in expression, genes w/LFC >4 or <-4 are filtered out
+# also not visualizing snoRNAs due to limited observations
+p_LFC_biotype <- ggplot(data = LFCplot %>% filter(Biotype != "snoRNA" & abs(LFC) < 4), aes(x = Time, y = 2^LFC, fill = Time)) +
+  geom_violin(scale = "width") + 
+  scale_fill_viridis(discrete = T) + 
+  theme_classic() + 
+  ylab(expression(Delta~`in`~expression~vs~unstimulated)) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1), legend.position = "none") +
+  geom_hline(yintercept=1,
+             color="dimgrey")
+  
+p_LFC_biotype <- p_LFC_biotype +
+  scale_y_continuous(trans = log2_trans(),
+                     labels = c(1/8,1/4,1/2,1,2,4,8),
+                     breaks = c(1/8,1/4,1/2,1,2,4,8)
+                     ) +
+  facet_wrap(~Biotype, scales = "free_y", dir = "v") +
+  theme(strip.background = element_rect(color="white", fill="white")
+        )
+
+ggsave(plot = p_LFC_biotype, filename = "fig2_H295R/plots/LFC_biotype.pdf", device = "pdf", units = "in", width = 6, height = 4, dpi = 320)
+
+
+```
+
+```{r clustering prep}
+# we will cluster the change in expression vs unstimulated for differentially expressed genes
+mySigGenes <- sig %>% filter(FDR < 0.001, maxabsfc > 1) %>% pull(gene_id)
+# Limit clustering analysis to genes that DGE analysis was performed on
+data_genelevel <- myTxi_H295R$abundance$matureGene %>% filter(gene_id %in% mySigGenes)
+
+# make sure there are no gene that have a sd = 0 as this will cause errors
+mySds <- vector() # create empty vector
+
+for (i in 1:nrow(data_genelevel)) {
+  mySds[i] <- sd(data_genelevel[i, 4:27])
+}
+
+# extract genes that have sd = 0
+stopifnot(!data_genelevel[mySds <= 0,"symbol"])
+
+clustData <- data_genelevel %>% 
+  select_if(is.numeric) %>%
+  as.matrix()
+
+clustData <- clustData[,sort(colnames(clustData))]
+clustData <- clustData[,c(23:24,1:12,15:22,13:14)]
+rownames(clustData) <- data_genelevel$gene_id
+
+colnames(clustData) <- gsub(pattern = "Mock_|AngII_", "", x = colnames(clustData)) %>% gsub(pattern = "_A|_B", replacement = "")
+
+# calc log2 fold change vs unstimulated
+clustData <- limma::avearrays(clustData)
+s_clustData <- log2(clustData + 1) - log2(clustData[,1] +1)
+
+```
+
+```{r determine number of clusters}
+
+k2test <- 2:20
+clustInfo <- data.frame(k=integer(), wss=double())
+set.seed(42)
+
+for (i in k2test) {
+  clustInfo[i,1] <- i
+  clustInfo[i,2] <- wss(knum = i,data2clust = s_clustData)
+}
+
+p_clustNum <- ggplot(data = clustInfo, aes(x=k, y=wss)) +
+  geom_point() +
+  xlab("number of clusters") + ylab("Total within-clusters\nsum of squares") +
+  theme_classic() +
+  theme(legend.position = "none") +
+  geom_vline(xintercept=12,
+             color="red")
+  
+k <- 12
+ggsave(plot = p_clustNum, filename = "fig2_H295R/plots/clusterNumber.pdf", device = "pdf", units = "in", width = 6, height = 4, dpi = 320)
+
+```
+
+```{r clustering}
+
+if(!file.exists("data/RNAseq/clustGenes.R")) {
+  cd <- pheatmap(mat = s_clustData, kmeans_k = k, scale = "none", clustering_distance_rows = "correlation", cluster_cols = F, silent = T, clustering_method = "median")
+
+
+  myClust <- data.frame("cluster"=factor(cd$kmeans$cluster),s_clustData)
+  colnames(myClust) <- gsub(pattern = "X", replacement = "", x = colnames(myClust))
+  rownames(myClust) <- rownames(s_clustData)
+  
+  myClust$cluster <- recode(myClust$cluster,
+                            "1" = "as1",
+                            "2" = "rs2",
+                            "3" = "aw5",
+                            "4" = "aw4",
+                            "5" = "as2",
+                            "6" = "as3",
+                            "7" = "aw1",
+                            "8" = "rw1",
+                            "9" = "aw2",
+                            "10" = "aw3",
+                            "11" = "rs1",
+                            "12" = "as4")
+  
+  myClust_annotated <- cbind("gene_id"=rownames(myClust),myClust)
+  
+  myClust_annotated <- left_join(myClust_annotated, subTxinfo, by="gene_id") 
+  
+  write_csv(x = myClust_annotated, path = "data/clusterData.csv")
+  
+  save(myClust_annotated, cd, file = "data/clustGenes.R")
+
+
+}
+
+load("data/RNAseq/clustGenes.R")
+
+cdPlot <- reshape2::melt(myClust_annotated)
+
+colnames(cdPlot) <- c("gene_id", "cluster", "symbol", "biotype","time", "lfc")
+cdPlot$cluster <- factor(cdPlot$cluster, levels = sort(levels(cdPlot$cluster)))
+ 
+ 
+cdPlot$time <- as.numeric(as.character(cdPlot$time))
+
+
+# colors for clustering
+clusterCols <- c(viridis_pal(option = "D",end = .4)(4),
+            viridis_pal(option = "D",begin = .5,end = .9)(5),
+            viridis_pal(option = "A", begin =  .6, end = .9)(4)
+            )
+save(file = here("data", "accessories","clusterCols"), object = clusterCols)
+
+
+cdPlot_summary <- Rmisc::summarySE(cdPlot, measurevar="lfc", groupvars=c("cluster","time"))
+
+
+p_clusters_line <- ggplot(cdPlot_summary, aes(x=time, y=lfc, colour=cluster)) +
+  geom_errorbar(aes(ymin=lfc-se, ymax=lfc+se), width=.25) +
+  geom_line() +
+  # geom_point(size=1) +
+  theme_classic() +
+  scale_color_manual(values = clusterCols) + 
+  theme_classic() + 
+  ylab(expression(Delta~`in`~expression~vs~unstimulated)) +
+  theme(legend.position = "none") +
+  geom_hline(yintercept=0,
+             color="dimgrey") +
+  scale_y_continuous(breaks = c(-1,0,1,2,3,4),
+                     labels = c('1/2',1,2,4,8,16))
+  
+ggsave(plot = p_clusters_line, filename = "fig2_H295R/plots/clusterLineplot.pdf", device = "pdf", units = "in", width = 4, height = 4, dpi = 320)
+
+```
+
+
+```{r cluster gene enrichment analysis}
+
+### cluster enrichment: biotype analysis ###
+
+myClust_annotated$simple <- recode(myClust_annotated$biotype,
+                          "3prime_overlapping_ncRNA" = "lncRNA",
+                          "antisense" = "lncRNA",
+                          "bidirectional_promoter_lncRNA" = "lncRNA",
+                          "lincRNA" = "lncRNA",
+                          "macro_lncRNA" = "lncRNA",
+                          "non_coding" = "lncRNA",
+                          "processed_pseudogene" = "pseudogene",
+                          "processed_transcript" = "lncRNA",
+                          "protein_coding" = "coding",
+                          "sense_intronic" = "lncRNA",
+                          "sense_overlapping" = "lncRNA",
+                          "TEC" = "lncRNA",
+                          "transcribed_processed_pseudogene" = "pseudogene",
+                          "transcribed_unitary_pseudogene" = "pseudogene",
+                          "transcribed_unprocessed_pseudogene" = "pseudogene",
+                          "unitary_pseudogene" = "pseudogene",
+                          "unprocessed_pseudogene" = "pseudogene") %>% as.factor() 
+
+
+clustList <- split(myClust_annotated$gene_id, myClust_annotated$cluster)
+biotypeList <- split(myClust_annotated$gene_id, myClust_annotated$simple)
+
+gom.Clust <- newGOM(clustList, biotypeList, genome.size = nrow(myClust_annotated))
+
+overlapClust <- -log10(getMatrix(gom.Clust, "pval"))
+overlapClust[overlapClust < -log10(.05)] <- -log10(1)
+overlapClust[overlapClust > 10] <- 10
+
+overlapClust <- overlapClust[sort(rownames(overlapClust)),]
+overlapClust <- overlapClust[,-4]
+
+
+pheatmap(mat = overlapClust, scale = "none", cluster_rows = F, cluster_cols = F,  color = viridis(10, option = "E", direction = 1), border_color = "black", treeheight_row = 0, treeheight_col = 0, width = 4, height = 4, filename = "fig2_H295R/plots/cluster_biotype_overlap.pdf")
+dev.off()
+
+
+p_snRNA_line <- ggplot(cdPlot_summary %>% filter(cluster=="aw1"), aes(x=time, y=lfc, colour=cluster)) +
+  geom_errorbar(aes(ymin=lfc-se, ymax=lfc+se), width=.25) +
+  geom_line() +
+  # geom_point(size=1) +
+  theme_classic() +
+  scale_color_manual(values = clusterCols[5]) + 
+  theme_classic() + 
+  ylab(expression(Delta~`in`~expression~vs~unstimulated)) +
+  theme(legend.position = "none") +
+  geom_hline(yintercept=0,
+             color="dimgrey") +
+  scale_y_continuous(limits = c(-1,2),
+                       breaks = c(-1,0,1,2,3,4),
+                     labels = c('1/2',1,2,4,8,16))
+  
+p_snRNA_line
+
+ggsave(plot = p_snRNA_line, filename = "fig2_H295R/plots/snRNALineplot.pdf", device = "pdf", units = "in", width = 4, height = 4, dpi = 320)
+
+
+```
+
+```{r gene sets}
+
+### cluster enrichment: GO BP analysis ###
+m_df <- msigdbr(species = "Homo sapiens")
+
+
+keepBP <- m_df %>% filter(gs_subcat == "BP") %>% dplyr::count(gs_name) %>% filter(n > 9 & n <100) %>% pull(gs_name)
+
+msigdbList <- m_df %>% filter(gs_subcat == "BP", gs_name %in% keepBP) %>% split(x = .$gene_symbol, f = .$gs_name)
+
+clustList <- split(myClust_annotated$symbol, myClust_annotated$cluster)
+
+numSig <- read_csv(here("data", "RNAseq","edger.csv.gz")) %>%  nrow() 
+                
+                
+gom.Clustmsigdb <- newGOM(clustList, msigdbList, genome.size = numSig)
+
+clustmsigdb <- -log10(getMatrix(gom.Clustmsigdb, "pval"))
+
+
+clustmsigdb <- clustmsigdb[,colMaxs(clustmsigdb) > 3.4]
+
+
+clustmsigdb[clustmsigdb < -log10(.05)] <- -log10(1)
+clustmsigdb[clustmsigdb > 5] <- 5
+clustmsigdb <- clustmsigdb[sort(rownames(clustmsigdb)),]
+colnames(clustmsigdb) <- gsub("GO_","",colnames(clustmsigdb))
+
+pheatmap(mat = t(clustmsigdb), scale = "none", cluster_cols = F, border_color = "black", clustering_distance_rows = "euclidean", clustering_method = "complete", color = viridis(10, option = "E", direction = 1), treeheight_row = 0, treeheight_col = 0, filename = here("fig2_H295R","plots","BP.pdf"), width = 60, height = 50, fontsize = 24)
+
+### cluster enrichment: GO MF analysis ###
+
+msigdbList <- m_df %>% filter(gs_subcat == "MF") %>% split(x = .$gene_symbol, f = .$gs_name)
+
+clustList <- split(myClust_annotated$symbol, myClust_annotated$cluster)
+
+
+gom.Clustmsigdb <- newGOM(clustList, msigdbList, genome.size = nrow(sig))
+
+clustmsigdb <- -log10(getMatrix(gom.Clustmsigdb, "pval"))
+
+
+clustmsigdb <- clustmsigdb[,colMaxs(clustmsigdb) > 3]
+
+
+clustmsigdb[clustmsigdb < -log10(.05)] <- -log10(1)
+clustmsigdb[clustmsigdb > 5] <- 5
+clustmsigdb <- clustmsigdb[sort(rownames(clustmsigdb)),]
+colnames(clustmsigdb) <- gsub("GO_","",colnames(clustmsigdb))
+
+pheatmap(mat = t(clustmsigdb), scale = "none", cluster_cols = F, clustering_distance_rows = "correlation", clustering_method = "ward.D2", color = viridis(10, option = "E", direction = 1), treeheight_row = 0, treeheight_col = 0, filename = here("fig2_H295R","plots","MF.pdf"), width = 20, height = 20, fontsize = 24)
+
+
+```
+
+```{r}
+
+# RBPs <- readxl::read_xls(here("data","accessories","41576_2014_BFnrg3813_MOESM25_ESM.xls"), sheet = 2) %>% janitor::clean_names()
+# 
+# TFs <- readxl::read_xlsx(here("data","accessories","41576_2014_BFnrg3813_MOESM26_ESM.xlsx"), sheet = 1) %>% janitor::clean_names()
+# 
+# 
+# myClust_annotated$regulator <- if_else(myClust_annotated$symbol %in% RBPs$gene_name, "RBP",
+#                                        if_else(myClust_annotated$symbol %in% TFs$gene_name, "TF", "other"))
+# 
+# regClusts <- myClust_annotated %>% filter(regulator %in% c("RBP"))
+# 
+# names(regClusts)
+# 
+# reg_heatmap_data <- as.matrix(2^regClusts[,3:14])
+# rownames(reg_heatmap_data) <- regClusts$symbol
+# 
+# reg_ann <- data.frame("Regulator"=regClusts$regulator)
+# rownames(reg_ann) <- regClusts$symbol
+# 
+# 
+# 
+# paletteLength <- 50
+# myColor <- colorRampPalette(c("blue", "white", "yellow"))(paletteLength)
+# # length(breaks) == length(paletteLength) + 1
+# # use floor and ceiling to deal with even/odd length pallettelengths
+# myBreaks <- c(seq(min(reg_heatmap_data), 1, length.out=ceiling(paletteLength/2) + 1), 
+#               seq(max(reg_heatmap_data)/paletteLength, max(reg_heatmap_data), length.out=floor(paletteLength/2)))
+# 
+# 
+# pheatmap(reg_heatmap_data, cluster_cols = F, annotation_row = reg_ann, fontsize_row = 6, color = myColor, breaks = myBreaks)
+
+
+```
+

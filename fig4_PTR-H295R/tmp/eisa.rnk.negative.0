@@ -1,0 +1,2750 @@
+rank      word      z-score   fdr       ledge     annotation
+1         gggctg    7.22      0.00e+00  2707                
+2         gcagcc    7.15      0.00e+00  2162      hsa-miR-604,hsa-miR-647
+3         agaggg    6.94      0.00e+00  1537      hsa-miR-642
+4         ggactg    6.72      0.00e+00  2658      hsa-miR-455-3p
+5         gcggg     6.70      0.00e+00  2337                
+6         agctcc    6.69      0.00e+00  2172      hsa-miR-28-5p,hsa-miR-708,hsa-miR-920
+7         gggggc    6.55      0.00e+00  2639                
+8         gcgggg    6.54      0.00e+00  2631                
+9         agggca    6.54      0.00e+00  2250      hsa-miR-18a*,hsa-miR-874
+10        ggactc    6.48      0.00e+00  2429      hsa-miR-1289
+11        ggggg     6.45      0.00e+00  2121                
+12        ccccag    6.45      0.00e+00  2250      hsa-miR-637
+13        caccc     6.43      0.00e+00  2171                
+14        cgtggg    6.43      0.00e+00  2476      hsa-miR-662
+15        caccct    6.35      0.00e+00  2118                
+16        acaccc    6.25      0.00e+00  2467      hsa-miR-609
+17        acacca    6.18      0.00e+00  1211                
+18        ctgcc     6.17      0.00e+00  1579                
+19        acacc     6.14      0.00e+00  2313                
+20        ggggc     6.13      0.00e+00  2338                
+21        ccagag    6.10      0.00e+00  1460      hsa-miR-330-5p,hsa-miR-326,hsa-miR-518c*
+22        gtggcc    6.07      0.00e+00  1680      hsa-miR-588
+23        ccaaac    6.06      0.00e+00  1489                
+24        gacac     6.04      0.00e+00  1577                
+25        ggcagc    5.96      0.00e+00  2228      hsa-miR-22
+26        caccag    5.90      0.00e+00  1538      hsa-miR-138
+27        tgcgg     5.77      3.70e-04  2162                
+28        cccaga    5.74      3.57e-04  1436      hsa-miR-330-5p,hsa-miR-326
+29        cgggg     5.70      6.90e-04  2321                
+30        ggagag    5.70      6.67e-04  2675                
+31        gaggac    5.68      6.45e-04  2233                
+32        ggact     5.67      6.25e-04  1681                
+33        cagcga    5.65      6.06e-04  1325      hsa-miR-639,hsa-miR-720
+34        cccttc    5.64      5.88e-04  1579                
+35        gcccac    5.63      5.71e-04  2353      hsa-miR-654-5p,hsa-miR-541
+36        gggact    5.62      5.56e-04  2601                
+37        gggca     5.61      5.41e-04  2210                
+38        agggc     5.60      5.26e-04  2695                
+39        gactcc    5.60      5.13e-04  2100      hsa-miR-1289
+40        agccc     5.59      5.00e-04  2320                
+41        tgcggg    5.58      4.88e-04  1322                
+42        cccca     5.57      4.76e-04  1680                
+43        gacacc    5.57      4.65e-04  2293                
+44        agccag    5.53      4.55e-04  1878      hsa-miR-149,hsa-miR-892b,hsa-miR-664*
+45        gggcc     5.51      4.44e-04  2337                
+46        gagccc    5.49      4.35e-04  2320                
+47        cagcca    5.48      4.26e-04  1616      hsa-miR-647
+48        gccca     5.45      4.17e-04  2138                
+49        gcctga    5.43      4.08e-04  1466                
+50        tccagc    5.43      4.00e-04  1680      hsa-miR-1287
+51        gagggc    5.42      3.92e-04  2639                
+52        gcagc     5.41      3.85e-04  2138                
+53        ccctgc    5.39      5.66e-04  928       hsa-miR-1207-5p
+54        gctcc     5.39      5.56e-04  2121                
+55        tggggg    5.37      7.27e-04  1185      hsa-miR-361-3p
+56        cccag     5.32      7.14e-04  2138                
+57        ggacac    5.32      7.02e-04  1543                
+58        gggac     5.30      6.90e-04  1672                
+59        tcccc     5.27      1.02e-03  1681                
+60        ggccac    5.26      1.00e-03  1509      hsa-miR-663b,hsa-miR-1204
+61        cagcc     5.25      1.15e-03  2127                
+62        ggaca     5.24      1.29e-03  1577                
+63        tctgcc    5.23      1.27e-03  1264                
+64        agcca     5.23      1.25e-03  1878                
+65        ggggcc    5.22      1.23e-03  2338      hsa-miR-296-5p
+66        agctc     5.21      1.21e-03  2138                
+67        ccttc     5.19      1.19e-03  1395                
+68        gagagg    5.19      1.18e-03  2615                
+69        tggagg    5.18      1.16e-03  2607                
+70        cgggc     5.16      1.29e-03  2365                
+71        gggcag    5.14      1.27e-03  2585      hsa-miR-18a*,hsa-miR-324-3p
+72        ctcca     5.13      1.25e-03  2127                
+73        ggggct    5.12      1.37e-03  2607      hsa-miR-1225-3p
+74        cctgcc    5.10      1.62e-03  2127      hsa-miR-940,hsa-miR-1207-5p
+75        ctgcca    5.10      1.60e-03  1138                
+76        ccctg     5.08      1.58e-03  2138                
+77        ggccc     5.07      1.56e-03  2320                
+78        gagctc    5.04      1.92e-03  2585                
+79        ccaggg    5.04      1.90e-03  2210      hsa-miR-331-3p
+80        ctcccc    5.01      2.12e-03  1680      hsa-miR-939
+81        gctggc    5.00      2.10e-03  1579      hsa-miR-1202
+82        agccca    5.00      2.07e-03  2121                
+83        atgggc    5.00      2.05e-03  1680                
+84        agggac    4.98      2.02e-03  1680                
+85        gggcct    4.98      2.00e-03  2679                
+86        gagcc     4.97      1.98e-03  2259                
+87        cagggc    4.96      1.95e-03  2228      hsa-miR-146b-3p,hsa-miR-874,hsa-miR-1291
+88        cagctc    4.93      1.93e-03  2145      hsa-miR-558
+89        ggggga    4.93      1.91e-03  1360                
+90        acccac    4.93      2.00e-03  1477                
+91        ccggg     4.92      2.09e-03  2338                
+92        ggctga    4.90      2.28e-03  2585                
+93        cagcg     4.89      2.37e-03  2117                
+94        acagcc    4.89      2.34e-03  1680                
+95        gggct     4.89      2.32e-03  2607                
+96        cccct     4.88      2.50e-03  1681                
+97        tcctgg    4.87      2.47e-03  1697      hsa-miR-665
+98        cggag     4.86      2.55e-03  2249                
+99        gccagg    4.86      2.53e-03  2259      hsa-miR-221*
+100       gtgtcc    4.85      2.50e-03  2353      hsa-miR-1197
+101       caggg     4.84      2.48e-03  2121                
+102       ctccaa    4.83      2.45e-03  1682      hsa-miR-432,hsa-miR-768-5p
+103       ctgggg    4.83      2.43e-03  2249      hsa-miR-361-3p
+104       ccagg     4.83      2.50e-03  2259                
+105       ctggg     4.81      2.67e-03  1680                
+106       gccac     4.81      2.83e-03  1466                
+107       gccacc    4.80      2.80e-03  1466                
+108       gccag     4.78      2.87e-03  2259                
+109       ctccc     4.77      2.84e-03  1681                
+110       gtgcct    4.77      2.91e-03  1877      hsa-miR-124,hsa-miR-506
+111       tccgg     4.77      2.88e-03  2121                
+112       ggctg     4.76      2.95e-03  2139                
+113       cccaca    4.76      2.92e-03  2320      hsa-miR-299-3p
+114       tccaa     4.73      2.98e-03  1448                
+115       ccccca    4.73      2.96e-03  1618      hsa-miR-637,hsa-miR-1275
+116       agagcc    4.73      2.93e-03  2127      hsa-miR-760
+117       agcgg     4.72      2.99e-03  2121                
+118       cccact    4.71      2.97e-03  902       hsa-miR-194*
+119       gaagga    4.71      2.94e-03  1487                
+120       gaggga    4.68      3.33e-03  1460      hsa-miR-642
+121       ccccaa    4.68      3.39e-03  1493                
+122       cctgg     4.68      3.36e-03  1672                
+123       cccatg    4.67      3.50e-03  1883      hsa-miR-1308
+124       ctcctc    4.67      3.47e-03  1479      hsa-miR-151-5p,hsa-miR-765
+125       cctcc     4.67      3.44e-03  1681                
+126       ggcctt    4.66      3.41e-03  1878                
+127       gggcaa    4.64      3.46e-03  2707                
+128       gtcaca    4.64      3.52e-03  1663      hsa-miR-758
+129       ggagcc    4.63      3.88e-03  2251                
+130       cgtgg     4.62      3.85e-03  2210                
+131       gcccc     4.62      3.89e-03  2320                
+132       cagtcc    4.58      4.32e-03  1479      hsa-miR-1269,hsa-miR-1288
+133       gctgag    4.58      4.29e-03  2585      hsa-miR-512-5p
+134       ccagc     4.58      4.25e-03  1616                
+135       cacca     4.56      4.37e-03  1457                
+136       actccc    4.56      4.34e-03  1585                
+137       catggg    4.53      4.60e-03  2585                
+138       cccac     4.52      4.64e-03  1680                
+139       agcccc    4.51      4.60e-03  2320      hsa-miR-185*
+140       cgggcc    4.51      4.57e-03  2421                
+141       cccagc    4.51      4.54e-03  2138                
+142       cccaag    4.51      4.51e-03  2127      hsa-miR-635
+143       gactc     4.51      4.48e-03  1680                
+144       tgccc     4.50      4.72e-03  2138                
+145       gccctc    4.50      4.69e-03  2313      hsa-miR-1226*
+146       cctgag    4.49      4.66e-03  1682      hsa-miR-510,hsa-miR-1266
+147       acaagc    4.49      4.63e-03  1486                
+148       cctgga    4.49      4.66e-03  1672                
+149       ggatg     4.48      4.77e-03  1325                
+150       cctcct    4.48      4.73e-03  1682                
+151       tcccca    4.46      4.90e-03  1681      hsa-miR-491-5p
+152       gcccca    4.45      5.13e-03  2320                
+153       cggcag    4.45      5.10e-03  2118                
+154       ggagc     4.44      5.13e-03  2112                
+155       ccaccc    4.44      5.23e-03  2138      hsa-miR-363*,hsa-miR-608,hsa-miR-1293
+156       cccctg    4.44      5.26e-03  2101                
+157       cccga     4.43      5.22e-03  2365                
+158       ggaggt    4.43      5.19e-03  2575                
+159       gactgt    4.43      5.16e-03  1380      hsa-miR-212,hsa-miR-132
+160       ggctgg    4.40      5.50e-03  2138                
+161       ccttcc    4.40      5.47e-03  1681                
+162       gaggg     4.39      5.43e-03  2658                
+163       ccttca    4.37      5.64e-03  1465                
+164       caggcc    4.37      5.67e-03  2259      hsa-miR-1234
+165       tgccca    4.37      5.64e-03  2138      hsa-miR-612,hsa-miR-1285
+166       cagagc    4.37      5.60e-03  2121      hsa-miR-760
+167       gagcg     4.37      5.75e-03  1681                
+168       tctggg    4.37      5.71e-03  999                 
+169       tgcagc    4.35      6.21e-03  1680                
+170       ctccca    4.34      6.24e-03  2123      hsa-miR-30c-2*,hsa-miR-30b*,hsa-miR-30c-1*
+171       gggtc     4.34      6.20e-03  1325                
+172       ccacc     4.33      6.40e-03  1680                
+173       tcccct    4.32      6.36e-03  1568                
+174       tccggg    4.32      6.32e-03  2083                
+175       cccgg     4.32      6.29e-03  2338                
+176       cggagc    4.31      6.65e-03  2109                
+177       ggatgg    4.31      6.61e-03  1342                
+178       agacac    4.31      6.69e-03  1577      hsa-miR-187
+179       agagg     4.30      6.70e-03  1579                
+180       gggccc    4.30      6.67e-03  2423      hsa-miR-296-5p
+181       ccaggc    4.29      6.74e-03  2121      hsa-miR-661,hsa-miR-1254
+182       accctg    4.28      6.87e-03  2313                
+183       ccgggc    4.28      6.83e-03  2338                
+184       tgggac    4.27      6.79e-03  1580                
+185       gacagc    4.27      6.76e-03  2326      hsa-miR-626
+186       ccaga     4.26      6.72e-03  798                 
+187       cacaga    4.24      7.49e-03  1614                
+188       ggcag     4.24      7.45e-03  2585                
+189       ccctc     4.24      7.46e-03  1579                
+190       gccgg     4.23      7.53e-03  2164                
+191       aacccg    4.22      7.59e-03  2294      hsa-miR-125b-1*
+192       cacccc    4.21      7.55e-03  1990      hsa-miR-342-5p,hsa-miR-608
+193       gccctg    4.21      7.56e-03  1680                
+194       acccc     4.21      7.58e-03  1681                
+195       ctcct     4.20      7.59e-03  1259                
+196       accccc    4.20      7.55e-03  2083                
+197       tcgggc    4.20      7.56e-03  2371                
+198       cctcca    4.20      7.53e-03  2087      hsa-miR-768-5p
+199       cgctgg    4.18      7.89e-03  2526                
+200       ctgcag    4.18      8.05e-03  1436      hsa-miR-17*,hsa-miR-509-5p,hsa-miR-509-3-5p,hsa-miR-1184,hsa-miR-1205
+201       ggctcg    4.18      8.01e-03  2308      hsa-miR-615-3p
+202       caacc     4.17      8.22e-03  1578                
+203       ggcccc    4.16      8.28e-03  2308                
+204       gaccg     4.16      8.24e-03  1568                
+205       gcaccc    4.15      8.39e-03  2176      hsa-miR-342-5p
+206       catcc     4.15      8.45e-03  1208                
+207       tctgc     4.13      8.70e-03  1436                
+208       cctggg    4.13      8.65e-03  1697                
+209       cagggg    4.13      8.66e-03  2173      hsa-miR-331-3p
+210       cctgc     4.13      8.62e-03  1579                
+211       gcccat    4.12      8.82e-03  2263                
+212       agcacc    4.12      8.96e-03  970       hsa-miR-1250
+213       atcccc    4.12      8.92e-03  926       hsa-miR-542-5p
+214       gctgg     4.11      8.93e-03  2138                
+215       cccctc    4.10      9.26e-03  1519      hsa-miR-423-5p
+216       gctcca    4.08      9.63e-03  2427                
+217       ccaca     4.08      9.63e-03  1477                
+218       acagc     4.07      9.63e-03  1663                
+219       cacag     4.07      9.68e-03  1460                
+220       gtgcc     4.07      9.64e-03  1680                
+221       gggtct    4.07      9.59e-03  1320                
+222       gaaggg    4.07      9.55e-03  2695                
+223       gagtcg    4.07      9.51e-03  2854                
+224       tctgca    4.06      9.55e-03  1456                
+225       ccacct    4.06      9.51e-03  1680                
+226       ctcagg    4.06      9.56e-03  1681      hsa-miR-125b,hsa-miR-125a-5p,hsa-miR-1200
+227       caatg     4.06      9.56e-03  1879                
+228       ctgccc    4.05      9.61e-03  1681      hsa-miR-486-3p
+229       atgagg    4.05      9.65e-03  1681                
+230       cacct     4.04      9.70e-03  1680                
+231       ccagct    4.04      9.83e-03  2138      hsa-miR-1207-3p
+232       cggca     4.04      9.78e-03  2118                
+233       ctggac    4.03      1.02e-02  1579      hsa-miR-198
+234       ctggc     4.01      1.07e-02  2138                
+235       gaccca    4.01      1.07e-02  1486                
+236       ggccca    4.00      1.08e-02  2565                
+237       ctccag    3.99      1.11e-02  2127      hsa-miR-516b
+238       caaac     3.99      1.11e-02  1448                
+239       gcagac    3.98      1.11e-02  1612      hsa-miR-346,hsa-miR-632
+240       cagaca    3.98      1.12e-02  1590      hsa-miR-632,hsa-miR-654-3p,hsa-miR-1231
+241       ccggga    3.98      1.13e-02  2320                
+242       tgctcc    3.97      1.14e-02  1579                
+243       tccttc    3.96      1.16e-02  1395      hsa-miR-1252
+244       ggcca     3.96      1.16e-02  1697                
+245       caagcc    3.96      1.17e-02  2138                
+246       tcccgt    3.95      1.17e-02  1354                
+247       cacagc    3.94      1.19e-02  1590                
+248       cgcatc    3.94      1.18e-02  1471                
+249       ccctgg    3.93      1.19e-02  2123                
+250       ggtcg     3.93      1.19e-02  2326                
+251       gggatc    3.93      1.20e-02  1061                
+252       gaggtg    3.91      1.27e-02  2695                
+253       caaacc    3.91      1.26e-02  1461                
+254       tggcc     3.90      1.26e-02  2138                
+255       cggggg    3.90      1.26e-02  2124                
+256       cgagc     3.90      1.26e-02  1579                
+257       tctcc     3.90      1.26e-02  1259                
+258       actcc     3.90      1.26e-02  2101                
+259       ctgcct    3.90      1.25e-02  1579      hsa-miR-34b*,hsa-miR-940,hsa-miR-1827
+260       catcca    3.89      1.25e-02  1402      hsa-miR-432*
+261       acccag    3.89      1.27e-02  2259                
+262       gggaca    3.88      1.28e-02  1652                
+263       ggccct    3.88      1.28e-02  2127      hsa-miR-1296
+264       cggga     3.88      1.28e-02  2337                
+265       ctgtgc    3.88      1.28e-02  1208                
+266       atcggg    3.88      1.27e-02  2578                
+267       gcctcg    3.87      1.31e-02  2585                
+268       tctccc    3.87      1.31e-02  999       hsa-miR-30c-2*,hsa-miR-30c-1*
+269       ggccag    3.86      1.31e-02  2259      hsa-miR-193a-3p,hsa-miR-193b
+270       tggggc    3.86      1.31e-02  2194                
+271       gggatg    3.86      1.31e-02  925       hsa-miR-324-5p
+272       aggac     3.85      1.31e-02  2121                
+273       gccaga    3.85      1.33e-02  1213                
+274       gagag     3.85      1.32e-02  2676                
+275       gcacc     3.85      1.33e-02  2337                
+276       gggccg    3.84      1.33e-02  2125                
+277       gagcgg    3.84      1.33e-02  1625      hsa-miR-572
+278       cacctc    3.84      1.33e-02  1680                
+279       catgtg    3.84      1.33e-02  1436                
+280       acctgc    3.84      1.32e-02  2606      hsa-miR-657
+281       tgtgag    3.83      1.35e-02  1202      hsa-miR-342-3p
+282       gagcac    3.83      1.35e-02  1456                
+283       caagg     3.83      1.35e-02  1883                
+284       gacaca    3.83      1.35e-02  1583      hsa-miR-592,hsa-miR-599
+285       ctggga    3.82      1.35e-02  1580                
+286       ccggc     3.82      1.37e-02  2121                
+287       cggcc     3.82      1.37e-02  2121                
+288       ccatg     3.81      1.37e-02  1448                
+289       ctggtc    3.81      1.36e-02  2337                
+290       gagcaa    3.81      1.36e-02  1844                
+291       ctgccg    3.81      1.37e-02  2120                
+292       gctggg    3.80      1.37e-02  2142                
+293       gccct     3.80      1.39e-02  1580                
+294       ccaagc    3.79      1.38e-02  1522                
+295       tgggg     3.79      1.40e-02  1186                
+296       aagggg    3.79      1.40e-02  2422                
+297       tccag     3.78      1.41e-02  1436                
+298       cccaa     3.78      1.40e-02  1914                
+299       aggggg    3.77      1.43e-02  2571                
+300       aggga     3.77      1.44e-02  1208                
+301       ccatcc    3.76      1.47e-02  2138      hsa-miR-432*
+302       gtccc     3.76      1.46e-02  2321                
+303       agtccc    3.76      1.48e-02  2474                
+304       acccca    3.76      1.47e-02  1634                
+305       cccagg    3.75      1.49e-02  2215      hsa-miR-661
+306       cctctc    3.75      1.49e-02  1004                
+307       caagct    3.74      1.50e-02  1208      hsa-miR-100*
+308       cagag     3.74      1.50e-02  1680                
+309       ggagcg    3.74      1.50e-02  1123                
+310       tggccc    3.74      1.50e-02  2249                
+311       gtggga    3.73      1.52e-02  1680      hsa-miR-188-3p,hsa-miR-532-3p,hsa-miR-1260
+312       tggac     3.73      1.53e-02  1579                
+313       gcatgg    3.72      1.55e-02  2691                
+314       gcggga    3.72      1.57e-02  2337                
+315       gtgtc     3.71      1.58e-02  1680                
+316       agggg     3.71      1.59e-02  2338                
+317       gcccg     3.71      1.58e-02  2476                
+318       aggctc    3.71      1.58e-02  777                 
+319       gaggcg    3.71      1.57e-02  1681      hsa-miR-1281
+320       tcgga     3.71      1.57e-02  1580                
+321       aggggc    3.70      1.61e-02  2300                
+322       cagctg    3.69      1.62e-02  1448      hsa-miR-1207-3p
+323       ccctcc    3.69      1.64e-02  2113      hsa-miR-149*
+324       gcacca    3.68      1.67e-02  789                 
+325       cctga     3.68      1.67e-02  1680                
+326       gtggg     3.68      1.67e-02  1680                
+327       gggcac    3.67      1.67e-02  2202                
+328       agggtc    3.67      1.67e-02  2084      hsa-miR-504
+329       cctccg    3.67      1.67e-02  1578      hsa-miR-658
+330       ggcct     3.67      1.68e-02  2138                
+331       gccgtc    3.67      1.68e-02  1614                
+332       agggcc    3.66      1.70e-02  2676      hsa-miR-328,hsa-miR-1291
+333       ggggtc    3.66      1.70e-02  1579                
+334       tgccg     3.66      1.71e-02  1681                
+335       cctct     3.66      1.70e-02  1006                
+336       tgagca    3.65      1.72e-02  1436      hsa-miR-767-3p,hsa-miR-1178
+337       ggcggg    3.65      1.74e-02  2702                
+338       acacag    3.65      1.74e-02  1213      hsa-miR-892a
+339       gtgtct    3.64      1.76e-02  989                 
+340       caagga    3.63      1.79e-02  1883      hsa-miR-362-5p,hsa-miR-502-5p
+341       gggcca    3.63      1.79e-02  2337      hsa-miR-328,hsa-miR-663b
+342       gagggt    3.62      1.80e-02  2696                
+343       gctgcc    3.62      1.80e-02  1672      hsa-miR-885-3p
+344       gggaac    3.62      1.79e-02  1568                
+345       tccccg    3.62      1.79e-02  2079      hsa-miR-542-5p
+346       tctgg     3.62      1.79e-02  1208                
+347       gaagg     3.62      1.81e-02  2666                
+348       cgaacc    3.61      1.83e-02  1446                
+349       cctggc    3.60      1.87e-02  2138                
+350       tgatgc    3.60      1.87e-02  798                 
+351       agaca     3.60      1.87e-02  1448                
+352       gtccgg    3.59      1.88e-02  2112                
+353       accca     3.58      1.92e-02  2259                
+354       ggggaa    3.58      1.92e-02  1397                
+355       cctcg     3.57      1.95e-02  2327                
+356       tgacgc    3.57      1.96e-02  1573                
+357       cagccg    3.57      1.97e-02  1026                
+358       cagccc    3.56      2.00e-02  2321      hsa-miR-185*
+359       ccagac    3.55      2.00e-02  2131      hsa-miR-1231
+360       caagc     3.55      2.03e-02  1487                
+361       agcccg    3.55      2.03e-02  2779                
+362       gcctag    3.53      2.08e-02  1883      hsa-miR-645
+363       gctcct    3.53      2.07e-02  1243      hsa-miR-28-5p,hsa-miR-708
+364       tcctc     3.52      2.10e-02  1136                
+365       agggct    3.52      2.12e-02  2652      hsa-miR-129*,hsa-miR-129-3p,hsa-miR-1233
+366       gtgggg    3.52      2.13e-02  937                 
+367       tatcac    3.51      2.15e-02  1177                
+368       gcccct    3.51      2.14e-02  2171      hsa-miR-423-5p
+369       cttctc    3.51      2.14e-02  1208      hsa-miR-1300,hsa-miR-1253
+370       tcctcc    3.51      2.15e-02  2096      hsa-miR-765
+371       agtcc     3.51      2.14e-02  2585                
+372       attccc    3.51      2.14e-02  1681                
+373       ctgag     3.50      2.16e-02  1887                
+374       gggga     3.50      2.16e-02  938                 
+375       aagagg    3.49      2.18e-02  1399      hsa-miR-877*
+376       ggcacc    3.49      2.20e-02  2604                
+377       ctgagc    3.49      2.21e-02  1672      hsa-miR-24
+378       gggggg    3.48      2.22e-02  2169                
+379       gggtgt    3.48      2.23e-02  2320                
+380       atggg     3.47      2.26e-02  2585                
+381       ggagg     3.46      2.29e-02  2695                
+382       gacagg    3.46      2.29e-02  1680      hsa-miR-214*,hsa-miR-339-5p
+383       gtcggc    3.45      2.33e-02  1938                
+384       gctccc    3.45      2.34e-02  2121      hsa-miR-920,hsa-miR-939
+385       ggggca    3.45      2.33e-02  2194      hsa-miR-324-3p
+386       ccaagg    3.44      2.33e-02  1990                
+387       cacacc    3.44      2.33e-02  1577                
+388       ccctgt    3.44      2.34e-02  2138      hsa-miR-220c
+389       agcggt    3.44      2.33e-02  1875                
+390       cgagcc    3.44      2.35e-02  2320                
+391       gacag     3.43      2.36e-02  1201                
+392       ccagcc    3.43      2.36e-02  2138                
+393       ccaaa     3.43      2.35e-02  1208                
+394       agccgg    3.43      2.36e-02  2162                
+395       cagac     3.43      2.37e-02  1613                
+396       ctcag     3.43      2.37e-02  1487                
+397       ggacag    3.43      2.37e-02  1681                
+398       ccgaca    3.42      2.39e-02  2194                
+399       ctacac    3.42      2.40e-02  904                 
+400       tgggtc    3.42      2.39e-02  1218      hsa-miR-551a,hsa-miR-551b
+401       ggacct    3.42      2.40e-02  4617                
+402       ctctcc    3.41      2.40e-02  1004      hsa-miR-185
+403       ttgggg    3.41      2.41e-02  1122                
+404       acatcc    3.40      2.43e-02  926       hsa-miR-105*,hsa-miR-1265
+405       tgggc     3.40      2.42e-02  1680                
+406       acaggg    3.40      2.42e-02  1878      hsa-miR-10a,hsa-miR-10b,hsa-miR-339-5p,hsa-miR-146b-3p,hsa-miR-1274a,hsa-miR-1274b
+407       cagcgg    3.40      2.41e-02  2105                
+408       ggtggg    3.40      2.42e-02  1266      hsa-miR-1224-3p,hsa-miR-1260,hsa-miR-1280
+409       acccct    3.39      2.45e-02  1234                
+410       ggcctc    3.38      2.52e-02  2138                
+411       caggga    3.38      2.53e-02  1887      hsa-miR-1274a
+412       ccagca    3.37      2.55e-02  1249                
+413       gggtgc    3.37      2.57e-02  1680                
+414       gacccc    3.36      2.58e-02  1608      hsa-miR-615-5p
+415       gcaatg    3.36      2.61e-02  1822                
+416       ccatgg    3.36      2.63e-02  1266                
+417       gcctcc    3.35      2.64e-02  2145      hsa-miR-650
+418       gccgcc    3.35      2.67e-02  2124                
+419       gcgga     3.34      2.68e-02  1717                
+420       ctcgga    3.34      2.68e-02  2222                
+421       ccacag    3.32      2.78e-02  1467                
+422       gagcct    3.32      2.77e-02  1699      hsa-miR-484
+423       tgggca    3.32      2.78e-02  1672                
+424       cttgcc    3.31      2.82e-02  1436      hsa-miR-31
+425       caatga    3.31      2.83e-02  1818      hsa-miR-616
+426       aggaca    3.31      2.83e-02  2313                
+427       catccc    3.30      2.86e-02  906                 
+428       tgcct     3.30      2.86e-02  1680                
+429       caggac    3.30      2.86e-02  2434                
+430       cgcccc    3.29      2.88e-02  2462                
+431       agggga    3.29      2.88e-02  1577                
+432       ggtctc    3.29      2.87e-02  2695      hsa-miR-769-5p
+433       gctga     3.29      2.87e-02  2585                
+434       gtcgg     3.29      2.87e-02  1712                
+435       agcggg    3.28      2.89e-02  1608                
+436       ggcgc     3.28      2.90e-02  2584                
+437       gcgccc    3.28      2.90e-02  2421                
+438       cccggg    3.28      2.90e-02  2476                
+439       cactc     3.27      2.94e-02  1579                
+440       cccat     3.27      2.93e-02  1883                
+441       acccga    3.27      2.95e-02  2404                
+442       ggccg     3.26      2.98e-02  2136                
+443       ccacac    3.26      2.98e-02  1693      hsa-miR-147,hsa-miR-644
+444       tccca     3.26      2.99e-02  1680                
+445       ccggcc    3.26      2.99e-02  2263                
+446       gcgacg    3.25      3.00e-02  2511      hsa-miR-1181
+447       ggaga     3.25      3.00e-02  2695                
+448       tcggc     3.25      3.00e-02  2119                
+449       tcaggg    3.25      3.00e-02  1679      hsa-miR-125b,hsa-miR-125a-5p
+450       ctctgc    3.25      3.00e-02  1579                
+451       ccact     3.24      3.04e-02  903                 
+452       tgtggg    3.24      3.04e-02  1681      hsa-miR-188-3p
+453       gccggg    3.24      3.06e-02  2337      hsa-miR-941
+454       tgtcc     3.23      3.07e-02  1878                
+455       aacacc    3.23      3.07e-02  2520      hsa-miR-609
+456       aagggc    3.23      3.07e-02  2787      hsa-miR-129*,hsa-miR-129-3p,hsa-miR-938,hsa-miR-1249
+457       ggggt     3.22      3.13e-02  1208                
+458       tggact    3.22      3.13e-02  1681      hsa-miR-455-3p
+459       gcctc     3.22      3.14e-02  2127                
+460       tggagc    3.22      3.15e-02  2675                
+461       ccgcaa    3.21      3.17e-02  1875                
+462       ggaagg    3.21      3.18e-02  1681                
+463       ccatc     3.21      3.19e-02  1577                
+464       actgcc    3.21      3.20e-02  780       hsa-miR-34a,hsa-miR-34b*,hsa-miR-34c-5p,hsa-miR-449a,hsa-miR-449b
+465       gcccgg    3.20      3.21e-02  2804                
+466       gcaaa     3.20      3.22e-02  1219                
+467       acgac     3.20      3.23e-02  1254                
+468       gcgag     3.19      3.24e-02  2027                
+469       gcgatg    3.19      3.25e-02  1011                
+470       cactcc    3.19      3.25e-02  2087      hsa-miR-122
+471       gagtcc    3.19      3.25e-02  2585                
+472       ccaag     3.18      3.27e-02  1916                
+473       caccca    3.18      3.27e-02  2302      hsa-miR-1262
+474       tcaccc    3.18      3.27e-02  1681      hsa-miR-1262
+475       gtccct    3.18      3.27e-02  2372                
+476       gacgac    3.18      3.28e-02  1292                
+477       tggag     3.18      3.28e-02  2675                
+478       gcaga     3.18      3.27e-02  1680                
+479       tccagg    3.18      3.27e-02  2122      hsa-miR-619,hsa-miR-1254
+480       gctcag    3.17      3.29e-02  2202                
+481       gaggt     3.17      3.33e-02  1620                
+482       tgcgga    3.17      3.33e-02  1709                
+483       ctggcc    3.17      3.33e-02  2138                
+484       gcaaac    3.16      3.36e-02  1883      hsa-miR-1282
+485       ggtgtc    3.16      3.36e-02  2337                
+486       gcctg     3.16      3.36e-02  1680                
+487       ctggct    3.16      3.37e-02  1254      hsa-miR-575
+488       gggat     3.15      3.39e-02  1325                
+489       ccgac     3.15      3.39e-02  2300                
+490       ggctac    3.15      3.38e-02  2930                
+491       gaccgc    3.15      3.38e-02  1708                
+492       ggatga    3.15      3.38e-02  1323                
+493       ggcaa     3.14      3.42e-02  1213                
+494       gcaggg    3.13      3.46e-02  1001                
+495       agccta    3.13      3.46e-02  1883      hsa-miR-645
+496       cccagt    3.13      3.46e-02  2585                
+497       ggcaga    3.13      3.47e-02  2607      hsa-miR-346
+498       gacatc    3.13      3.47e-02  2688                
+499       gaccc     3.13      3.47e-02  1579                
+500       caccta    3.13      3.46e-02  1446                
+501       ctcaac    3.12      3.46e-02  1487                
+502       ctccct    3.12      3.49e-02  932       hsa-miR-1321
+503       cctatg    3.12      3.49e-02  2675                
+504       ctccg     3.12      3.49e-02  2329                
+505       cttcc     3.12      3.49e-02  1395                
+506       gggtg     3.11      3.52e-02  1208                
+507       agtgcc    3.11      3.51e-02  1324                
+508       atccaa    3.11      3.54e-02  1237                
+509       gcccag    3.10      3.58e-02  2138      hsa-miR-612,hsa-miR-1285
+510       gggag     3.09      3.63e-02  2251                
+511       gggagc    3.09      3.63e-02  2253                
+512       tagccc    3.09      3.65e-02  2300                
+513       gggaag    3.08      3.66e-02  2676                
+514       gagtc     3.08      3.65e-02  1220                
+515       cggac     3.08      3.65e-02  1579                
+516       acaccg    3.08      3.65e-02  2236                
+517       gggaa     3.08      3.65e-02  1208                
+518       ttcctg    3.08      3.67e-02  1883      hsa-miR-873
+519       ccccgg    3.07      3.69e-02  2352                
+520       cagca     3.07      3.73e-02  1680                
+521       atatgc    3.06      3.75e-02  1656      hsa-miR-448
+522       atggac    3.06      3.77e-02  1373                
+523       gcagcg    3.06      3.77e-02  2337      hsa-miR-639
+524       gtggag    3.06      3.79e-02  2696                
+525       tgtacg    3.05      3.82e-02  1208                
+526       ctgac     3.05      3.82e-02  1214                
+527       tggggt    3.05      3.84e-02  1143                
+528       aagccc    3.04      3.88e-02  948       hsa-miR-27a*
+529       gcccga    3.04      3.88e-02  1990                
+530       tgggt     3.04      3.88e-02  1680                
+531       gccccc    3.03      3.91e-02  2331                
+532       ctccac    3.03      3.91e-02  1579                
+533       cctcgg    3.02      3.93e-02  2320                
+534       tgtgcc    3.01      4.00e-02  1879                
+535       cacctg    3.01      4.02e-02  2218      hsa-miR-125a-3p,hsa-miR-552
+536       tgccgg    3.01      4.03e-02  1672                
+537       aggcc     3.01      4.03e-02  2259                
+538       agtgtc    3.01      4.03e-02  1153                
+539       cgggtt    3.00      4.04e-02  1709                
+540       ccgga     3.00      4.04e-02  2253                
+541       aggtc     3.00      4.04e-02  1436                
+542       acccg     3.00      4.05e-02  2313                
+543       gccgt     3.00      4.05e-02  1680                
+544       cgctg     3.00      4.05e-02  1488                
+545       tggcca    2.99      4.06e-02  1457      hsa-miR-588
+546       gttccc    2.99      4.10e-02  1362      hsa-miR-1292
+547       ccagga    2.99      4.09e-02  1205                
+548       aaccc     2.99      4.10e-02  1614                
+549       tcggag    2.99      4.09e-02  2320                
+550       ctgtg     2.98      4.09e-02  1201                
+551       tgcca     2.98      4.09e-02  1680                
+552       gtcccc    2.98      4.10e-02  2086                
+553       gtgagt    2.98      4.11e-02  2777                
+554       gcaagg    2.98      4.11e-02  1682      hsa-miR-502-5p
+555       tcaacc    2.97      4.11e-02  1551      hsa-miR-380*,hsa-miR-563
+556       cgcttc    2.97      4.12e-02  2281                
+557       cagct     2.97      4.12e-02  1432                
+558       gccaaa    2.97      4.12e-02  1208                
+559       gccaca    2.97      4.15e-02  1477      hsa-miR-644
+560       tcggg     2.96      4.16e-02  2365                
+561       catgct    2.96      4.20e-02  1879                
+562       aaggg     2.95      4.24e-02  907                 
+563       ggacga    2.95      4.23e-02  1691                
+564       tcctg     2.95      4.23e-02  1680                
+565       aaggtc    2.95      4.25e-02  1355                
+566       actcca    2.95      4.25e-02  2101                
+567       tggga     2.94      4.24e-02  1680                
+568       gatgg     2.94      4.26e-02  1614                
+569       ttcacc    2.94      4.28e-02  1510                
+570       agggtg    2.94      4.28e-02  2337                
+571       ccccac    2.93      4.28e-02  2308      hsa-miR-92a-2*,hsa-miR-491-5p
+572       cctcga    2.93      4.32e-02  2814                
+573       gagcca    2.93      4.31e-02  2585      hsa-miR-149
+574       gagca     2.93      4.31e-02  803                 
+575       gcctgg    2.93      4.31e-02  2607                
+576       ccagaa    2.92      4.32e-02  803                 
+577       tgaagg    2.92      4.34e-02  2656      hsa-miR-205
+578       aggtcg    2.92      4.33e-02  1374                
+579       gtcgca    2.92      4.35e-02  2156                
+580       tgggcc    2.91      4.38e-02  2315                
+581       ccaaag    2.91      4.40e-02  1214      hsa-miR-9
+582       ggcgct    2.91      4.40e-02  2365      hsa-miR-339-3p
+583       ccctca    2.90      4.40e-02  2105      hsa-miR-1226*
+584       atccc     2.90      4.40e-02  906                 
+585       ccctct    2.90      4.41e-02  938                 
+586       agcaa     2.90      4.43e-02  1448                
+587       tccctg    2.89      4.47e-02  928                 
+588       cggaca    2.89      4.46e-02  2856                
+589       ggagct    2.89      4.47e-02  1208                
+590       cccctt    2.89      4.50e-02  1316                
+591       cgggct    2.88      4.50e-02  2801                
+592       tcacc     2.88      4.52e-02  1680                
+593       cgata     2.88      4.53e-02  1483                
+594       ggtgcc    2.87      4.56e-02  1680      hsa-miR-593*
+595       aaggag    2.87      4.56e-02  2118                
+596       ccaggt    2.87      4.57e-02  2250      hsa-miR-490-3p,hsa-miR-619,hsa-miR-631
+597       ctgctc    2.87      4.57e-02  924                 
+598       acctgg    2.86      4.61e-02  1887                
+599       gagga     2.86      4.62e-02  906                 
+600       cacatc    2.85      4.65e-02  1672      hsa-miR-576-3p
+601       ggtgag    2.85      4.66e-02  2250      hsa-miR-1229
+602       ccgcc     2.85      4.66e-02  2084                
+603       atgcgg    2.85      4.65e-02  2605                
+604       aggccc    2.85      4.66e-02  1264                
+605       cctcgc    2.84      4.70e-02  2310                
+606       cgggga    2.84      4.72e-02  2308                
+607       agactc    2.83      4.77e-02  1583      hsa-miR-627,hsa-miR-924
+608       tccaag    2.83      4.76e-02  1883      hsa-miR-432,hsa-miR-890
+609       caggc     2.83      4.79e-02  2121                
+610       gtcgga    2.83      4.81e-02  2512                
+611       catgg     2.83      4.80e-02  2691                
+612       ctgga     2.82      4.80e-02  1681                
+613       caagtg    2.82      4.82e-02  1218                
+614       caaccc    2.82      4.88e-02  1432      hsa-miR-296-3p
+615       ggtgc     2.82      4.88e-02  1681                
+616       aagtcc    2.81      4.90e-02  2716                
+617       acgagc    2.81      4.89e-02  1456                
+618       ctctg     2.81      4.89e-02  932                 
+619       agcac     2.81      4.90e-02  1456                
+620       agaga     2.81      4.89e-02  1883                
+621       cctgac    2.81      4.90e-02  1201                
+622       cttcct    2.81      4.91e-02  1396                
+623       gactct    2.80      4.92e-02  1680                
+624       cagaga    2.80      4.92e-02  1878      hsa-miR-593
+625       tcccag    2.80      4.95e-02  928                 
+626       tccaaa    2.79      4.99e-02  1400                
+627       tgcggc    2.79      5.02e-02  1708                
+628       ccaat     2.78      5.06e-02  1395                
+629       gacaa     2.78      5.07e-02  1213                
+630       aacccc    2.78      5.07e-02  986       hsa-miR-193b*
+631       accct     2.78      5.08e-02  2313                
+632       ctgcgg    2.78      5.08e-02  1583                
+633       agagag    2.77      5.11e-02  1218                
+634       cggctg    2.77      5.12e-02  2121                
+635       ctctc     2.77      5.17e-02  1004                
+636       gcaaag    2.77      5.17e-02  1232                
+637       ggctc     2.76      5.20e-02  1886                
+638       actgtg    2.76      5.20e-02  1448      hsa-miR-27a,hsa-miR-27b,hsa-miR-128
+639       cggagg    2.76      5.19e-02  2313                
+640       accac     2.75      5.21e-02  1655                
+641       ttcccc    2.75      5.20e-02  1325      hsa-miR-625
+642       gggcgc    2.75      5.20e-02  2630                
+643       ggatgt    2.75      5.19e-02  913                 
+644       tccct     2.75      5.21e-02  999                 
+645       ctctgg    2.74      5.25e-02  931       hsa-miR-520a-5p,hsa-miR-525-5p
+646       tcctgc    2.74      5.24e-02  1577      hsa-miR-1286
+647       ttccc     2.74      5.27e-02  1218                
+648       ttgcgg    2.74      5.27e-02  2845                
+649       gccatg    2.74      5.27e-02  1680                
+650       aagcca    2.73      5.31e-02  1879      hsa-miR-135a,hsa-miR-135b
+651       cctagc    2.73      5.34e-02  1173                
+652       ttctcc    2.73      5.36e-02  1215                
+653       caaag     2.72      5.37e-02  1218                
+654       agctct    2.72      5.37e-02  1208                
+655       ccatgc    2.72      5.40e-02  1680                
+656       cgact     2.72      5.39e-02  2458                
+657       gcgagc    2.72      5.41e-02  2808                
+658       cagga     2.71      5.42e-02  804                 
+659       atcgg     2.71      5.44e-02  1493                
+660       tccacc    2.71      5.46e-02  1886      hsa-miR-363*
+661       ttccca    2.71      5.45e-02  1680                
+662       acgca     2.71      5.44e-02  937                 
+663       gaaccc    2.71      5.45e-02  1684      hsa-miR-23a*,hsa-miR-23b*
+664       tgagc     2.70      5.48e-02  1680                
+665       acctg     2.70      5.53e-02  1208                
+666       tctcca    2.69      5.55e-02  1213      hsa-miR-620,hsa-miR-1270
+667       cttggg    2.69      5.55e-02  1697                
+668       cctctg    2.69      5.54e-02  1436                
+669       tgctgg    2.69      5.56e-02  1875      hsa-miR-338-3p,hsa-miR-634
+670       tctcag    2.69      5.59e-02  1460                
+671       cgctga    2.68      5.62e-02  1676      hsa-miR-923
+672       ctcttg    2.68      5.61e-02  1214      hsa-miR-335
+673       cccggc    2.68      5.62e-02  2263                
+674       ctgggc    2.68      5.63e-02  1663                
+675       ctaca     2.68      5.65e-02  1208                
+676       caagac    2.68      5.65e-02  1440      hsa-miR-431
+677       tccaat    2.67      5.66e-02  1395                
+678       acagcg    2.67      5.68e-02  2313                
+679       acactc    2.66      5.79e-02  1465      hsa-miR-122,hsa-miR-574-5p
+680       cctacg    2.66      5.79e-02  2922                
+681       cccgcg    2.66      5.81e-02  2778                
+682       gtgcgg    2.66      5.85e-02  1185                
+683       ctcgg     2.65      5.86e-02  2210                
+684       agacag    2.65      5.87e-02  1201      hsa-miR-626
+685       ccaac     2.65      5.88e-02  847                 
+686       gactg     2.65      5.88e-02  1377                
+687       tgaccc    2.65      5.88e-02  2242                
+688       tgaccg    2.65      5.88e-02  952                 
+689       tgcccc    2.64      5.90e-02  1456      hsa-miR-486-3p
+690       cggccc    2.64      5.90e-02  2313                
+691       acaat     2.64      5.91e-02  1451                
+692       acgctc    2.64      5.92e-02  2112                
+693       ccatga    2.63      6.01e-02  1484                
+694       acaata    2.63      6.01e-02  803                 
+695       agaagg    2.63      6.00e-02  867       hsa-miR-1237,hsa-miR-1248
+696       caaggc    2.63      6.00e-02  2112                
+697       ctggt     2.63      5.99e-02  999                 
+698       tcgcag    2.63      5.99e-02  2585                
+699       ccgcca    2.63      5.99e-02  2066                
+700       gtctgg    2.63      6.00e-02  1523                
+701       cacccg    2.63      6.00e-02  1678      hsa-miR-886-3p
+702       gtctcc    2.62      6.06e-02  2123                
+703       taaccc    2.62      6.06e-02  923       hsa-miR-125b-1*
+704       ctcgc     2.62      6.09e-02  2306                
+705       ccaatg    2.62      6.09e-02  1893                
+706       ctagc     2.62      6.08e-02  1680                
+707       aagcc     2.61      6.08e-02  1202                
+708       cctgtc    2.61      6.11e-02  2145                
+709       tgccaa    2.61      6.11e-02  897       hsa-miR-96,hsa-miR-182,hsa-miR-1271
+710       tcggca    2.61      6.14e-02  2421                
+711       acctct    2.60      6.16e-02  1883                
+712       caacgg    2.60      6.19e-02  1193                
+713       caacac    2.60      6.18e-02  1213                
+714       aggagc    2.60      6.18e-02  1151                
+715       ccactc    2.60      6.18e-02  1522                
+716       ggggat    2.59      6.21e-02  2302                
+717       gccaa     2.59      6.23e-02  1448                
+718       gccttg    2.59      6.23e-02  1683                
+719       gaccac    2.59      6.23e-02  1542      hsa-miR-323-5p
+720       cagagg    2.59      6.23e-02  1402                
+721       cttgg     2.59      6.22e-02  1240                
+722       cagcct    2.59      6.22e-02  2153      hsa-miR-485-5p
+723       cccgt     2.59      6.22e-02  1568                
+724       gcccaa    2.59      6.22e-02  2177      hsa-miR-635
+725       tgcccg    2.59      6.21e-02  2300                
+726       ggggtg    2.58      6.25e-02  994                 
+727       tgcctg    2.58      6.26e-02  1635                
+728       agagc     2.58      6.27e-02  881                 
+729       cccaac    2.58      6.28e-02  834       hsa-miR-92a-1*
+730       agtcac    2.57      6.30e-02  1787      hsa-miR-134
+731       agggag    2.57      6.30e-02  2251                
+732       caccaa    2.57      6.30e-02  781                 
+733       cacgg     2.57      6.30e-02  2337                
+734       agccct    2.57      6.31e-02  1580                
+735       accagg    2.57      6.33e-02  1577                
+736       tccccc    2.56      6.35e-02  1483      hsa-miR-625,hsa-miR-1275
+737       cttcgg    2.56      6.39e-02  2137                
+738       agccgc    2.56      6.40e-02  2164                
+739       acaca     2.56      6.40e-02  1680                
+740       cggacc    2.55      6.42e-02  2331                
+741       ccacca    2.55      6.45e-02  1477                
+742       ctgca     2.55      6.45e-02  1396                
+743       gacact    2.55      6.46e-02  874                 
+744       gtccag    2.55      6.45e-02  1151      hsa-miR-378,hsa-miR-422a
+745       ggcagg    2.55      6.44e-02  1681                
+746       aagaca    2.55      6.45e-02  1448      hsa-miR-511
+747       agagac    2.54      6.46e-02  1156      hsa-miR-593
+748       ccccc     2.54      6.47e-02  1479                
+749       ggcagt    2.54      6.48e-02  2695                
+750       gctgga    2.54      6.48e-02  2526      hsa-miR-766
+751       agcaaa    2.54      6.51e-02  1396                
+752       cccgga    2.53      6.53e-02  1634                
+753       cgtgc     2.53      6.53e-02  1616                
+754       cccacc    2.53      6.55e-02  907       hsa-miR-92a-2*,hsa-miR-654-5p,hsa-miR-541
+755       gtgccc    2.53      6.55e-02  1608                
+756       cgagtg    2.53      6.54e-02  1548                
+757       cagggt    2.53      6.55e-02  1680      hsa-miR-10a,hsa-miR-10b,hsa-miR-504
+758       gccta     2.53      6.54e-02  1883                
+759       aatggg    2.52      6.58e-02  928       hsa-miR-660
+760       ggcaaa    2.52      6.57e-02  1233                
+761       gagctg    2.52      6.61e-02  2138                
+762       cccacg    2.52      6.60e-02  2112                
+763       gtgggt    2.52      6.59e-02  1230                
+764       agttcc    2.52      6.59e-02  1355                
+765       accga     2.52      6.59e-02  1720                
+766       aagtgc    2.52      6.58e-02  1225                
+767       cacaa     2.51      6.60e-02  1460                
+768       gtaccc    2.51      6.67e-02  994       hsa-miR-1225-5p
+769       ctgggt    2.50      6.72e-02  1680                
+770       cctggt    2.50      6.72e-02  2087                
+771       catcg     2.50      6.72e-02  1523                
+772       agcgag    2.50      6.72e-02  2086      hsa-miR-720
+773       ctaggc    2.50      6.72e-02  1886                
+774       cgagt     2.50      6.72e-02  1526                
+775       aaggc     2.50      6.72e-02  1883                
+776       gatcc     2.50      6.71e-02  1218                
+777       tgtccc    2.50      6.70e-02  2113      hsa-miR-1302
+778       ccgcgt    2.50      6.71e-02  2778                
+779       tgagcg    2.50      6.70e-02  1908      hsa-miR-574-3p
+780       acagg     2.49      6.74e-02  1456                
+781       cctccc    2.48      6.79e-02  2138      hsa-miR-30b*,hsa-miR-149*,hsa-miR-1321
+782       ccagcg    2.48      6.79e-02  1679                
+783       ggaag     2.48      6.82e-02  1208                
+784       gcggac    2.48      6.84e-02  1579                
+785       gatgag    2.48      6.84e-02  930                 
+786       gggtca    2.47      6.90e-02  2670                
+787       ggtgga    2.47      6.91e-02  2153                
+788       ggacg     2.47      6.92e-02  2121                
+789       ggccgt    2.47      6.92e-02  2122                
+790       tacgta    2.47      6.92e-02  3051                
+791       gagct     2.47      6.92e-02  2112                
+792       agcgtg    2.47      6.91e-02  1681                
+793       cggct     2.46      6.91e-02  2121                
+794       ggggag    2.46      6.91e-02  2331                
+795       ccccct    2.46      6.95e-02  1681                
+796       gcagct    2.46      6.94e-02  1235      hsa-miR-22,hsa-miR-558
+797       cccgtg    2.46      6.95e-02  1482      hsa-miR-602
+798       tgcctc    2.46      6.94e-02  1883      hsa-miR-650,hsa-miR-1827
+799       cagaag    2.46      6.94e-02  798       hsa-miR-1237
+800       agctgg    2.45      6.98e-02  2138                
+801       cattcg    2.45      6.99e-02  1875                
+802       gggaga    2.45      6.99e-02  2708      hsa-miR-629*
+803       ggagga    2.45      6.98e-02  1460                
+804       gcctt     2.45      6.99e-02  1680                
+805       cggggt    2.45      7.03e-02  1680                
+806       cctaac    2.44      7.06e-02  1291      hsa-miR-1258
+807       acctc     2.44      7.05e-02  1680                
+808       cggat     2.44      7.05e-02  1608                
+809       gggagg    2.44      7.05e-02  2202                
+810       gcctct    2.44      7.07e-02  1456                
+811       caaaga    2.44      7.09e-02  1355                
+812       acggca    2.44      7.09e-02  2092                
+813       ccacg     2.43      7.10e-02  2314                
+814       ggtgg     2.43      7.10e-02  2202                
+815       ttcggg    2.43      7.11e-02  2120                
+816       aagctc    2.43      7.18e-02  1208      hsa-miR-27b*
+817       ggcttg    2.43      7.17e-02  1904                
+818       gcatcg    2.43      7.17e-02  2721                
+819       acctcc    2.43      7.16e-02  1680                
+820       ggacc     2.43      7.17e-02  1571                
+821       aacagg    2.42      7.17e-02  2690      hsa-miR-1274b
+822       ggtatc    2.42      7.20e-02  1221                
+823       ccgtc     2.42      7.24e-02  1578                
+824       gaacct    2.42      7.25e-02  1136                
+825       gccttc    2.42      7.25e-02  1680                
+826       tcgatt    2.41      7.25e-02  1245                
+827       gtgcac    2.41      7.33e-02  1122                
+828       gcggta    2.41      7.32e-02  2715                
+829       ctggtg    2.40      7.36e-02  2228      hsa-miR-1226
+830       cggtgc    2.40      7.36e-02  2329                
+831       caatgc    2.40      7.36e-02  1883      hsa-miR-33a,hsa-miR-33b,hsa-miR-1256
+832       gatgga    2.40      7.37e-02  1577                
+833       cgagtc    2.40      7.40e-02  2250                
+834       ggaac     2.40      7.42e-02  928                 
+835       cctca     2.39      7.43e-02  1680                
+836       tgagg     2.39      7.45e-02  2251                
+837       ggtcac    2.38      7.52e-02  1697                
+838       ctcggt    2.38      7.53e-02  1184                
+839       gaacaa    2.38      7.54e-02  1448      hsa-miR-375
+840       agggaa    2.38      7.54e-02  1480                
+841       acact     2.38      7.54e-02  789                 
+842       cccgac    2.38      7.57e-02  2281                
+843       acggc     2.37      7.57e-02  2409                
+844       aggag     2.37      7.57e-02  930                 
+845       ccctt     2.37      7.57e-02  1374                
+846       caaca     2.37      7.58e-02  781                 
+847       cgggca    2.37      7.58e-02  2371                
+848       cgcggg    2.37      7.63e-02  2463                
+849       agcctc    2.37      7.64e-02  2143      hsa-miR-485-5p
+850       acatc     2.36      7.63e-02  1395                
+851       ggcaag    2.36      7.62e-02  2119                
+852       aacct     2.36      7.65e-02  1214                
+853       gcagg     2.36      7.66e-02  999                 
+854       aggaga    2.36      7.69e-02  2171                
+855       ggttc     2.35      7.74e-02  1214                
+856       gggacc    2.35      7.76e-02  2607                
+857       gaagcc    2.35      7.77e-02  1134                
+858       atcacc    2.34      7.78e-02  1680                
+859       ccacgg    2.34      7.87e-02  2327      hsa-miR-132*
+860       acggg     2.33      7.91e-02  1615                
+861       agccg     2.33      7.92e-02  2131                
+862       cacaag    2.33      7.93e-02  1572      hsa-miR-581
+863       tcttgg    2.33      7.93e-02  1218                
+864       gacgg     2.33      8.00e-02  2132                
+865       ctccgg    2.32      8.00e-02  2121      hsa-miR-1203
+866       ccttga    2.32      8.00e-02  1213                
+867       aaggcc    2.32      8.00e-02  1697                
+868       agaagc    2.32      8.01e-02  798                 
+869       ggtga     2.32      8.02e-02  2250                
+870       ggcccg    2.32      8.04e-02  3267                
+871       ccccg     2.32      8.06e-02  2088                
+872       aacgcc    2.32      8.05e-02  3200                
+873       gtctc     2.32      8.05e-02  1218                
+874       gacaag    2.31      8.07e-02  1213                
+875       catctc    2.31      8.11e-02  1883      hsa-miR-143
+876       tcgata    2.31      8.12e-02  1757                
+877       ggcctg    2.31      8.12e-02  2608                
+878       actcaa    2.31      8.12e-02  1448                
+879       gtcct     2.31      8.11e-02  1879                
+880       ggtcgg    2.31      8.10e-02  2544                
+881       acttcc    2.31      8.09e-02  718                 
+882       cttgga    2.31      8.09e-02  1214                
+883       gggtgg    2.30      8.09e-02  2670                
+884       caacaa    2.30      8.11e-02  1215                
+885       gggctc    2.30      8.11e-02  2217      hsa-miR-1225-3p,hsa-miR-1233
+886       ctcctt    2.30      8.10e-02  1235                
+887       cggggc    2.30      8.10e-02  2313                
+888       tggctg    2.30      8.10e-02  2776                
+889       cggta     2.30      8.11e-02  1202                
+890       gctaca    2.30      8.11e-02  917                 
+891       gggacg    2.30      8.12e-02  2372                
+892       acagga    2.30      8.12e-02  1821                
+893       agggat    2.29      8.15e-02  1220      hsa-miR-188-5p
+894       tgccga    2.29      8.16e-02  1541                
+895       gcaaat    2.29      8.17e-02  1399                
+896       aggcaa    2.28      8.25e-02  1892                
+897       acggag    2.28      8.25e-02  1608                
+898       ggaacc    2.28      8.26e-02  2156      hsa-miR-23a*,hsa-miR-218-1*,hsa-miR-23b*
+899       ggtct     2.28      8.28e-02  1466                
+900       cgcca     2.28      8.29e-02  1488                
+901       cactag    2.28      8.28e-02  1883                
+902       caagag    2.28      8.28e-02  1878                
+903       gatgtc    2.28      8.27e-02  1680      hsa-miR-489
+904       acccgc    2.28      8.27e-02  1751      hsa-miR-886-3p
+905       ctgatc    2.28      8.29e-02  1456      hsa-miR-383
+906       ggatgc    2.27      8.31e-02  2690      hsa-miR-324-5p
+907       tcccgg    2.27      8.31e-02  2263                
+908       agtcca    2.27      8.33e-02  798       hsa-miR-378,hsa-miR-422a,hsa-miR-1269
+909       ggctgt    2.27      8.33e-02  2640                
+910       gagac     2.27      8.32e-02  799                 
+911       gccggc    2.27      8.33e-02  2083                
+912       accacc    2.27      8.33e-02  1446      hsa-miR-323-5p,hsa-miR-876-3p,hsa-miR-1293
+913       agagga    2.26      8.35e-02  903                 
+914       acagag    2.26      8.36e-02  1697                
+915       accgag    2.26      8.36e-02  1143      hsa-miR-423-3p
+916       ctgaga    2.26      8.35e-02  2314                
+917       agcgt     2.26      8.36e-02  1610                
+918       gtccg     2.26      8.39e-02  1652                
+919       ccgtgg    2.26      8.39e-02  2169                
+920       gctgac    2.26      8.38e-02  1084                
+921       gcaag     2.26      8.38e-02  1883                
+922       gcgggt    2.26      8.37e-02  2162                
+923       ggctgc    2.26      8.38e-02  2127                
+924       gcgtg     2.25      8.39e-02  1681                
+925       cctgtg    2.25      8.40e-02  1681      hsa-miR-513a-5p,hsa-miR-220c
+926       ccatcg    2.25      8.43e-02  1522                
+927       ccccat    2.24      8.51e-02  1634                
+928       gcatcc    2.24      8.52e-02  1220                
+929       cgggt     2.24      8.52e-02  2340                
+930       tgaggg    2.24      8.52e-02  2352                
+931       cagcag    2.24      8.52e-02  1460      hsa-miR-93*,hsa-miR-370
+932       tgggct    2.23      8.59e-02  2118                
+933       caggtc    2.23      8.58e-02  1208      hsa-miR-492,hsa-miR-631
+934       gacctg    2.23      8.60e-02  4405                
+935       gagaca    2.23      8.61e-02  798                 
+936       tcctca    2.22      8.69e-02  1681      hsa-miR-1224-5p
+937       agctg     2.22      8.71e-02  1614                
+938       caatcc    2.22      8.70e-02  744                 
+939       cgtaac    2.22      8.69e-02  798                 
+940       ccgtg     2.22      8.71e-02  1482                
+941       aggcct    2.22      8.73e-02  2262                
+942       tgcag     2.22      8.73e-02  1448                
+943       tccaac    2.22      8.73e-02  2087                
+944       tccatc    2.21      8.75e-02  1878                
+945       acgggc    2.21      8.76e-02  1993                
+946       tgccac    2.21      8.76e-02  1431                
+947       gctct     2.21      8.76e-02  1208                
+948       ccttg     2.21      8.75e-02  1208                
+949       ctaacc    2.21      8.79e-02  984                 
+950       ttcca     2.20      8.81e-02  1460                
+951       gagcgc    2.20      8.83e-02  1213                
+952       ttccag    2.20      8.83e-02  1221      hsa-miR-875-3p,hsa-miR-1299
+953       ggctcc    2.20      8.82e-02  2607      hsa-miR-505*
+954       aggtga    2.20      8.82e-02  2250                
+955       acgctg    2.20      8.81e-02  1098                
+956       ctggca    2.19      8.91e-02  1680      hsa-miR-1202
+957       acaacc    2.19      8.94e-02  1589      hsa-miR-453
+958       ttctgg    2.19      8.94e-02  1208                
+959       gtcagc    2.19      8.95e-02  1578      hsa-miR-628-5p
+960       tgctc     2.19      8.95e-02  1150                
+961       atgctg    2.18      9.01e-02  879       hsa-miR-103,hsa-miR-107,hsa-miR-338-3p
+962       acaag     2.18      9.02e-02  798                 
+963       tcccg     2.18      9.02e-02  1487                
+964       ccctga    2.18      9.05e-02  1672      hsa-miR-1266
+965       ggccgg    2.17      9.09e-02  2331                
+966       cttcac    2.17      9.08e-02  1680                
+967       cacgct    2.17      9.08e-02  2131                
+968       cggtg     2.17      9.09e-02  1524                
+969       gtggc     2.17      9.09e-02  1616                
+970       cggcct    2.17      9.10e-02  2092      hsa-miR-1295
+971       acctaa    2.17      9.09e-02  1774                
+972       gtcagg    2.16      9.13e-02  1916      hsa-miR-378*
+973       tggatg    2.16      9.13e-02  1208                
+974       tcccta    2.16      9.13e-02  2695      hsa-miR-135a*
+975       cacac     2.16      9.13e-02  1614                
+976       agcct     2.16      9.12e-02  2138                
+977       ctgtcc    2.16      9.17e-02  2123                
+978       ctccta    2.16      9.17e-02  2249                
+979       tgtctg    2.16      9.18e-02  1064      hsa-miR-1324
+980       aaaggc    2.16      9.19e-02  1634                
+981       tgggtg    2.15      9.19e-02  1208                
+982       cacagg    2.15      9.21e-02  1460                
+983       cctgct    2.15      9.21e-02  931       hsa-miR-214
+984       tgccgt    2.15      9.21e-02  1608                
+985       gcaac     2.15      9.23e-02  1460                
+986       ctaagc    2.15      9.24e-02  1208                
+987       gtccaa    2.15      9.25e-02  2873                
+988       ggcac     2.15      9.24e-02  2202                
+989       agacc     2.15      9.23e-02  804                 
+990       tggcct    2.15      9.23e-02  1906      hsa-miR-15a*
+991       caaagc    2.15      9.22e-02  1225                
+992       gatgc     2.14      9.23e-02  798                 
+993       gcaggt    2.14      9.24e-02  798                 
+994       ccgag     2.14      9.24e-02  1322                
+995       tcgcgc    2.14      9.26e-02  2575                
+996       gggtag    2.14      9.26e-02  1998                
+997       gccaat    2.13      9.37e-02  1484                
+998       cattcc    2.13      9.36e-02  1583      hsa-miR-1,hsa-miR-206,hsa-miR-613
+999       ccgat     2.13      9.36e-02  2923                
+1000      actggc    2.13      9.38e-02  2127      hsa-miR-575
+1001      caggag    2.13      9.39e-02  1680                
+1002      gtgctg    2.12      9.41e-02  1681                
+1003      cgctc     2.12      9.44e-02  2337                
+1004      agtctc    2.12      9.47e-02  907                 
+1005      ccggca    2.12      9.50e-02  1138                
+1006      ctccgt    2.12      9.49e-02  1479                
+1007      tacaca    2.12      9.49e-02  1874                
+1008      catgac    2.12      9.50e-02  1879                
+1009      cggatt    2.12      9.50e-02  2294                
+1010      ctgagg    2.11      9.51e-02  2585                
+1011      tccgc     2.11      9.57e-02  1579                
+1012      ggaact    2.11      9.57e-02  923                 
+1013      aggcgg    2.11      9.61e-02  2083                
+1014      aacgg     2.10      9.62e-02  1220                
+1015      caccat    2.10      9.64e-02  2144                
+1016      ggtctg    2.10      9.66e-02  1436                
+1017      gctgc     2.10      9.68e-02  1681                
+1018      gcgagt    2.09      9.72e-02  1526                
+1019      catcgt    2.09      9.77e-02  2738                
+1020      ggtacc    2.09      9.80e-02  1885      hsa-miR-1263
+1021      ccgctg    2.09      9.81e-02  1397      hsa-miR-923
+1022      gcagag    2.08      9.84e-02  1680                
+1023      cacaac    2.08      9.86e-02  1220                
+1024      cctgcg    2.08      9.87e-02  2761                
+1025      cccgag    2.08      9.86e-02  2365                
+1026      cagacc    2.08      9.85e-02  1618                
+1027      ggtggc    2.08      9.85e-02  1680                
+1028      atctgg    2.08      9.85e-02  1875      hsa-miR-488*
+1029      gctccg    2.08      9.87e-02  2354      hsa-miR-1203
+1030      agcagg    2.07      9.92e-02  1134      hsa-miR-370
+1031      cacggg    2.07      9.91e-02  2337                
+1032      cagcaa    2.07      9.91e-02  807                 
+1033      gtctg     2.07      9.94e-02  1523                
+1034      cctcag    2.07      9.96e-02  1316                
+1035      agacaa    2.06      9.98e-02  1456                
+1036      acgaca    2.06      9.99e-02  509                 
+1037      ggaggg    2.06      1.00e-01  2656                
+1038      ctgcg     2.06      1.00e-01  1712                
+1039      aggatg    2.06      1.00e-01  1682                
+1040      aaccca    2.06      1.00e-01  1879                
+1041      gaacc     2.05      1.01e-01  1639                
+1042      agaaag    2.05      1.01e-01  803                 
+1043      agccaa    2.05      1.01e-01  1449                
+1044      tcgtg     2.05      1.01e-01  2313                
+1045      acgcgg    2.05      1.01e-01  1941                
+1046      ccgca     2.05      1.01e-01  1264                
+1047      gtgccg    2.05      1.01e-01  2164                
+1048      agcga     2.05      1.01e-01  1199                
+1049      aaggga    2.05      1.01e-01  877       hsa-miR-204,hsa-miR-211,hsa-miR-188-5p,hsa-miR-623
+1050      cctag     2.05      1.01e-01  1883                
+1051      ctgtgg    2.04      1.01e-01  1579      hsa-miR-140-3p
+1052      catcct    2.04      1.02e-01  1220      hsa-miR-1265
+1053      tctctt    2.04      1.02e-01  1218                
+1054      tgccct    2.04      1.02e-01  1682                
+1055      tcctct    2.04      1.02e-01  1136      hsa-miR-877
+1056      tgccag    2.04      1.02e-01  1219      hsa-miR-221*
+1057      ggtccc    2.04      1.02e-01  2372                
+1058      gtcgtg    2.04      1.02e-01  938                 
+1059      ctggag    2.03      1.02e-01  2675      hsa-miR-508-5p,hsa-miR-766
+1060      catcac    2.03      1.02e-01  1577                
+1061      ctccat    2.03      1.02e-01  2087                
+1062      ctggta    2.03      1.02e-01  1378                
+1063      caacg     2.03      1.02e-01  938                 
+1064      aaagag    2.03      1.02e-01  879       hsa-miR-130b*
+1065      gctttg    2.03      1.02e-01  1431      hsa-miR-330-3p
+1066      cctgca    2.03      1.02e-01  1265      hsa-miR-1205
+1067      gcatca    2.03      1.03e-01  1479      hsa-miR-1322
+1068      actagg    2.02      1.03e-01  1122                
+1069      gcgtgg    2.02      1.03e-01  2320                
+1070      gtgag     2.02      1.04e-01  1680                
+1071      aggctg    2.01      1.04e-01  2143                
+1072      ggtca     2.01      1.04e-01  1680                
+1073      cagcac    2.01      1.04e-01  2604      hsa-miR-512-3p
+1074      catca     2.01      1.04e-01  1487                
+1075      atcac     2.01      1.04e-01  1634                
+1076      tctggt    2.01      1.04e-01  2222                
+1077      gaacac    2.00      1.05e-01  2235      hsa-miR-124*
+1078      tccac     2.00      1.05e-01  1456                
+1079      tcacag    2.00      1.05e-01  1875                
+1080      actaca    2.00      1.05e-01  1220      hsa-miR-20b*
+1081      gatcg     2.00      1.05e-01  1534                
+1082      gatccc    2.00      1.06e-01  906       hsa-miR-638,hsa-miR-769-3p,hsa-miR-450b-3p
+1083      gtgatg    1.99      1.06e-01  874       hsa-miR-499-3p
+1084      agctgc    1.99      1.06e-01  1671      hsa-miR-646,hsa-miR-1301
+1085      agaggt    1.99      1.06e-01  1626                
+1086      tggccg    1.99      1.06e-01  1915                
+1087      agaccc    1.99      1.06e-01  907       hsa-miR-193a-5p,hsa-miR-1182
+1088      atgggg    1.99      1.07e-01  2585                
+1089      gctctg    1.98      1.08e-01  2194                
+1090      cgagcg    1.98      1.08e-01  1549                
+1091      gcggt     1.98      1.08e-01  1472                
+1092      ctcctg    1.97      1.09e-01  1264      hsa-miR-665
+1093      tcgtgg    1.97      1.09e-01  2474                
+1094      agctca    1.97      1.09e-01  1714      hsa-miR-556-5p
+1095      ggacat    1.97      1.09e-01  1983                
+1096      gccagc    1.96      1.09e-01  2604                
+1097      actgag    1.96      1.09e-01  2312                
+1098      ggaggc    1.96      1.10e-01  2218      hsa-miR-1281
+1099      gtgcg     1.96      1.10e-01  2417                
+1100      cgcgag    1.96      1.10e-01  2022                
+1101      cccgat    1.96      1.10e-01  2552                
+1102      accatc    1.95      1.10e-01  1399                
+1103      catcgg    1.95      1.10e-01  1493                
+1104      gtaggg    1.95      1.10e-01  1122                
+1105      gtcca     1.95      1.10e-01  1434                
+1106      caggtg    1.95      1.10e-01  907                 
+1107      tggct     1.95      1.11e-01  1886                
+1108      gacgcg    1.95      1.11e-01  2306                
+1109      tgtgc     1.95      1.11e-01  1208                
+1110      attcc     1.95      1.11e-01  1213                
+1111      gtccgc    1.95      1.11e-01  3777                
+1112      gcatc     1.94      1.12e-01  1220                
+1113      ctagcc    1.94      1.12e-01  2225                
+1114      tctctg    1.94      1.12e-01  930                 
+1115      caccga    1.94      1.12e-01  2242                
+1116      accta     1.93      1.12e-01  1448                
+1117      gctgtg    1.93      1.13e-01  1143                
+1118      tgagtc    1.93      1.13e-01  2585                
+1119      cgccc     1.93      1.13e-01  2462                
+1120      acagac    1.93      1.13e-01  1580                
+1121      atgag     1.93      1.13e-01  1220                
+1122      cgcaaa    1.92      1.13e-01  1878      hsa-miR-450a
+1123      caaaca    1.92      1.13e-01  1218                
+1124      cctac     1.92      1.13e-01  1680                
+1125      gatccg    1.92      1.13e-01  1480      hsa-miR-127-3p
+1126      gttcc     1.92      1.13e-01  1432                
+1127      catcaa    1.92      1.14e-01  1821                
+1128      atgccc    1.92      1.14e-01  1886                
+1129      cctaca    1.92      1.14e-01  1815      hsa-miR-135b*
+1130      aggtgc    1.91      1.14e-01  1614      hsa-miR-500*
+1131      gtcac     1.91      1.14e-01  1680                
+1132      ggtcgc    1.91      1.14e-01  2410                
+1133      cacgca    1.91      1.14e-01  1555                
+1134      agagtg    1.91      1.14e-01  926                 
+1135      gtcctc    1.91      1.15e-01  2127      hsa-miR-611,hsa-miR-1224-5p
+1136      ggtcc     1.90      1.15e-01  1680                
+1137      acgtgg    1.90      1.15e-01  1480      hsa-miR-662
+1138      gcaaga    1.90      1.15e-01  1878      hsa-miR-431
+1139      cttcca    1.90      1.15e-01  1879                
+1140      tcagg     1.90      1.15e-01  1681                
+1141      aactgg    1.90      1.15e-01  1399      hsa-miR-145
+1142      ccactg    1.90      1.15e-01  922       hsa-miR-194*
+1143      agaccg    1.90      1.15e-01  1839                
+1144      catacg    1.90      1.15e-01  1346                
+1145      ctcatg    1.90      1.15e-01  1201                
+1146      cgggag    1.90      1.15e-01  2365                
+1147      ccgagc    1.90      1.15e-01  1312      hsa-miR-423-3p
+1148      ccttgg    1.90      1.15e-01  2328                
+1149      atccgg    1.90      1.15e-01  791                 
+1150      gcacct    1.89      1.15e-01  1206      hsa-miR-18a,hsa-miR-18b
+1151      actgc     1.89      1.15e-01  1214                
+1152      aagaga    1.89      1.15e-01  1883                
+1153      aaagca    1.89      1.15e-01  1224                
+1154      tcccat    1.89      1.15e-01  788                 
+1155      gatgcc    1.89      1.15e-01  803                 
+1156      ccgtac    1.89      1.16e-01  1835                
+1157      tgcgtg    1.89      1.16e-01  1697                
+1158      acagct    1.88      1.16e-01  1000                
+1159      aggcca    1.88      1.16e-01  1680                
+1160      cgaca     1.88      1.16e-01  1387                
+1161      tgtcct    1.88      1.17e-01  1878      hsa-miR-1197
+1162      aacgc     1.88      1.16e-01  1436                
+1163      gcacgg    1.88      1.17e-01  2368                
+1164      cggatg    1.87      1.17e-01  1714                
+1165      ggctct    1.87      1.17e-01  1886                
+1166      aggct     1.87      1.17e-01  1883                
+1167      aggact    1.87      1.17e-01  2236                
+1168      caataa    1.87      1.17e-01  1396                
+1169      gccgga    1.87      1.17e-01  2249      hsa-miR-1180
+1170      ccccga    1.87      1.17e-01  2345                
+1171      ttcgg     1.87      1.17e-01  871                 
+1172      caacct    1.87      1.17e-01  1214      hsa-miR-377*
+1173      gtcctg    1.87      1.17e-01  1680      hsa-miR-1286
+1174      gaggag    1.87      1.17e-01  906                 
+1175      acgcag    1.87      1.17e-01  1573                
+1176      gacct     1.87      1.17e-01  1214                
+1177      ccgtca    1.87      1.17e-01  932                 
+1178      ccccgc    1.87      1.17e-01  2109      hsa-miR-663,hsa-miR-744
+1179      gatggc    1.87      1.17e-01  2564                
+1180      tacac     1.86      1.18e-01  791                 
+1181      gcgcgg    1.86      1.18e-01  2465      hsa-miR-937
+1182      aagag     1.86      1.18e-01  803                 
+1183      cgatt     1.86      1.18e-01  1577                
+1184      gcactg    1.86      1.18e-01  1480      hsa-miR-148a,hsa-miR-152,hsa-miR-148b,hsa-miR-1825
+1185      gagagt    1.85      1.19e-01  1970                
+1186      gccat     1.85      1.19e-01  1680                
+1187      gagatc    1.85      1.19e-01  1634                
+1188      gcgggc    1.85      1.19e-01  2784                
+1189      caaact    1.85      1.19e-01  1221                
+1190      atcca     1.85      1.19e-01  1448                
+1191      cgtggc    1.85      1.19e-01  1466                
+1192      actctc    1.84      1.20e-01  1065                
+1193      cctcta    1.84      1.21e-01  1836      hsa-miR-877
+1194      gatga     1.84      1.21e-01  1395                
+1195      gccgc     1.83      1.22e-01  2121                
+1196      aagac     1.83      1.22e-01  1448                
+1197      cctgat    1.83      1.22e-01  1487                
+1198      gaggc     1.83      1.22e-01  2202                
+1199      cggtat    1.83      1.22e-01  1194                
+1200      ctcagc    1.83      1.22e-01  2260                
+1201      aggcag    1.83      1.22e-01  2585                
+1202      atccct    1.83      1.22e-01  1875                
+1203      cccaaa    1.82      1.23e-01  1881                
+1204      ggctt     1.82      1.23e-01  1208                
+1205      gtcccg    1.82      1.23e-01  2331                
+1206      accaa     1.82      1.23e-01  784                 
+1207      ttctc     1.82      1.23e-01  1215                
+1208      tcaac     1.82      1.23e-01  793                 
+1209      agcagc    1.82      1.23e-01  798                 
+1210      agaaca    1.82      1.23e-01  1448      hsa-miR-26b*
+1211      gctca     1.81      1.23e-01  2202                
+1212      ccgggg    1.81      1.23e-01  2313                
+1213      tctatg    1.81      1.23e-01  1886      hsa-miR-376c,hsa-miR-376a,hsa-miR-376b
+1214      ctttgc    1.81      1.24e-01  1448      hsa-miR-518a-5p,hsa-miR-527
+1215      gattcc    1.81      1.24e-01  1875                
+1216      cacgc     1.80      1.25e-01  1577                
+1217      cagtc     1.80      1.24e-01  1883                
+1218      aggagg    1.80      1.24e-01  813                 
+1219      agcctg    1.80      1.24e-01  1680      hsa-miR-484
+1220      aggcga    1.80      1.25e-01  547                 
+1221      cgtgct    1.80      1.25e-01  1680                
+1222      tctcct    1.80      1.25e-01  1218                
+1223      tacccc    1.80      1.25e-01  1549                
+1224      tggtgg    1.80      1.25e-01  2171                
+1225      acaga     1.79      1.26e-01  1579                
+1226      tgtct     1.79      1.26e-01  803                 
+1227      gactgg    1.79      1.26e-01  2236                
+1228      cactgg    1.79      1.26e-01  902       hsa-miR-199a-5p,hsa-miR-199b-5p,hsa-miR-1825
+1229      gagcgt    1.78      1.27e-01  1681      hsa-miR-574-3p
+1230      accaaa    1.78      1.27e-01  789       hsa-miR-9
+1231      aggtg     1.78      1.27e-01  932                 
+1232      tcccaa    1.78      1.27e-01  1681                
+1233      aacggg    1.78      1.27e-01  1314                
+1234      aaggct    1.77      1.28e-01  812                 
+1235      atgcaa    1.77      1.28e-01  1635                
+1236      cgcac     1.77      1.28e-01  1143                
+1237      ccgtcc    1.77      1.28e-01  1334      hsa-miR-184,hsa-miR-92b*
+1238      cgaagg    1.77      1.28e-01  2652                
+1239      gcaca     1.77      1.29e-01  1218                
+1240      acgct     1.77      1.29e-01  1395                
+1241      ctagca    1.77      1.29e-01  1461                
+1242      tgaca     1.77      1.29e-01  1213                
+1243      tgtcca    1.77      1.28e-01  2293                
+1244      atcgcg    1.76      1.29e-01  1472                
+1245      ggtgca    1.76      1.29e-01  2101      hsa-miR-500*,hsa-miR-501-3p,hsa-miR-502-3p
+1246      cactg     1.76      1.29e-01  1208                
+1247      cacact    1.76      1.29e-01  798       hsa-miR-574-5p,hsa-miR-595,hsa-miR-648
+1248      gcggag    1.76      1.29e-01  2081                
+1249      agcgcg    1.76      1.30e-01  1578                
+1250      ccacaa    1.76      1.30e-01  1261                
+1251      cagagt    1.75      1.30e-01  798                 
+1252      cctcac    1.75      1.30e-01  1591      hsa-miR-1294
+1253      tctttc    1.75      1.30e-01  1208                
+1254      cgcct     1.75      1.29e-01  1683                
+1255      gaccga    1.75      1.30e-01  1077                
+1256      ggggcg    1.75      1.30e-01  2313                
+1257      ctcgcc    1.75      1.30e-01  2291                
+1258      cgccat    1.75      1.30e-01  1680      hsa-miR-652
+1259      aggcgc    1.75      1.30e-01  2474      hsa-miR-566
+1260      gaagc     1.75      1.30e-01  798                 
+1261      ccaaca    1.74      1.31e-01  781                 
+1262      ggagac    1.74      1.31e-01  928                 
+1263      cgcaag    1.74      1.31e-01  1652                
+1264      agcag     1.74      1.31e-01  1201                
+1265      ggcgg     1.73      1.32e-01  2365                
+1266      tcgggg    1.73      1.33e-01  2350                
+1267      gtagtt    1.73      1.33e-01  1399      hsa-miR-606
+1268      acaac     1.73      1.33e-01  1213                
+1269      cgtcct    1.72      1.34e-01  1681                
+1270      tcccac    1.72      1.34e-01  902                 
+1271      cccatc    1.72      1.34e-01  1618                
+1272      gaatgg    1.72      1.34e-01  1202                
+1273      agcaca    1.71      1.35e-01  1223      hsa-miR-218
+1274      ccgcct    1.71      1.35e-01  2084                
+1275      cggttc    1.71      1.35e-01  1319                
+1276      tacgg     1.71      1.35e-01  2956                
+1277      ggaatc    1.71      1.36e-01  1208      hsa-miR-145*
+1278      gccctt    1.70      1.36e-01  2321                
+1279      acgtg     1.70      1.36e-01  1579                
+1280      tggcag    1.70      1.36e-01  2250                
+1281      aggcg     1.70      1.36e-01  1681                
+1282      tccctc    1.70      1.36e-01  1013                
+1283      acacct    1.70      1.36e-01  1399                
+1284      caaaag    1.70      1.36e-01  1879                
+1285      ggagca    1.70      1.37e-01  1680                
+1286      tgtgtg    1.70      1.37e-01  937       hsa-miR-377
+1287      agtgc     1.69      1.37e-01  1220                
+1288      atctgc    1.69      1.38e-01  1751                
+1289      tggaca    1.69      1.38e-01  1577                
+1290      ctctt     1.69      1.38e-01  1218                
+1291      gggctt    1.69      1.38e-01  2250                
+1292      actct     1.68      1.38e-01  881                 
+1293      gctcg     1.68      1.39e-01  2403                
+1294      gcgcc     1.68      1.39e-01  1215                
+1295      tgtgtc    1.68      1.39e-01  1879                
+1296      gtctct    1.68      1.39e-01  1213                
+1297      tgtcag    1.68      1.39e-01  1890      hsa-miR-888*
+1298      agatgg    1.68      1.39e-01  1663                
+1299      cggaga    1.67      1.39e-01  2598                
+1300      cgtgta    1.67      1.40e-01  1886                
+1301      ggttca    1.67      1.40e-01  1448                
+1302      cgattt    1.67      1.40e-01  1893                
+1303      tcgct     1.67      1.41e-01  928                 
+1304      atccg     1.67      1.40e-01  1435                
+1305      tccggc    1.66      1.41e-01  2121                
+1306      cccttg    1.66      1.41e-01  1245                
+1307      tggtga    1.66      1.41e-01  2672      hsa-miR-197
+1308      gacgca    1.66      1.41e-01  903                 
+1309      caatct    1.65      1.43e-01  1218                
+1310      cttccc    1.65      1.43e-01  1883                
+1311      agcgga    1.65      1.44e-01  1973      hsa-miR-572
+1312      gagtg     1.65      1.44e-01  1215                
+1313      tcaca     1.65      1.44e-01  1680                
+1314      ggtcgt    1.64      1.44e-01  1354                
+1315      gctatc    1.64      1.44e-01  1427                
+1316      gtctgc    1.64      1.44e-01  2718                
+1317      ctaac     1.64      1.44e-01  1214                
+1318      ttctgc    1.64      1.44e-01  1208      hsa-miR-298
+1319      cgatcc    1.64      1.45e-01  2093      hsa-miR-638
+1320      tggtcg    1.64      1.45e-01  986                 
+1321      taaacg    1.63      1.46e-01  1679                
+1322      cttgc     1.63      1.46e-01  1432                
+1323      ggcatc    1.63      1.46e-01  1612                
+1324      tgcaga    1.63      1.46e-01  1448      hsa-miR-544
+1325      caacca    1.63      1.47e-01  1643                
+1326      acaggc    1.63      1.47e-01  1457      hsa-miR-214*
+1327      cgggat    1.62      1.46e-01  2422                
+1328      gcacag    1.62      1.47e-01  1208                
+1329      gagatg    1.62      1.47e-01  2100                
+1330      gaaagc    1.62      1.48e-01  1135                
+1331      tctct     1.62      1.48e-01  1213                
+1332      ttcgtt    1.62      1.48e-01  1634                
+1333      ctcaa     1.61      1.48e-01  1213                
+1334      tgatcg    1.61      1.48e-01  1552                
+1335      ctcgca    1.61      1.48e-01  2317                
+1336      gcggct    1.61      1.48e-01  1497                
+1337      actggg    1.61      1.49e-01  2100                
+1338      gctgtc    1.60      1.50e-01  701                 
+1339      tcatcc    1.60      1.50e-01  1334      hsa-miR-1255a,hsa-miR-1255b
+1340      aaacg     1.60      1.50e-01  1608                
+1341      acgtat    1.60      1.50e-01  1434                
+1342      gcgctc    1.60      1.50e-01  2313      hsa-miR-339-3p
+1343      cgccac    1.60      1.51e-01  1526                
+1344      ccttgc    1.59      1.51e-01  936                 
+1345      cgactg    1.59      1.51e-01  1529                
+1346      ggcgat    1.59      1.51e-01  702                 
+1347      gaacg     1.59      1.51e-01  1471                
+1348      tcgttc    1.59      1.52e-01  1480                
+1349      cactca    1.59      1.52e-01  1577                
+1350      aagct     1.58      1.52e-01  1219                
+1351      accctc    1.58      1.52e-01  2173                
+1352      agcaac    1.58      1.52e-01  1465                
+1353      gctagg    1.58      1.52e-01  1400                
+1354      cgcgg     1.58      1.53e-01  2414                
+1355      atgagc    1.58      1.53e-01  1221                
+1356      acacta    1.58      1.53e-01  791       hsa-miR-142-3p
+1357      tccgct    1.57      1.54e-01  4034                
+1358      cgttcc    1.57      1.54e-01  1230      hsa-miR-1292
+1359      tagggg    1.57      1.54e-01  2323                
+1360      ggtcaa    1.57      1.54e-01  2267                
+1361      attcg     1.57      1.54e-01  1637                
+1362      cgcctg    1.57      1.54e-01  2604                
+1363      gggtcg    1.57      1.55e-01  2320      hsa-miR-551a,hsa-miR-551b
+1364      ggcttt    1.56      1.55e-01  1208                
+1365      tccctt    1.56      1.55e-01  1208                
+1366      caccac    1.56      1.55e-01  1876                
+1367      aaagac    1.56      1.55e-01  1395      hsa-miR-511
+1368      gggtcc    1.56      1.55e-01  1387                
+1369      gagtct    1.56      1.56e-01  2714                
+1370      gccact    1.56      1.56e-01  1334                
+1371      agcaag    1.56      1.56e-01  1201                
+1372      tcgcca    1.55      1.56e-01  1526                
+1373      ctcttc    1.55      1.56e-01  1004                
+1374      acacaa    1.55      1.56e-01  1817      hsa-miR-581,hsa-miR-599
+1375      cacgaa    1.55      1.56e-01  1622                
+1376      tccta     1.55      1.57e-01  907                 
+1377      gctgaa    1.55      1.56e-01  1855                
+1378      cttccg    1.55      1.57e-01  1315                
+1379      ctctct    1.55      1.57e-01  942                 
+1380      ctgacc    1.55      1.57e-01  1214                
+1381      gcggat    1.55      1.57e-01  1717                
+1382      cgcacg    1.55      1.57e-01  2038                
+1383      gtgagg    1.54      1.57e-01  2330                
+1384      acatca    1.54      1.57e-01  1395                
+1385      tgggag    1.54      1.57e-01  2703      hsa-miR-150,hsa-miR-532-3p
+1386      ccggtt    1.54      1.57e-01  1143                
+1387      gggttc    1.54      1.57e-01  1637                
+1388      cactgc    1.54      1.57e-01  1579      hsa-miR-34a,hsa-miR-34c-5p,hsa-miR-449a,hsa-miR-449b
+1389      accaca    1.54      1.57e-01  1655                
+1390      cgcaa     1.54      1.57e-01  1687                
+1391      ctggat    1.54      1.57e-01  2687                
+1392      agccat    1.54      1.58e-01  1880      hsa-miR-135a,hsa-miR-135b
+1393      tcttcg    1.53      1.58e-01  403                 
+1394      gtctgt    1.53      1.58e-01  799                 
+1395      tcgctg    1.53      1.59e-01  2327                
+1396      accgca    1.53      1.59e-01  1875                
+1397      tcgcat    1.53      1.59e-01  2015                
+1398      aagcgg    1.53      1.59e-01  2137                
+1399      gaaaga    1.52      1.60e-01  879       hsa-miR-130b*
+1400      tcaatg    1.52      1.60e-01  1448                
+1401      tgacc     1.52      1.60e-01  1214                
+1402      gacgc     1.52      1.60e-01  924                 
+1403      tccgga    1.52      1.60e-01  3809                
+1404      ttcct     1.52      1.60e-01  798                 
+1405      gaaag     1.52      1.60e-01  798                 
+1406      tcttgc    1.52      1.60e-01  1448      hsa-miR-31
+1407      gaggca    1.52      1.60e-01  2585                
+1408      tcggcc    1.52      1.60e-01  2127                
+1409      tcactc    1.52      1.60e-01  1374                
+1410      cgtgaa    1.52      1.60e-01  2112                
+1411      caggct    1.51      1.60e-01  1488      hsa-miR-596
+1412      ggaagc    1.51      1.60e-01  1178      hsa-miR-516b*,hsa-miR-516a-3p
+1413      tgggaa    1.51      1.60e-01  2763                
+1414      catct     1.51      1.60e-01  1883                
+1415      gatcgc    1.51      1.60e-01  1472                
+1416      agagaa    1.51      1.61e-01  1879      hsa-miR-942
+1417      cgtgcg    1.51      1.61e-01  2414                
+1418      ctcaga    1.51      1.62e-01  1460                
+1419      gcagga    1.50      1.62e-01  778                 
+1420      cgcctt    1.50      1.62e-01  1175      hsa-miR-525-3p,hsa-miR-524-3p
+1421      aacctc    1.50      1.62e-01  1219      hsa-miR-377*
+1422      caggt     1.50      1.62e-01  1218                
+1423      gtcag     1.50      1.63e-01  1680                
+1424      cctgt     1.50      1.63e-01  1681                
+1425      ctgatg    1.49      1.63e-01  1000                
+1426      atgggt    1.49      1.63e-01  1213      hsa-miR-660
+1427      ctgtc     1.49      1.63e-01  798                 
+1428      ccagtc    1.49      1.63e-01  2237                
+1429      ccctac    1.49      1.63e-01  1360      hsa-miR-135b*
+1430      tcaagg    1.49      1.64e-01  1886                
+1431      ggaccc    1.49      1.64e-01  1591      hsa-miR-615-5p
+1432      aggca     1.48      1.65e-01  1680                
+1433      aactac    1.48      1.65e-01  1220      hsa-miR-1244
+1434      tacacc    1.48      1.65e-01  791                 
+1435      atcgt     1.48      1.66e-01  1817                
+1436      tcacca    1.48      1.66e-01  1456                
+1437      tccatg    1.48      1.66e-01  2694      hsa-miR-490-5p
+1438      acgtgt    1.47      1.66e-01  739                 
+1439      atcgag    1.47      1.66e-01  892                 
+1440      ctagg     1.47      1.67e-01  1634                
+1441      gagacc    1.47      1.67e-01  965                 
+1442      ctttcc    1.47      1.67e-01  906                 
+1443      acggta    1.47      1.67e-01  934                 
+1444      agtggc    1.47      1.67e-01  1655                
+1445      ttccga    1.46      1.67e-01  1376                
+1446      agggt     1.46      1.67e-01  2694                
+1447      cgcag     1.46      1.67e-01  2320                
+1448      gctgt     1.46      1.67e-01  1208                
+1449      tgtctc    1.46      1.68e-01  1297                
+1450      tggaga    1.46      1.68e-01  1848      hsa-miR-515-5p,hsa-miR-519e*
+1451      agagct    1.46      1.68e-01  2100                
+1452      ggaaag    1.46      1.67e-01  1682                
+1453      ccggaa    1.46      1.67e-01  2413      hsa-miR-1180
+1454      gaagcg    1.46      1.67e-01  798                 
+1455      tggcta    1.46      1.68e-01  1219                
+1456      tcatc     1.46      1.68e-01  1436                
+1457      tcctat    1.45      1.68e-01  906                 
+1458      gtgct     1.45      1.68e-01  798                 
+1459      ctgcaa    1.45      1.69e-01  1395                
+1460      gacaat    1.45      1.69e-01  1249      hsa-miR-219-5p
+1461      caatgt    1.45      1.69e-01  1480                
+1462      gagaga    1.44      1.70e-01  1218                
+1463      cgtagg    1.44      1.70e-01  1334                
+1464      aaaggg    1.44      1.70e-01  798       hsa-miR-204,hsa-miR-211
+1465      ggcgcc    1.44      1.70e-01  1681      hsa-miR-566
+1466      gggggt    1.44      1.71e-01  1299                
+1467      acaaga    1.44      1.71e-01  871       hsa-miR-578
+1468      gcggcc    1.44      1.71e-01  2121                
+1469      gggaaa    1.43      1.72e-01  1213                
+1470      agccac    1.43      1.73e-01  1879                
+1471      tatcgg    1.43      1.73e-01  1966                
+1472      caggca    1.42      1.73e-01  1681      hsa-miR-550
+1473      ccagtg    1.42      1.73e-01  1614                
+1474      cagcgt    1.42      1.74e-01  1990                
+1475      ggaagt    1.42      1.74e-01  1878      hsa-miR-617
+1476      tcggac    1.42      1.74e-01  1568                
+1477      atctcc    1.42      1.74e-01  1233      hsa-miR-620,hsa-miR-1270
+1478      tacggt    1.42      1.74e-01  2963                
+1479      gtctca    1.41      1.74e-01  1452                
+1480      gtcggt    1.41      1.75e-01  2856                
+1481      ggggac    1.41      1.76e-01  903                 
+1482      atggcg    1.41      1.76e-01  2083      hsa-miR-122*
+1483      tcagc     1.41      1.76e-01  1436                
+1484      gcagaa    1.40      1.78e-01  914       hsa-miR-544
+1485      ttcggc    1.40      1.78e-01  3725                
+1486      agatc     1.40      1.78e-01  1448                
+1487      aacggc    1.39      1.78e-01  696                 
+1488      ggcaac    1.39      1.78e-01  1578      hsa-miR-744*
+1489      gtgac     1.39      1.78e-01  924                 
+1490      gctcgc    1.39      1.78e-01  1896                
+1491      tgctg     1.39      1.79e-01  1208                
+1492      cctat     1.39      1.79e-01  799                 
+1493      ctgacg    1.39      1.79e-01  2682                
+1494      gactca    1.39      1.79e-01  804       hsa-miR-627
+1495      aaggac    1.38      1.80e-01  782                 
+1496      atcaca    1.38      1.80e-01  1665                
+1497      aacac     1.38      1.80e-01  1579                
+1498      cctaga    1.38      1.80e-01  1004                
+1499      ggagtc    1.38      1.80e-01  1261                
+1500      accagc    1.38      1.80e-01  1543      hsa-miR-138
+1501      tgcac     1.38      1.80e-01  1681                
+1502      gcgtgc    1.38      1.80e-01  1733                
+1503      accag     1.38      1.80e-01  1543                
+1504      ttcgtg    1.38      1.80e-01  2422                
+1505      gtgggc    1.38      1.80e-01  2612                
+1506      tcatct    1.38      1.80e-01  1395      hsa-miR-143
+1507      tgacag    1.37      1.81e-01  1218                
+1508      gagtgt    1.37      1.81e-01  1217                
+1509      tccgtg    1.37      1.81e-01  1477                
+1510      tcacg     1.37      1.82e-01  1680                
+1511      aacaat    1.36      1.82e-01  1451                
+1512      catgc     1.36      1.82e-01  1215                
+1513      ctctag    1.36      1.82e-01  1261      hsa-miR-519c-5p,hsa-miR-519b-5p,hsa-miR-523*,hsa-miR-518f*,hsa-miR-526a,hsa-miR-520c-5p,hsa-miR-518e*,hsa-miR-518d-5p,hsa-miR-522*,hsa-miR-519a*
+1514      acttgg    1.36      1.82e-01  1685                
+1515      tgagga    1.36      1.82e-01  903                 
+1516      acagca    1.36      1.83e-01  1201                
+1517      tccgcg    1.36      1.83e-01  2354                
+1518      cgatag    1.36      1.84e-01  772                 
+1519      cacata    1.35      1.85e-01  1680                
+1520      tcagcg    1.35      1.85e-01  1316                
+1521      tgctgc    1.35      1.85e-01  798       hsa-miR-15a,hsa-miR-16,hsa-miR-103,hsa-miR-107,hsa-miR-15b,hsa-miR-195,hsa-miR-424,hsa-miR-497
+1522      atgac     1.35      1.85e-01  1218                
+1523      ttggag    1.35      1.86e-01  2615      hsa-miR-515-5p,hsa-miR-519e*
+1524      cggagt    1.34      1.86e-01  1172                
+1525      cagcat    1.34      1.86e-01  1883                
+1526      aggacc    1.34      1.86e-01  869                 
+1527      ctgact    1.34      1.86e-01  789                 
+1528      ctgcac    1.34      1.87e-01  1682      hsa-miR-143*
+1529      cgtata    1.34      1.87e-01  2867      hsa-let-7d*,hsa-let-7e*
+1530      gtgca     1.34      1.87e-01  1634                
+1531      ggggta    1.34      1.87e-01  1122                
+1532      cccaat    1.33      1.87e-01  1748                
+1533      ccggag    1.33      1.87e-01  1026                
+1534      ggtccg    1.33      1.87e-01  2776                
+1535      tccgcc    1.33      1.88e-01  1489      hsa-miR-25*
+1536      gcgagg    1.33      1.88e-01  2162                
+1537      gatctg    1.33      1.89e-01  925                 
+1538      cgccgc    1.32      1.89e-01  2913                
+1539      cacgac    1.32      1.89e-01  3316                
+1540      tctca     1.32      1.89e-01  1448                
+1541      ccccta    1.32      1.89e-01  2668                
+1542      tacgac    1.32      1.89e-01  1377                
+1543      cccgc     1.32      1.89e-01  2112                
+1544      agtcg     1.32      1.89e-01  1600                
+1545      attcgg    1.32      1.89e-01  1618                
+1546      cactaa    1.32      1.89e-01  789                 
+1547      cttagc    1.31      1.91e-01  688                 
+1548      ccgatt    1.31      1.91e-01  2767                
+1549      gccgat    1.31      1.91e-01  3928                
+1550      acgag     1.31      1.91e-01  1456                
+1551      ctctga    1.31      1.91e-01  1887                
+1552      aactcc    1.31      1.92e-01  2156                
+1553      gtttcc    1.30      1.92e-01  2307                
+1554      gctctc    1.30      1.92e-01  1201                
+1555      gcacaa    1.30      1.92e-01  1479                
+1556      aacaac    1.30      1.92e-01  1634                
+1557      tgggat    1.30      1.92e-01  1577                
+1558      ctcatc    1.30      1.92e-01  1563      hsa-miR-1255a,hsa-miR-1255b
+1559      ccgact    1.30      1.93e-01  2337                
+1560      cgagg     1.30      1.93e-01  2639                
+1561      gcaact    1.30      1.93e-01  1690                
+1562      cggcca    1.30      1.93e-01  2162                
+1563      ttccg     1.29      1.93e-01  1316                
+1564      taccc     1.29      1.93e-01  1377                
+1565      agccgt    1.29      1.94e-01  1179      hsa-miR-337-5p
+1566      ggaacg    1.29      1.94e-01  2095                
+1567      ttgctc    1.29      1.94e-01  1448                
+1568      ggccga    1.29      1.94e-01  2515                
+1569      ccaacg    1.28      1.95e-01  2302      hsa-miR-1306
+1570      cttggt    1.28      1.95e-01  688                 
+1571      tcacac    1.28      1.95e-01  2585                
+1572      accgta    1.28      1.95e-01  1647                
+1573      ctggcg    1.28      1.95e-01  2336                
+1574      ggttg     1.28      1.96e-01  879                 
+1575      cgtagt    1.28      1.96e-01  2530                
+1576      actgg     1.28      1.96e-01  906                 
+1577      gctagc    1.28      1.96e-01  1881      hsa-miR-621
+1578      agagtc    1.28      1.96e-01  790                 
+1579      ctcact    1.27      1.96e-01  2666      hsa-miR-921
+1580      tggcg     1.27      1.96e-01  2162                
+1581      caaggg    1.27      1.96e-01  1672      hsa-miR-623
+1582      tccga     1.27      1.96e-01  1431                
+1583      ctacat    1.27      1.96e-01  1821                
+1584      gtgga     1.27      1.96e-01  907                 
+1585      tacaat    1.27      1.96e-01  1850      hsa-miR-508-3p
+1586      ggtgat    1.27      1.96e-01  1215                
+1587      gccagt    1.27      1.96e-01  2820      hsa-miR-193a-3p,hsa-miR-193b,hsa-miR-892b
+1588      atcct     1.27      1.96e-01  1214                
+1589      accgc     1.26      1.98e-01  1680                
+1590      acaatg    1.26      1.99e-01  1879                
+1591      caaga     1.26      1.99e-01  1879                
+1592      gagagc    1.26      1.99e-01  2915                
+1593      gatcgg    1.25      2.00e-01  1483                
+1594      ccgttt    1.25      2.01e-01  1068      hsa-miR-553
+1595      caggaa    1.25      2.01e-01  798                 
+1596      tgcagg    1.25      2.01e-01  798                 
+1597      gagtga    1.25      2.01e-01  1213      hsa-miR-668
+1598      ttcccg    1.24      2.01e-01  1316      hsa-miR-425*
+1599      gcccgt    1.24      2.01e-01  2112                
+1600      gacga     1.24      2.01e-01  1456                
+1601      taggg     1.24      2.01e-01  2097                
+1602      tcgcac    1.24      2.02e-01  1136                
+1603      tgtgg     1.24      2.02e-01  1680                
+1604      ccacgc    1.24      2.02e-01  1568                
+1605      tctgtg    1.24      2.02e-01  1064                
+1606      gaaggc    1.24      2.03e-01  2643                
+1607      acgact    1.23      2.03e-01  2434                
+1608      tggtg     1.23      2.03e-01  2675                
+1609      ccttct    1.23      2.04e-01  1325                
+1610      cgcact    1.23      2.04e-01  1143                
+1611      ctacgg    1.23      2.04e-01  2511                
+1612      cgtgt     1.22      2.06e-01  874                 
+1613      gccgtt    1.22      2.06e-01  710       hsa-miR-337-5p
+1614      atcccg    1.22      2.06e-01  1325                
+1615      ctgaca    1.21      2.07e-01  1159                
+1616      gaggaa    1.21      2.07e-01  1208      hsa-miR-1238
+1617      tgggga    1.21      2.07e-01  2776                
+1618      gcggc     1.21      2.07e-01  2121                
+1619      cgtggt    1.21      2.07e-01  2185                
+1620      cacttc    1.21      2.08e-01  804       hsa-miR-573
+1621      gaggct    1.21      2.08e-01  1697                
+1622      acaaca    1.21      2.07e-01  1641                
+1623      gacgtg    1.21      2.08e-01  785                 
+1624      cgtcc     1.20      2.09e-01  1681                
+1625      aagtgg    1.20      2.09e-01  1888                
+1626      ctgct     1.20      2.09e-01  1208                
+1627      cactct    1.20      2.09e-01  1466                
+1628      tggacg    1.20      2.10e-01  1573                
+1629      ctaag     1.20      2.10e-01  1213                
+1630      cgaggc    1.19      2.11e-01  2176                
+1631      gtcgat    1.19      2.11e-01  1001      hsa-miR-369-5p
+1632      catgga    1.19      2.12e-01  925                 
+1633      cttcg     1.19      2.12e-01  1561                
+1634      atcctc    1.19      2.12e-01  1213      hsa-miR-1185
+1635      ggtgt     1.19      2.12e-01  1480                
+1636      gagggg    1.18      2.12e-01  938                 
+1637      ggttct    1.18      2.13e-01  1208      hsa-miR-548b-3p,hsa-miR-589
+1638      ccaacc    1.18      2.13e-01  1084      hsa-miR-92a-1*
+1639      gggagt    1.18      2.14e-01  2513                
+1640      tctggc    1.18      2.14e-01  1377                
+1641      cgacct    1.18      2.14e-01  517       hsa-miR-431*
+1642      ctatgg    1.18      2.14e-01  2663                
+1643      ttggg     1.17      2.14e-01  1213                
+1644      tcctag    1.17      2.14e-01  1981                
+1645      gccccg    1.17      2.14e-01  2302      hsa-miR-744
+1646      cgagga    1.17      2.14e-01  2869      hsa-miR-1238
+1647      tccaga    1.17      2.15e-01  798       hsa-miR-518c*,hsa-miR-516b,hsa-miR-1299
+1648      ctgtgt    1.17      2.15e-01  1201                
+1649      ggttgg    1.17      2.15e-01  1680                
+1650      gcgtc     1.17      2.15e-01  1532                
+1651      ctgtga    1.16      2.16e-01  1070      hsa-miR-27a,hsa-miR-27b,hsa-miR-513a-5p
+1652      cgcat     1.16      2.16e-01  946                 
+1653      atgcg     1.16      2.16e-01  2583                
+1654      aaccta    1.16      2.17e-01  792                 
+1655      aaacgc    1.15      2.17e-01  1486                
+1656      actca     1.15      2.18e-01  1449                
+1657      tgcatc    1.15      2.18e-01  1136                
+1658      gtacc     1.15      2.18e-01  1232                
+1659      atctc     1.15      2.19e-01  1448                
+1660      cacggc    1.14      2.20e-01  2313                
+1661      caatgg    1.14      2.19e-01  1680                
+1662      ctatc     1.14      2.20e-01  1400                
+1663      agtcgg    1.14      2.20e-01  1590                
+1664      gaaca     1.14      2.20e-01  1879                
+1665      agtccg    1.14      2.20e-01  2696                
+1666      cgctct    1.14      2.20e-01  1302                
+1667      ctgagt    1.14      2.20e-01  1173      hsa-miR-512-5p,hsa-miR-510
+1668      ccaatc    1.13      2.21e-01  1634      hsa-miR-509-3p
+1669      ggcgca    1.13      2.22e-01  2776                
+1670      cctacc    1.13      2.22e-01  1374                
+1671      ctatcc    1.13      2.22e-01  796                 
+1672      tggctc    1.13      2.22e-01  1886      hsa-miR-505*
+1673      atgcc     1.13      2.22e-01  798                 
+1674      gcttgg    1.13      2.23e-01  881                 
+1675      agagca    1.12      2.23e-01  692                 
+1676      tcgca     1.12      2.23e-01  2162                
+1677      cgaccg    1.12      2.24e-01  3699                
+1678      cgacaa    1.12      2.24e-01  926                 
+1679      actgcg    1.12      2.24e-01  1218                
+1680      ccgaga    1.12      2.24e-01  2366                
+1681      gatggg    1.12      2.24e-01  1208                
+1682      ccttcg    1.11      2.25e-01  1395                
+1683      agtcct    1.11      2.25e-01  1477                
+1684      ccggct    1.11      2.25e-01  931                 
+1685      gaggtt    1.11      2.25e-01  1620                
+1686      gtccca    1.11      2.25e-01  878       hsa-miR-1302
+1687      cgggac    1.11      2.26e-01  2329                
+1688      gccgag    1.11      2.26e-01  2833      hsa-miR-1307
+1689      atacgc    1.11      2.26e-01  1337                
+1690      ggtcca    1.10      2.27e-01  851                 
+1691      tcctcg    1.10      2.27e-01  2313      hsa-miR-151-5p,hsa-miR-611
+1692      gaccgg    1.10      2.26e-01  932                 
+1693      agaag     1.10      2.26e-01  798                 
+1694      cttgtc    1.10      2.26e-01  798                 
+1695      tgatcc    1.10      2.26e-01  1218                
+1696      aagatc    1.10      2.27e-01  1451                
+1697      agctgt    1.10      2.27e-01  1201                
+1698      ggcga     1.10      2.27e-01  851                 
+1699      ggtagc    1.10      2.28e-01  1360                
+1700      agacct    1.09      2.28e-01  1158                
+1701      tcacgg    1.09      2.28e-01  1488                
+1702      aggaag    1.09      2.28e-01  1203      hsa-miR-516b*,hsa-miR-516a-3p
+1703      agatct    1.09      2.28e-01  1451                
+1704      tgctca    1.09      2.28e-01  1448                
+1705      cccgca    1.09      2.28e-01  1264                
+1706      tcctga    1.09      2.28e-01  1136                
+1707      cgacc     1.09      2.28e-01  940                 
+1708      tacggc    1.09      2.28e-01  2526                
+1709      aacgct    1.09      2.28e-01  1486                
+1710      ttgcca    1.09      2.28e-01  1431      hsa-miR-182
+1711      agcaga    1.09      2.28e-01  1465                
+1712      aaccac    1.08      2.29e-01  1465      hsa-miR-140-5p,hsa-miR-876-3p
+1713      acgcaa    1.08      2.29e-01  1552                
+1714      gcgct     1.08      2.29e-01  1304                
+1715      cactga    1.08      2.29e-01  1208                
+1716      ggagaa    1.08      2.29e-01  1213      hsa-miR-629*
+1717      ttggtg    1.08      2.30e-01  688                 
+1718      gagaag    1.08      2.30e-01  2084      hsa-miR-942
+1719      acggtg    1.08      2.30e-01  2585                
+1720      atgtgt    1.08      2.30e-01  1874                
+1721      tacaga    1.07      2.30e-01  1579                
+1722      gcact     1.07      2.30e-01  1616                
+1723      tatggg    1.07      2.30e-01  2250                
+1724      ctatgt    1.07      2.31e-01  1879      hsa-miR-376c
+1725      ttgccc    1.07      2.31e-01  2087                
+1726      cgccct    1.07      2.31e-01  1578                
+1727      ggatcg    1.07      2.32e-01  1466                
+1728      tctacc    1.06      2.32e-01  1874      hsa-miR-379
+1729      cgcgta    1.06      2.33e-01  1978                
+1730      tcggtg    1.06      2.34e-01  1314                
+1731      aggtct    1.05      2.35e-01  2761      hsa-miR-769-5p
+1732      cccta     1.05      2.35e-01  2260                
+1733      cgtat     1.05      2.35e-01  798                 
+1734      tcagcc    1.05      2.35e-01  1886                
+1735      tcacct    1.05      2.36e-01  1607      hsa-miR-125a-3p
+1736      gctcat    1.05      2.36e-01  1150      hsa-miR-556-5p
+1737      tagcac    1.05      2.36e-01  739                 
+1738      gaatag    1.05      2.36e-01  1843      hsa-miR-26a-1*,hsa-miR-26a-2*
+1739      tctgga    1.04      2.37e-01  984       hsa-miR-198,hsa-miR-520a-5p,hsa-miR-525-5p
+1740      ctctca    1.04      2.37e-01  802                 
+1741      tcaaac    1.04      2.37e-01  1699                
+1742      cgctgt    1.04      2.38e-01  1391                
+1743      aacagc    1.03      2.39e-01  1210                
+1744      ccgctt    1.03      2.39e-01  1464                
+1745      acgacg    1.03      2.40e-01  770                 
+1746      gcagtc    1.03      2.40e-01  1537      hsa-miR-1288
+1747      ccgct     1.03      2.40e-01  1488                
+1748      cgggtg    1.03      2.41e-01  2365                
+1749      ccatct    1.02      2.41e-01  1697                
+1750      cgtttc    1.02      2.41e-01  1243                
+1751      aagcaa    1.02      2.41e-01  1431                
+1752      aagtcg    1.02      2.41e-01  1477                
+1753      taccca    1.02      2.41e-01  986       hsa-miR-1225-5p
+1754      actccg    1.02      2.42e-01  2082                
+1755      atggc     1.02      2.42e-01  1879                
+1756      aatctg    1.01      2.42e-01  1214      hsa-miR-10b*
+1757      cggtgg    1.01      2.43e-01  1134      hsa-miR-1280
+1758      cctagg    1.01      2.43e-01  1886                
+1759      ctcga     1.01      2.43e-01  2821                
+1760      tgcaaa    1.01      2.43e-01  1448      hsa-miR-507,hsa-miR-557,hsa-miR-450b-5p
+1761      atcgc     1.01      2.43e-01  1472                
+1762      ccgcg     1.01      2.43e-01  2778                
+1763      ttccgg    1.01      2.43e-01  1150                
+1764      gcactc    1.01      2.43e-01  1616                
+1765      gggcg     1.00      2.45e-01  1614                
+1766      acacga    1.00      2.44e-01  2306                
+1767      ccctcg    1.00      2.44e-01  2313                
+1768      atggcc    1.00      2.45e-01  1213      hsa-miR-15a*
+1769      ccaaat    1.00      2.45e-01  777                 
+1770      tgccta    1.00      2.45e-01  1857                
+1771      acgagg    1.00      2.46e-01  2137                
+1772      cgccga    1.00      2.46e-01  2117      hsa-miR-1307
+1773      tcgtcc    0.99      2.46e-01  2776                
+1774      acgtgc    0.99      2.46e-01  1678                
+1775      cctatt    0.99      2.46e-01  1884                
+1776      ggctca    0.99      2.47e-01  2585                
+1777      cggtt     0.99      2.47e-01  1397                
+1778      tgcgt     0.99      2.48e-01  1680                
+1779      catctg    0.98      2.48e-01  1887                
+1780      cgcaga    0.98      2.48e-01  2422                
+1781      tcagca    0.98      2.49e-01  2009      hsa-miR-93*,hsa-miR-628-5p
+1782      caggat    0.98      2.50e-01  1218                
+1783      cctcaa    0.97      2.50e-01  1222      hsa-miR-1304
+1784      aggtcc    0.97      2.51e-01  1576      hsa-miR-492
+1785      gagcag    0.97      2.51e-01  1680      hsa-miR-767-3p
+1786      gttggg    0.97      2.51e-01  2138                
+1787      gtgaca    0.97      2.51e-01  1471      hsa-miR-597
+1788      ttgacg    0.97      2.51e-01  2779                
+1789      agcatg    0.97      2.51e-01  1883                
+1790      agctga    0.97      2.52e-01  2585                
+1791      cagtgc    0.97      2.52e-01  1395      hsa-miR-106b*
+1792      cacga     0.97      2.52e-01  1578                
+1793      cgcagc    0.96      2.52e-01  2612      hsa-miR-604
+1794      gcttct    0.96      2.51e-01  1208                
+1795      atctct    0.96      2.51e-01  1655                
+1796      gacggc    0.96      2.52e-01  2120                
+1797      gctgcg    0.96      2.52e-01  848                 
+1798      acccgg    0.96      2.52e-01  1779                
+1799      cgtccc    0.96      2.52e-01  1392      hsa-miR-92b*
+1800      cttgac    0.96      2.52e-01  2768                
+1801      cgccag    0.96      2.52e-01  1098                
+1802      ggcgga    0.96      2.52e-01  1717                
+1803      ggacgg    0.96      2.52e-01  2131      hsa-miR-1247
+1804      ggtgaa    0.95      2.53e-01  1886      hsa-miR-412
+1805      aggtgg    0.95      2.54e-01  928       hsa-miR-1224-3p
+1806      tggttc    0.95      2.54e-01  1208                
+1807      aggaac    0.95      2.55e-01  798                 
+1808      atcggc    0.94      2.56e-01  413                 
+1809      atggtg    0.94      2.56e-01  2675      hsa-miR-767-5p
+1810      ctatca    0.94      2.56e-01  1385                
+1811      ccgtga    0.94      2.56e-01  1570                
+1812      gccggt    0.94      2.56e-01  2425                
+1813      gtcgc     0.94      2.57e-01  2120                
+1814      cgataa    0.94      2.57e-01  1483                
+1815      caacgc    0.94      2.57e-01  4305                
+1816      gcttcc    0.94      2.57e-01  1325      hsa-miR-671-5p
+1817      actctg    0.94      2.57e-01  1538                
+1818      ggtaag    0.94      2.57e-01  1136                
+1819      acaatt    0.93      2.57e-01  1213      hsa-miR-219-2-3p
+1820      gcggtg    0.93      2.57e-01  1477                
+1821      tacgtg    0.93      2.58e-01  787                 
+1822      atgaca    0.93      2.58e-01  1195                
+1823      cagaac    0.93      2.58e-01  1893      hsa-miR-148b*
+1824      aggtca    0.93      2.59e-01  1616      hsa-miR-192,hsa-miR-215
+1825      ccgccc    0.92      2.60e-01  2105      hsa-miR-1228*
+1826      cccgcc    0.92      2.60e-01  2105      hsa-miR-663
+1827      cacaat    0.92      2.60e-01  1836                
+1828      atatcc    0.92      2.60e-01  2251                
+1829      gactgc    0.92      2.60e-01  1220                
+1830      aacaca    0.92      2.61e-01  1750                
+1831      ccgaa     0.92      2.61e-01  1432                
+1832      cggcat    0.91      2.61e-01  1448                
+1833      atgctc    0.91      2.61e-01  1213                
+1834      tttggc    0.91      2.62e-01  902                 
+1835      acgcca    0.91      2.62e-01  874                 
+1836      aaacac    0.91      2.62e-01  1577                
+1837      tgtcta    0.91      2.62e-01  804                 
+1838      gcacg     0.91      2.62e-01  799                 
+1839      ttccct    0.90      2.63e-01  1213                
+1840      ggccgc    0.90      2.63e-01  1680                
+1841      aaggca    0.90      2.63e-01  1883      hsa-miR-532-5p
+1842      ggcacg    0.90      2.63e-01  2338                
+1843      ggtgct    0.90      2.63e-01  2761      hsa-miR-29a,hsa-miR-29b,hsa-miR-29c
+1844      aacaag    0.90      2.64e-01  798                 
+1845      attggg    0.90      2.64e-01  778                 
+1846      accttc    0.90      2.64e-01  1885      hsa-miR-493
+1847      gcagtg    0.90      2.64e-01  2695                
+1848      tgagag    0.90      2.64e-01  881                 
+1849      gtccta    0.89      2.64e-01  1213                
+1850      ccggt     0.89      2.64e-01  2436                
+1851      aaacga    0.89      2.65e-01  1707                
+1852      ggctag    0.89      2.65e-01  1335                
+1853      aagtc     0.89      2.65e-01  1214                
+1854      ggactt    0.89      2.65e-01  765                 
+1855      cgtcag    0.89      2.65e-01  1579                
+1856      acgcct    0.89      2.66e-01  2533                
+1857      tgaggc    0.88      2.66e-01  2249                
+1858      gtgaga    0.88      2.66e-01  1145      hsa-miR-1229
+1859      gcgcg     0.88      2.66e-01  2471                
+1860      gtgtgg    0.88      2.68e-01  1208                
+1861      gccacg    0.88      2.67e-01  2313      hsa-miR-132*,hsa-miR-1204
+1862      gcctgt    0.88      2.68e-01  897                 
+1863      cgctca    0.88      2.68e-01  2788                
+1864      gctcaa    0.88      2.68e-01  1189                
+1865      ccagt     0.87      2.70e-01  780                 
+1866      acgcac    0.87      2.70e-01  4307      hsa-miR-210
+1867      gcacgc    0.87      2.70e-01  937                 
+1868      gaacag    0.87      2.71e-01  803       hsa-miR-26b*
+1869      gcgccg    0.86      2.71e-01  2056                
+1870      atccag    0.86      2.72e-01  1537      hsa-miR-1287,hsa-miR-1243
+1871      cccgaa    0.86      2.73e-01  1487                
+1872      gacgag    0.86      2.73e-01  2365                
+1873      atccca    0.85      2.73e-01  813       hsa-miR-769-3p,hsa-miR-450b-3p
+1874      ctcac     0.85      2.73e-01  2251                
+1875      ccgtgc    0.85      2.74e-01  4185      hsa-miR-564
+1876      gtcgt     0.85      2.74e-01  1143                
+1877      ttgggc    0.85      2.74e-01  2308                
+1878      ccaaga    0.85      2.74e-01  781                 
+1879      ctagag    0.85      2.74e-01  2101      hsa-miR-517*,hsa-miR-1251
+1880      gtggct    0.84      2.76e-01  1680                
+1881      gcatg     0.84      2.76e-01  1215                
+1882      cggttg    0.84      2.77e-01  847                 
+1883      ccgata    0.84      2.77e-01  2420                
+1884      gaacgg    0.84      2.77e-01  1207                
+1885      tctaag    0.84      2.77e-01  1218                
+1886      tgtaca    0.84      2.77e-01  701       hsa-let-7g*,hsa-miR-493*
+1887      tggttg    0.84      2.77e-01  879                 
+1888      aacacg    0.84      2.77e-01  1573                
+1889      tgcctt    0.84      2.77e-01  1680      hsa-miR-124,hsa-miR-506
+1890      attggc    0.83      2.77e-01  1655      hsa-miR-192*
+1891      cggcga    0.83      2.77e-01  2320                
+1892      tcgcc     0.83      2.77e-01  798                 
+1893      acggcc    0.83      2.77e-01  2313                
+1894      tcggt     0.83      2.78e-01  1359                
+1895      ttcacg    0.83      2.78e-01  867                 
+1896      ccggat    0.83      2.78e-01  1577                
+1897      gggtac    0.83      2.79e-01  939                 
+1898      gaagac    0.83      2.78e-01  407                 
+1899      gtgcgc    0.82      2.80e-01  2422                
+1900      cgaat     0.82      2.80e-01  798                 
+1901      atcatc    0.82      2.80e-01  1879                
+1902      agacgg    0.82      2.80e-01  2127      hsa-miR-340*
+1903      ggcta     0.82      2.80e-01  1234                
+1904      gaccta    0.82      2.80e-01  1176                
+1905      tcgtgt    0.81      2.81e-01  2313                
+1906      caattc    0.81      2.81e-01  1855      hsa-miR-219-2-3p
+1907      tcgag     0.81      2.82e-01  799                 
+1908      gtgtag    0.81      2.82e-01  1200                
+1909      ctgcga    0.81      2.82e-01  1199                
+1910      gctcgg    0.81      2.83e-01  2210      hsa-miR-615-3p
+1911      gcctat    0.80      2.83e-01  1883                
+1912      cgtga     0.80      2.83e-01  1218                
+1913      acactt    0.80      2.83e-01  1400      hsa-miR-595
+1914      ctcgag    0.80      2.84e-01  874       hsa-miR-516a-5p
+1915      tgcatg    0.80      2.84e-01  1634                
+1916      gaggat    0.80      2.84e-01  880                 
+1917      cgagca    0.80      2.85e-01  2716                
+1918      gcgctg    0.80      2.85e-01  2703                
+1919      gccgtg    0.79      2.85e-01  2127                
+1920      gtacg     0.79      2.86e-01  1968                
+1921      ccctat    0.79      2.87e-01  2686      hsa-miR-135a*
+1922      gcagat    0.79      2.87e-01  1676                
+1923      atgga     0.78      2.88e-01  1386                
+1924      tctcac    0.78      2.88e-01  2260                
+1925      ccactt    0.78      2.89e-01  901                 
+1926      cagtca    0.78      2.89e-01  1583      hsa-miR-134,hsa-miR-943
+1927      tggtc     0.78      2.89e-01  1634                
+1928      tcgat     0.78      2.89e-01  1435                
+1929      tgaacc    0.78      2.89e-01  1636                
+1930      ctcgct    0.77      2.90e-01  928                 
+1931      cgatgg    0.77      2.91e-01  554       hsa-miR-181c*,hsa-miR-181a*
+1932      ctgaag    0.77      2.91e-01  789                 
+1933      aggcac    0.76      2.93e-01  2120      hsa-miR-515-3p,hsa-miR-519e,hsa-miR-550,hsa-miR-33b*
+1934      gggcat    0.76      2.93e-01  2340      hsa-miR-365
+1935      atccgc    0.76      2.93e-01  1435                
+1936      gcaaca    0.76      2.93e-01  1060      hsa-miR-367*,hsa-miR-744*
+1937      gatgca    0.76      2.94e-01  1917                
+1938      catgag    0.76      2.94e-01  1583                
+1939      tgattc    0.76      2.94e-01  1881      hsa-miR-15b*
+1940      ctccga    0.75      2.95e-01  1973                
+1941      aagctg    0.75      2.95e-01  1606                
+1942      cgagtt    0.75      2.95e-01  1680                
+1943      agtcga    0.75      2.95e-01  1569                
+1944      cgacg     0.74      2.97e-01  2478                
+1945      cgaatg    0.74      2.98e-01  1048      hsa-miR-1298
+1946      ctgtac    0.74      2.98e-01  1230      hsa-let-7g*
+1947      tgacaa    0.74      2.98e-01  1154                
+1948      gacaac    0.74      2.99e-01  781       hsa-miR-453
+1949      cgagaa    0.73      3.01e-01  762                 
+1950      aggggt    0.73      3.02e-01  1122                
+1951      tttcg     0.73      3.02e-01  656                 
+1952      gcctac    0.73      3.02e-01  1878                
+1953      cgactc    0.73      3.02e-01  2875                
+1954      ccaatt    0.72      3.02e-01  1821                
+1955      atgtgc    0.72      3.02e-01  1682                
+1956      gcttag    0.72      3.03e-01  688                 
+1957      ccgaag    0.72      3.03e-01  1264                
+1958      cggcta    0.72      3.03e-01  2516                
+1959      acccaa    0.72      3.03e-01  827                 
+1960      accat     0.72      3.03e-01  1448                
+1961      gtcaac    0.71      3.05e-01  1889      hsa-miR-380*,hsa-miR-563
+1962      ggttgt    0.71      3.05e-01  701                 
+1963      atacg     0.71      3.05e-01  1233                
+1964      ccggtg    0.71      3.05e-01  1686                
+1965      tggcgg    0.71      3.05e-01  2176                
+1966      gtgacc    0.71      3.06e-01  926                 
+1967      cccgct    0.71      3.06e-01  920                 
+1968      ggcaat    0.71      3.06e-01  1916                
+1969      actagc    0.71      3.06e-01  1689                
+1970      ctatgc    0.70      3.07e-01  1876      hsa-miR-153
+1971      tcacgc    0.70      3.07e-01  1848                
+1972      cgcacc    0.70      3.07e-01  1322      hsa-miR-675
+1973      tccgt     0.70      3.07e-01  1218                
+1974      cgtag     0.70      3.07e-01  2125                
+1975      gtgcag    0.70      3.08e-01  1689                
+1976      tcgccc    0.70      3.09e-01  2778                
+1977      agaggc    0.69      3.09e-01  1323                
+1978      tcggat    0.69      3.09e-01  1578                
+1979      tcagga    0.69      3.09e-01  778       hsa-miR-378*,hsa-miR-1200
+1980      ttcgga    0.69      3.09e-01  884                 
+1981      cctttc    0.69      3.09e-01  490       hsa-miR-488
+1982      cgctcc    0.69      3.09e-01  2788                
+1983      gaggcc    0.69      3.10e-01  2202                
+1984      ggcgag    0.69      3.10e-01  1536                
+1985      cgacgg    0.69      3.10e-01  2913                
+1986      ttcgc     0.69      3.10e-01  523                 
+1987      agaacg    0.69      3.10e-01  1614                
+1988      ggggtt    0.68      3.10e-01  1205                
+1989      gccga     0.68      3.12e-01  2585                
+1990      tatgag    0.68      3.12e-01  1230                
+1991      ttttcg    0.68      3.12e-01  2255                
+1992      tcgagt    0.68      3.12e-01  902                 
+1993      ggtgcg    0.67      3.13e-01  2526                
+1994      cggctt    0.67      3.13e-01  2118                
+1995      gccttt    0.67      3.14e-01  1680                
+1996      tcaggc    0.67      3.15e-01  1145      hsa-miR-1201
+1997      acaagg    0.67      3.15e-01  1448                
+1998      aaatgg    0.67      3.15e-01  879                 
+1999      cagact    0.66      3.15e-01  907       hsa-miR-622
+2000      gatggt    0.66      3.16e-01  1432      hsa-miR-181c*
+2001      tggca     0.66      3.16e-01  1616                
+2002      aagga     0.66      3.16e-01  798                 
+2003      gcgacc    0.65      3.18e-01  3878                
+2004      cacaca    0.65      3.18e-01  1614      hsa-miR-147
+2005      ccggtc    0.65      3.18e-01  2331                
+2006      agcact    0.65      3.19e-01  1448      hsa-miR-302a,hsa-miR-302b,hsa-miR-302c,hsa-miR-302d,hsa-miR-372,hsa-miR-373,hsa-miR-512-3p,hsa-miR-520e,hsa-miR-520f,hsa-miR-520a-3p,hsa-miR-520b,hsa-miR-520c-3p,hsa-miR-520d-3p,hsa-miR-302e
+2007      attcgc    0.65      3.19e-01  1817                
+2008      gacgga    0.65      3.19e-01  1915                
+2009      cggtta    0.65      3.20e-01  1397                
+2010      agcggc    0.65      3.20e-01  2320                
+2011      ctccgc    0.65      3.20e-01  1708      hsa-miR-25*,hsa-miR-658
+2012      gcagca    0.65      3.20e-01  2111                
+2013      ccaact    0.64      3.20e-01  847       hsa-miR-571
+2014      tgcacc    0.64      3.21e-01  1681                
+2015      atactc    0.64      3.20e-01  1466      hsa-miR-496
+2016      acctac    0.64      3.21e-01  1448                
+2017      agcgc     0.64      3.20e-01  1208                
+2018      atgtct    0.64      3.21e-01  1400      hsa-miR-641
+2019      gcccgc    0.64      3.21e-01  2437                
+2020      gctggt    0.64      3.21e-01  2121      hsa-miR-634,hsa-miR-1226
+2021      ccgta     0.64      3.21e-01  1561                
+2022      gaggta    0.64      3.22e-01  1877      hsa-miR-875-5p
+2023      tctatc    0.64      3.22e-01  1839                
+2024      ccgtt     0.63      3.22e-01  697                 
+2025      aaagtc    0.63      3.22e-01  1214                
+2026      ccgcac    0.63      3.23e-01  2083      hsa-miR-675,hsa-miR-147b
+2027      tggaag    0.63      3.23e-01  1208                
+2028      tcgac     0.63      3.24e-01  1081                
+2029      gacggt    0.63      3.24e-01  2118                
+2030      ccgagg    0.62      3.24e-01  1151                
+2031      ccgacc    0.62      3.25e-01  924       hsa-miR-886-5p
+2032      cttgag    0.62      3.25e-01  798       hsa-miR-513c
+2033      ccgcga    0.62      3.25e-01  1026                
+2034      cgatgt    0.62      3.25e-01  1874                
+2035      tcatgc    0.62      3.25e-01  781                 
+2036      ggccaa    0.61      3.27e-01  1448                
+2037      ctggtt    0.61      3.27e-01  804                 
+2038      tgaacg    0.61      3.27e-01  673                 
+2039      ctagga    0.61      3.28e-01  1666      hsa-miR-384
+2040      gctac     0.61      3.27e-01  781                 
+2041      atggga    0.60      3.29e-01  1208                
+2042      aatgg     0.60      3.30e-01  1448                
+2043      tcggta    0.60      3.30e-01  1201                
+2044      tcggct    0.60      3.30e-01  2585                
+2045      tgctga    0.60      3.30e-01  781                 
+2046      ccggcg    0.60      3.30e-01  2083                
+2047      cccgtc    0.60      3.31e-01  1542      hsa-miR-483-5p
+2048      ctaccc    0.60      3.31e-01  1537                
+2049      gttct     0.59      3.32e-01  1208                
+2050      ctgtca    0.59      3.32e-01  781       hsa-miR-542-3p
+2051      aatccc    0.59      3.33e-01  1758                
+2052      tagggt    0.59      3.33e-01  1875                
+2053      cgacac    0.59      3.34e-01  1411                
+2054      cgggta    0.58      3.36e-01  1608                
+2055      cggtac    0.58      3.36e-01  2776      hsa-miR-126
+2056      caaccg    0.58      3.36e-01  1487                
+2057      cgaggg    0.58      3.36e-01  863                 
+2058      ttccgc    0.57      3.37e-01  3588                
+2059      agtttc    0.57      3.37e-01  1886                
+2060      acgcg     0.57      3.37e-01  1941                
+2061      ctcta     0.57      3.38e-01  1208                
+2062      tacggg    0.57      3.38e-01  2112      hsa-miR-99a,hsa-miR-100,hsa-miR-99b
+2063      acacac    0.57      3.38e-01  1685                
+2064      tagagc    0.57      3.38e-01  913                 
+2065      ttggc     0.57      3.38e-01  1214                
+2066      cgatg     0.57      3.39e-01  669                 
+2067      catgcg    0.57      3.39e-01  2725                
+2068      tgtgcg    0.56      3.40e-01  1210                
+2069      cgtgtg    0.56      3.40e-01  1639                
+2070      tcagtc    0.56      3.40e-01  1884                
+2071      catagg    0.56      3.40e-01  1442      hsa-miR-202*
+2072      ggcggt    0.55      3.42e-01  1199                
+2073      atcacg    0.55      3.42e-01  1767                
+2074      gtacca    0.55      3.43e-01  2775      hsa-miR-150*,hsa-miR-1263
+2075      cgggaa    0.55      3.45e-01  4215                
+2076      gtcaat    0.54      3.45e-01  1656                
+2077      cccggt    0.54      3.45e-01  3093                
+2078      tgtccg    0.54      3.45e-01  1556                
+2079      ggaaga    0.54      3.45e-01  444       hsa-miR-141*,hsa-miR-1236
+2080      agcgaa    0.54      3.45e-01  990                 
+2081      cgacgt    0.54      3.46e-01  4552                
+2082      ctttgg    0.54      3.47e-01  1835      hsa-miR-186*
+2083      acgga     0.54      3.47e-01  1547                
+2084      ctcgaa    0.54      3.47e-01  2842                
+2085      taggcg    0.54      3.47e-01  3648                
+2086      ctctac    0.53      3.47e-01  1712                
+2087      atcctg    0.53      3.47e-01  1218                
+2088      tggcaa    0.53      3.47e-01  1230                
+2089      gtggac    0.53      3.48e-01  689                 
+2090      agaac     0.53      3.49e-01  1448                
+2091      gctgat    0.53      3.49e-01  914       hsa-miR-34a*
+2092      gcgcga    0.52      3.50e-01  2512                
+2093      cgcggt    0.52      3.51e-01  2764                
+2094      gcgcct    0.52      3.51e-01  1712      hsa-miR-525-3p,hsa-miR-524-3p
+2095      cgctt     0.52      3.51e-01  1432                
+2096      gacctt    0.52      3.52e-01  910       hsa-miR-493
+2097      gtgcgt    0.52      3.52e-01  1593      hsa-miR-521
+2098      cttgcg    0.52      3.52e-01  1080                
+2099      ctcgac    0.51      3.52e-01  822                 
+2100      gtctat    0.51      3.53e-01  1218                
+2101      cgcccg    0.51      3.53e-01  2784                
+2102      catcga    0.51      3.54e-01  910                 
+2103      ccagat    0.51      3.54e-01  1396                
+2104      gccatc    0.51      3.54e-01  2100                
+2105      tccaca    0.51      3.54e-01  1448                
+2106      caagcg    0.50      3.54e-01  2083                
+2107      gatcga    0.50      3.55e-01  5002                
+2108      cgcctc    0.50      3.56e-01  656                 
+2109      ctcggc    0.50      3.56e-01  2112                
+2110      gattcg    0.50      3.56e-01  499                 
+2111      ccatgt    0.50      3.56e-01  1680                
+2112      tgagct    0.50      3.56e-01  1620                
+2113      tggaac    0.50      3.57e-01  918                 
+2114      gtcga     0.50      3.57e-01  1001                
+2115      cgactt    0.49      3.57e-01  2619                
+2116      agtgag    0.49      3.58e-01  2691                
+2117      tctcat    0.49      3.58e-01  803                 
+2118      ggacaa    0.48      3.60e-01  1201                
+2119      cacat     0.48      3.60e-01  701                 
+2120      agtctg    0.48      3.60e-01  2721                
+2121      gtacga    0.48      3.60e-01  1893      hsa-miR-487b
+2122      aacgga    0.48      3.61e-01  1547                
+2123      ggtcag    0.48      3.62e-01  1672                
+2124      cgacca    0.48      3.62e-01  1134                
+2125      tccacg    0.48      3.62e-01  4439                
+2126      tttgcg    0.48      3.62e-01  1199                
+2127      tagggc    0.47      3.63e-01  2670      hsa-miR-18b*
+2128      atgcca    0.47      3.63e-01  788                 
+2129      gcgcat    0.47      3.63e-01  1208                
+2130      tcgggt    0.47      3.63e-01  1680                
+2131      gtgagc    0.47      3.64e-01  1680      hsa-miR-1178
+2132      cgcagg    0.46      3.64e-01  831                 
+2133      accttg    0.46      3.65e-01  986       hsa-miR-624
+2134      ctgcgt    0.46      3.65e-01  1671                
+2135      acctga    0.46      3.65e-01  2585                
+2136      ggtgac    0.46      3.65e-01  1680                
+2137      gacca     0.46      3.65e-01  1680                
+2138      cctaag    0.46      3.65e-01  1448                
+2139      gcaacc    0.46      3.66e-01  1456                
+2140      acagtc    0.45      3.67e-01  1751      hsa-miR-943
+2141      cttacg    0.45      3.67e-01  879                 
+2142      atcgtg    0.45      3.68e-01  1844                
+2143      ggcaca    0.45      3.68e-01  1616      hsa-miR-455-5p
+2144      ccacat    0.45      3.68e-01  881       hsa-miR-299-3p
+2145      cgtgca    0.45      3.69e-01  1614                
+2146      tgacg     0.45      3.69e-01  843                 
+2147      acacat    0.44      3.69e-01  1748                
+2148      ctacc     0.44      3.70e-01  1378                
+2149      caaagg    0.44      3.70e-01  1208                
+2150      tggtcc    0.44      3.70e-01  848                 
+2151      ttggcc    0.44      3.70e-01  2250                
+2152      tgcaca    0.44      3.70e-01  689                 
+2153      gagaa     0.44      3.70e-01  1666                
+2154      cgatac    0.44      3.71e-01  1200                
+2155      ccaata    0.43      3.73e-01  589                 
+2156      agaatg    0.43      3.73e-01  1394                
+2157      actggt    0.43      3.74e-01  1009                
+2158      tcacaa    0.43      3.75e-01  1680      hsa-miR-758
+2159      tctgac    0.42      3.75e-01  2695                
+2160      ctactc    0.42      3.75e-01  878                 
+2161      cctctt    0.42      3.76e-01  1004      hsa-miR-583
+2162      tccttg    0.42      3.76e-01  692                 
+2163      agacta    0.42      3.76e-01  1136                
+2164      gtcacc    0.42      3.76e-01  1644                
+2165      gcgac     0.42      3.77e-01  3900                
+2166      tagcga    0.42      3.77e-01  4831                
+2167      tgccat    0.41      3.78e-01  1680      hsa-miR-183
+2168      gtagcc    0.41      3.78e-01  1135                
+2169      ccttag    0.41      3.79e-01  1877                
+2170      aacgtg    0.41      3.80e-01  1487                
+2171      ggacca    0.40      3.82e-01  1138      hsa-miR-133a,hsa-miR-133b
+2172      gcgaa     0.39      3.85e-01  851                 
+2173      ccgatc    0.39      3.85e-01  2854                
+2174      ggccat    0.39      3.85e-01  881                 
+2175      ggagat    0.39      3.86e-01  4284                
+2176      attcgt    0.38      3.87e-01  691                 
+2177      acgggg    0.38      3.88e-01  1515                
+2178      gcaggc    0.38      3.88e-01  1436      hsa-miR-596
+2179      ccacga    0.38      3.88e-01  1664                
+2180      tagcgg    0.38      3.88e-01  2508                
+2181      gctctt    0.38      3.88e-01  1885      hsa-miR-335,hsa-miR-1276
+2182      gttctg    0.38      3.88e-01  1208      hsa-miR-589*
+2183      actaga    0.38      3.89e-01  1886                
+2184      tgctcg    0.38      3.89e-01  701                 
+2185      aggat     0.38      3.89e-01  1219                
+2186      gaacga    0.38      3.89e-01  1463                
+2187      cttggc    0.37      3.90e-01  2327                
+2188      gcggtc    0.37      3.90e-01  1874                
+2189      tccgat    0.37      3.92e-01  3034                
+2190      catacc    0.37      3.92e-01  1881                
+2191      gcaaaa    0.37      3.92e-01  1635      hsa-miR-19a*,hsa-miR-19b-1*,hsa-miR-19b-2*,hsa-miR-129-5p
+2192      tatcg     0.36      3.94e-01  1051                
+2193      agatcg    0.36      3.94e-01  2533                
+2194      gcgat     0.36      3.94e-01  688                 
+2195      ttcgct    0.36      3.95e-01  475                 
+2196      cggtcc    0.35      3.96e-01  2893                
+2197      tgagcc    0.35      3.96e-01  2259      hsa-miR-24
+2198      cgtgtc    0.35      3.96e-01  2300                
+2199      ggaccg    0.35      3.96e-01  1568                
+2200      tagacc    0.35      3.96e-01  1882      hsa-miR-601
+2201      cgatta    0.35      3.97e-01  1965                
+2202      gacaga    0.34      3.99e-01  1208                
+2203      gggtga    0.34      3.98e-01  1170                
+2204      cgaatc    0.34      3.98e-01  1595                
+2205      gtaggc    0.34      3.99e-01  1201      hsa-miR-24-1*,hsa-miR-24-2*
+2206      cccccg    0.34      3.99e-01  2313                
+2207      ctgaac    0.34      3.99e-01  1215                
+2208      agggcg    0.34      3.99e-01  1068      hsa-miR-1249
+2209      aatggc    0.34      3.99e-01  1208                
+2210      tcagag    0.34      3.99e-01  1211      hsa-miR-146a*
+2211      ggatc     0.34      3.99e-01  1215                
+2212      aacga     0.34      4.00e-01  1464                
+2213      atggag    0.34      4.00e-01  1590      hsa-miR-136
+2214      tactct    0.33      4.01e-01  1483                
+2215      ggtcga    0.33      4.02e-01  2434                
+2216      gtcaa     0.33      4.03e-01  1883                
+2217      gcgcag    0.32      4.03e-01  2856      hsa-miR-191*
+2218      agatcc    0.32      4.04e-01  1225                
+2219      cgcgc     0.32      4.06e-01  1018                
+2220      ctcccg    0.31      4.07e-01  2365                
+2221      gacttg    0.31      4.07e-01  1006                
+2222      cgcgca    0.31      4.08e-01  3125                
+2223      gcaacg    0.30      4.11e-01  880                 
+2224      atcgcc    0.30      4.12e-01  348                 
+2225      actcct    0.29      4.13e-01  1214                
+2226      ccgaat    0.29      4.14e-01  1651                
+2227      cggtga    0.29      4.14e-01  924                 
+2228      agcgcc    0.29      4.15e-01  1208                
+2229      actcag    0.29      4.15e-01  1334                
+2230      tccgaa    0.29      4.16e-01  1425                
+2231      cgacga    0.29      4.16e-01  3198                
+2232      tacctg    0.29      4.16e-01  1218                
+2233      cggcg     0.28      4.16e-01  2320                
+2234      tgtcac    0.28      4.16e-01  798       hsa-miR-542-3p
+2235      ccgtct    0.28      4.16e-01  1717      hsa-miR-483-5p
+2236      ggacgt    0.28      4.16e-01  1566                
+2237      cgtgac    0.28      4.17e-01  1577                
+2238      agtacc    0.28      4.17e-01  1234                
+2239      cgttct    0.28      4.17e-01  903                 
+2240      agcgtt    0.28      4.17e-01  1975                
+2241      cactcg    0.28      4.17e-01  780                 
+2242      aatccg    0.28      4.17e-01  914                 
+2243      gggcgt    0.27      4.18e-01  897                 
+2244      atgtac    0.27      4.18e-01  1195      hsa-miR-493*
+2245      aacgac    0.27      4.18e-01  1663                
+2246      cgtca     0.27      4.18e-01  1319                
+2247      actacg    0.27      4.19e-01  1924                
+2248      aacatc    0.27      4.20e-01  1378                
+2249      gaccat    0.27      4.20e-01  2305                
+2250      tgcaag    0.26      4.24e-01  2691                
+2251      acatcg    0.25      4.26e-01  2561                
+2252      agtgcg    0.25      4.28e-01  2153      hsa-miR-106b*,hsa-miR-521
+2253      acgaa     0.25      4.28e-01  518                 
+2254      gttctc    0.24      4.28e-01  812       hsa-miR-146a,hsa-miR-146b-5p,hsa-miR-589
+2255      tggcgt    0.24      4.28e-01  1724      hsa-miR-122*
+2256      acggac    0.24      4.29e-01  2795                
+2257      ctgttc    0.24      4.29e-01  954                 
+2258      cgggcg    0.24      4.29e-01  2194                
+2259      gaacgt    0.24      4.30e-01  2057                
+2260      gggta     0.23      4.31e-01  1137                
+2261      ggttga    0.23      4.31e-01  798                 
+2262      ggtacg    0.23      4.32e-01  3487      hsa-miR-126
+2263      cggaag    0.23      4.32e-01  2335                
+2264      ctcgat    0.23      4.33e-01  937                 
+2265      aaggcg    0.23      4.33e-01  2421                
+2266      tcgact    0.23      4.33e-01  1566                
+2267      ccggac    0.23      4.33e-01  2121                
+2268      gcatag    0.23      4.33e-01  1634      hsa-miR-31*
+2269      gggttg    0.23      4.33e-01  986                 
+2270      cgttc     0.22      4.33e-01  798                 
+2271      tttcgt    0.22      4.34e-01  1883                
+2272      tcgcct    0.22      4.34e-01  517                 
+2273      catggc    0.22      4.35e-01  2615                
+2274      gcaagt    0.22      4.35e-01  778                 
+2275      cgattg    0.22      4.35e-01  4810                
+2276      actctt    0.22      4.36e-01  781                 
+2277      gctag     0.22      4.36e-01  1879                
+2278      gggcta    0.21      4.36e-01  1237                
+2279      gtaccg    0.21      4.37e-01  1664                
+2280      ggcttc    0.20      4.39e-01  1697      hsa-miR-671-5p
+2281      gcgtag    0.20      4.39e-01  2149                
+2282      gccaag    0.20      4.40e-01  1446                
+2283      acgaaa    0.20      4.40e-01  1762                
+2284      tgtcg     0.20      4.40e-01  984                 
+2285      acgacc    0.20      4.41e-01  2989      hsa-miR-431*
+2286      aactgc    0.20      4.41e-01  1213                
+2287      catgca    0.20      4.41e-01  2616                
+2288      acccgt    0.20      4.41e-01  2876                
+2289      ggtttc    0.19      4.42e-01  1218                
+2290      cccatt    0.19      4.44e-01  1878                
+2291      cgcgga    0.18      4.45e-01  2891      hsa-miR-937
+2292      gccgct    0.18      4.45e-01  1397                
+2293      aatgcg    0.18      4.47e-01  2696                
+2294      aacctg    0.18      4.47e-01  1208      hsa-miR-657
+2295      cagcgc    0.18      4.47e-01  2169                
+2296      atgacc    0.17      4.48e-01  1220                
+2297      cacgag    0.17      4.48e-01  1557                
+2298      tcgacg    0.17      4.49e-01  722                 
+2299      ctaggt    0.17      4.49e-01  1436                
+2300      atgcag    0.17      4.49e-01  874       hsa-miR-20a*,hsa-miR-217
+2301      cacgcg    0.17      4.49e-01  1938                
+2302      taggct    0.17      4.51e-01  1843                
+2303      agctag    0.16      4.51e-01  788                 
+2304      gcacac    0.16      4.51e-01  693       hsa-miR-648
+2305      gtacgg    0.16      4.53e-01  1915                
+2306      ccgcag    0.16      4.53e-01  1264                
+2307      cgccg     0.16      4.54e-01  2124                
+2308      catggt    0.15      4.54e-01  2767      hsa-miR-591
+2309      agcaat    0.15      4.54e-01  1493      hsa-miR-137,hsa-miR-302f
+2310      aagccg    0.15      4.57e-01  1131                
+2311      gtatac    0.14      4.57e-01  1857                
+2312      cgtatc    0.14      4.59e-01  791                 
+2313      accaag    0.14      4.59e-01  774                 
+2314      atctca    0.14      4.60e-01  1884                
+2315      gcgtct    0.14      4.60e-01  1573      hsa-miR-139-3p
+2316      cgtgga    0.14      4.60e-01  2387                
+2317      acgggt    0.13      4.60e-01  1571      hsa-miR-99a,hsa-miR-100,hsa-miR-99b
+2318      gaacgc    0.13      4.61e-01  1872                
+2319      tggacc    0.13      4.61e-01  698                 
+2320      gtcgct    0.13      4.61e-01  1402                
+2321      taagca    0.13      4.61e-01  1448                
+2322      ctcacg    0.13      4.61e-01  1072                
+2323      gagtgg    0.13      4.61e-01  2320                
+2324      cggtgt    0.13      4.61e-01  1123      hsa-miR-220a
+2325      tctccg    0.13      4.61e-01  926                 
+2326      gcgaaa    0.13      4.61e-01  752                 
+2327      tcgtga    0.13      4.61e-01  1321                
+2328      cagtgg    0.13      4.61e-01  1680      hsa-miR-181a-2*
+2329      ctagtc    0.13      4.61e-01  704                 
+2330      tacgt     0.12      4.62e-01  788                 
+2331      agtggg    0.12      4.63e-01  2708                
+2332      cggccg    0.12      4.64e-01  1147                
+2333      cccgtt    0.12      4.65e-01  1081                
+2334      gatcac    0.12      4.64e-01  1663      hsa-miR-1245
+2335      gccgac    0.12      4.65e-01  643                 
+2336      cggaa     0.12      4.65e-01  445                 
+2337      cgcatg    0.12      4.65e-01  851                 
+2338      caacgt    0.11      4.64e-01  2408                
+2339      ggcgac    0.11      4.65e-01  3974      hsa-miR-1181
+2340      tgactc    0.11      4.65e-01  769                 
+2341      ttaggg    0.11      4.67e-01  1821      hsa-miR-18b*
+2342      tggcgc    0.11      4.67e-01  2702                
+2343      atcttc    0.11      4.67e-01  1136                
+2344      gaagtc    0.10      4.68e-01  1663      hsa-miR-617
+2345      acgagt    0.09      4.72e-01  1544                
+2346      tcacat    0.09      4.72e-01  788                 
+2347      ttctcg    0.09      4.73e-01  2200                
+2348      ccctaa    0.08      4.75e-01  2250                
+2349      attccg    0.08      4.77e-01  1915                
+2350      cgctta    0.08      4.77e-01  1395                
+2351      acgcc     0.08      4.78e-01  1608                
+2352      ctatcg    0.08      4.78e-01  1431                
+2353      ttgcg     0.07      4.79e-01  1213                
+2354      cgtaca    0.07      4.80e-01  5086                
+2355      acggcg    0.07      4.81e-01  1001                
+2356      tgtcgt    0.06      4.82e-01  984                 
+2357      tggcga    0.06      4.83e-01  2666                
+2358      gtgtcg    0.05      4.87e-01  2109                
+2359      acggt     0.05      4.87e-01  1213                
+2360      taagtc    0.05      4.89e-01  1836                
+2361      accgct    0.05      4.89e-01  1693                
+2362      gtacgt    0.04      4.89e-01  1199                
+2363      cgtcgg    0.04      4.89e-01  1648                
+2364      agcgct    0.04      4.89e-01  557       hsa-miR-518e
+2365      ggatcc    0.04      4.89e-01  1230      hsa-miR-127-3p
+2366      accgac    0.04      4.89e-01  2194                
+2367      ccgcgg    0.04      4.91e-01  2414                
+2368      ccgccg    0.04      4.92e-01  2124                
+2369      gcgaac    0.04      4.91e-01  999                 
+2370      tcgtag    0.04      4.92e-01  1406                
+2371      ccacgt    0.03      4.93e-01  1883                
+2372      cgcga     0.03      4.93e-01  993                 
+2373      cgtgat    0.03      4.93e-01  837                 
+2374      tatcgc    0.03      4.93e-01  1170                
+2375      gactat    0.03      4.95e-01  1292                
+2376      tcctgt    0.03      4.94e-01  1004                
+2377      ccgtgt    0.02      4.97e-01  788       hsa-miR-602
+2378      gaggtc    0.02      4.99e-01  2222                
+2379      cttcga    0.02      4.99e-01  1360                
+2380      aaacgg    0.01      4.99e-01  1272                
+2381      tgcgcg    0.01      5.02e-01  4390                
+2382      cgagct    0.01      5.02e-01  1678      hsa-miR-99a*,hsa-miR-99b*
+2383      ctagcg    0.01      5.02e-01  5110                
+2384      aatgag    0.01      5.02e-01  1218                
+2385      tgcgc     0.00      5.03e-01  1218                
+2386      ccttgt    0.00      5.03e-01  799       hsa-miR-624
+2387      cgtcaa    0.00      5.03e-01  2960                
+2388      gaaagg    0.00      5.03e-01  798                 
+2389      gggtat    -0.00     5.04e-01  1136                
+2390      tcagct    -0.00     5.04e-01  1432                
+2391      taagag    -0.00     5.03e-01  1177                
+2392      gtctaa    -0.00     5.04e-01  1840                
+2393      tcgctc    -0.00     5.04e-01  1845                
+2394      tggtgc    -0.00     5.05e-01  2666      hsa-miR-29a,hsa-miR-29b,hsa-miR-29c,hsa-miR-593*,hsa-miR-767-5p
+2395      ccgaac    -0.01     5.06e-01  1333                
+2396      accgcc    -0.01     5.06e-01  1685                
+2397      atcgtc    -0.01     5.07e-01  1672                
+2398      aggccg    -0.01     5.07e-01  2194      hsa-miR-1234
+2399      cacgga    -0.01     5.07e-01  851                 
+2400      gcgcgt    -0.01     5.07e-01  4601      hsa-miR-523
+2401      agcatc    -0.01     5.08e-01  697                 
+2402      acactg    -0.02     5.08e-01  2536      hsa-miR-199a-5p,hsa-miR-199b-5p
+2403      ccccgt    -0.02     5.09e-01  1676                
+2404      gagtca    -0.03     5.11e-01  689       hsa-miR-345
+2405      ggatct    -0.03     5.12e-01  1225                
+2406      ctacca    -0.03     5.14e-01  1448                
+2407      ccgtag    -0.03     5.14e-01  1316                
+2408      tcaaca    -0.03     5.15e-01  774       hsa-miR-653,hsa-miR-1267
+2409      gatgcg    -0.04     5.15e-01  1522                
+2410      ctcaag    -0.04     5.16e-01  1881      hsa-miR-526b
+2411      accacg    -0.04     5.17e-01  1708                
+2412      ccgatg    -0.04     5.17e-01  1877                
+2413      ggtcct    -0.04     5.17e-01  1606                
+2414      gatcca    -0.04     5.18e-01  1217                
+2415      cgcgt     -0.05     5.18e-01  2403                
+2416      ctaggg    -0.05     5.18e-01  3997                
+2417      gtcaga    -0.05     5.19e-01  897                 
+2418      gacgtc    -0.05     5.19e-01  3783                
+2419      acaacg    -0.05     5.20e-01  1387                
+2420      tgcgct    -0.05     5.20e-01  1201                
+2421      aagagc    -0.05     5.21e-01  906                 
+2422      actcga    -0.06     5.22e-01  1982                
+2423      aacgca    -0.06     5.23e-01  4305                
+2424      acgcat    -0.06     5.24e-01  942                 
+2425      cgttga    -0.07     5.24e-01  1319      hsa-miR-95
+2426      atggaa    -0.07     5.25e-01  1821      hsa-miR-587
+2427      gtacag    -0.07     5.25e-01  774       hsa-miR-486-5p
+2428      cagacg    -0.07     5.26e-01  2241                
+2429      ctctat    -0.07     5.25e-01  2676                
+2430      tcctac    -0.07     5.25e-01  906                 
+2431      gatgac    -0.07     5.26e-01  1135                
+2432      gacgt     -0.07     5.26e-01  2778                
+2433      caccg     -0.08     5.27e-01  930                 
+2434      tagcag    -0.08     5.29e-01  1189                
+2435      tcaact    -0.08     5.29e-01  1448      hsa-miR-219-1-3p
+2436      gcatgc    -0.08     5.29e-01  998                 
+2437      atccgt    -0.08     5.30e-01  970                 
+2438      tacctc    -0.08     5.30e-01  1877      hsa-let-7a,hsa-let-7b,hsa-let-7c,hsa-let-7d,hsa-let-7e,hsa-let-7f,hsa-miR-98,hsa-let-7g,hsa-let-7i,hsa-miR-202
+2439      gcttcg    -0.09     5.31e-01  4128                
+2440      aaccgc    -0.09     5.31e-01  1679                
+2441      aaccga    -0.10     5.34e-01  1259                
+2442      caccgt    -0.10     5.35e-01  1005                
+2443      cgtac     -0.10     5.35e-01  459                 
+2444      gttcgc    -0.10     5.35e-01  2694                
+2445      ccatac    -0.10     5.35e-01  2308                
+2446      tagatc    -0.11     5.38e-01  1883                
+2447      cgctcg    -0.11     5.39e-01  2306                
+2448      gcgtga    -0.11     5.39e-01  1136                
+2449      tgcacg    -0.11     5.40e-01  799       hsa-miR-517a,hsa-miR-517b,hsa-miR-517c
+2450      gttcaa    -0.12     5.41e-01  1656                
+2451      cctatc    -0.12     5.43e-01  1158                
+2452      gatctc    -0.12     5.43e-01  1315                
+2453      ccgggt    -0.13     5.45e-01  2337      hsa-miR-941
+2454      cccgta    -0.13     5.46e-01  2836                
+2455      tctcgg    -0.13     5.46e-01  1147                
+2456      gcctgc    -0.13     5.46e-01  2855                
+2457      acagat    -0.13     5.46e-01  1425                
+2458      tctgcg    -0.13     5.47e-01  1466                
+2459      tatccc    -0.14     5.49e-01  783                 
+2460      tgcgac    -0.15     5.53e-01  2891                
+2461      tgtgac    -0.15     5.53e-01  1205                
+2462      acgtcg    -0.15     5.54e-01  864                 
+2463      cacggt    -0.15     5.54e-01  2411                
+2464      ataggg    -0.15     5.55e-01  1634      hsa-miR-454*
+2465      ggcact    -0.15     5.55e-01  2121      hsa-miR-371-3p,hsa-miR-515-3p,hsa-miR-519e,hsa-miR-33b*
+2466      ctacag    -0.15     5.55e-01  1202      hsa-miR-20b*,hsa-miR-1183
+2467      tagttg    -0.15     5.55e-01  2234                
+2468      ctcgcg    -0.15     5.55e-01  4785                
+2469      caggta    -0.16     5.55e-01  2743                
+2470      gtcctt    -0.16     5.55e-01  784                 
+2471      gtccac    -0.16     5.56e-01  764                 
+2472      cgatat    -0.16     5.55e-01  1936                
+2473      gccgca    -0.16     5.57e-01  1258                
+2474      cgtctg    -0.17     5.60e-01  2164                
+2475      atagat    -0.17     5.61e-01  1436                
+2476      atcgat    -0.17     5.61e-01  4426                
+2477      cgctgc    -0.17     5.62e-01  1301      hsa-miR-503,hsa-miR-885-3p
+2478      tcgaga    -0.17     5.62e-01  799       hsa-miR-516a-5p
+2479      agcgac    -0.18     5.62e-01  3717                
+2480      cgcgct    -0.18     5.64e-01  2403                
+2481      acgtca    -0.19     5.66e-01  2112                
+2482      acctcg    -0.19     5.66e-01  2512                
+2483      cgaaag    -0.19     5.67e-01  813                 
+2484      cgtatg    -0.19     5.68e-01  2257                
+2485      gagttg    -0.19     5.69e-01  826                 
+2486      gtggtg    -0.20     5.70e-01  2202      hsa-miR-197,hsa-miR-220b
+2487      cgacta    -0.20     5.72e-01  4411                
+2488      ttccac    -0.20     5.72e-01  1456                
+2489      caattg    -0.20     5.73e-01  695                 
+2490      accgaa    -0.20     5.72e-01  2361                
+2491      ctcacc    -0.20     5.72e-01  1686                
+2492      cgaac     -0.21     5.74e-01  1848                
+2493      aggagt    -0.21     5.75e-01  803       hsa-miR-483-3p
+2494      tgcgtc    -0.21     5.75e-01  1434                
+2495      atttcg    -0.21     5.75e-01  1784                
+2496      agcgtc    -0.22     5.78e-01  2809                
+2497      tagcgt    -0.22     5.78e-01  788                 
+2498      tcgacc    -0.22     5.78e-01  946                 
+2499      accgg     -0.22     5.78e-01  871                 
+2500      ttggga    -0.22     5.78e-01  2703      hsa-miR-150
+2501      acgaat    -0.22     5.78e-01  515                 
+2502      gtcgac    -0.23     5.79e-01  1214                
+2503      cgcagt    -0.23     5.79e-01  1708                
+2504      ctgctg    -0.23     5.79e-01  1259      hsa-miR-214,hsa-miR-922
+2505      accgtc    -0.23     5.80e-01  1591                
+2506      gagaac    -0.23     5.80e-01  2656                
+2507      ctacg     -0.24     5.84e-01  2611                
+2508      gctgca    -0.24     5.85e-01  1259      hsa-miR-1301,hsa-miR-1184
+2509      gaccct    -0.25     5.87e-01  814       hsa-miR-1182
+2510      atatcg    -0.25     5.87e-01  1192                
+2511      agacg     -0.25     5.87e-01  465                 
+2512      ggcgcg    -0.25     5.87e-01  2598                
+2513      gggcga    -0.25     5.87e-01  1622                
+2514      accggt    -0.25     5.88e-01  843                 
+2515      acgatt    -0.25     5.90e-01  1889                
+2516      ttggca    -0.26     5.90e-01  1433      hsa-miR-192*
+2517      ggcgtg    -0.26     5.90e-01  2153                
+2518      ccgagt    -0.26     5.90e-01  1427                
+2519      accggc    -0.26     5.90e-01  4568                
+2520      ccgctc    -0.26     5.91e-01  2835                
+2521      gacgaa    -0.26     5.92e-01  517                 
+2522      ttcgac    -0.27     5.93e-01  331                 
+2523      gggcgg    -0.27     5.95e-01  2313                
+2524      cgaaa     -0.27     5.95e-01  1886                
+2525      ggagtg    -0.27     5.96e-01  1150      hsa-miR-483-3p
+2526      gcaccg    -0.27     5.96e-01  3878      hsa-miR-1250
+2527      tgcgaa    -0.28     5.97e-01  1201                
+2528      cggtca    -0.28     5.96e-01  1460                
+2529      cccata    -0.29     6.01e-01  1342                
+2530      acggct    -0.29     6.03e-01  2766                
+2531      ttgacc    -0.29     6.04e-01  2656                
+2532      catcgc    -0.29     6.04e-01  893                 
+2533      gaccgt    -0.30     6.05e-01  924                 
+2534      cgacag    -0.30     6.05e-01  3943                
+2535      gcgata    -0.30     6.06e-01  686                 
+2536      gcggca    -0.30     6.06e-01  1708                
+2537      ttacgg    -0.30     6.07e-01  2937                
+2538      ttcaac    -0.30     6.07e-01  547       hsa-miR-653
+2539      cgtgcc    -0.31     6.08e-01  2365      hsa-miR-564
+2540      ccattc    -0.31     6.09e-01  1215                
+2541      agacca    -0.31     6.09e-01  1663                
+2542      taggga    -0.31     6.11e-01  2109                
+2543      accccg    -0.32     6.12e-01  1675                
+2544      cgtcat    -0.32     6.13e-01  1178                
+2545      atgcgt    -0.32     6.14e-01  1874                
+2546      ataggc    -0.32     6.15e-01  1636                
+2547      ttgagc    -0.33     6.16e-01  804                 
+2548      caaggt    -0.33     6.17e-01  782                 
+2549      tcccga    -0.33     6.17e-01  721       hsa-miR-425*
+2550      gcacga    -0.33     6.19e-01  3713      hsa-miR-517a,hsa-miR-517c
+2551      ccgttg    -0.33     6.19e-01  1690      hsa-miR-95
+2552      gggata    -0.34     6.20e-01  888                 
+2553      cgaata    -0.34     6.22e-01  658                 
+2554      gtgcta    -0.35     6.27e-01  798                 
+2555      gccgcg    -0.36     6.28e-01  970                 
+2556      agtcgc    -0.37     6.33e-01  3713                
+2557      gtatcg    -0.37     6.34e-01  1024                
+2558      cacgtt    -0.38     6.37e-01  2343                
+2559      aagacg    -0.38     6.37e-01  663                 
+2560      agagcg    -0.38     6.38e-01  682                 
+2561      tgggta    -0.38     6.39e-01  1680                
+2562      gagacg    -0.39     6.40e-01  1911      hsa-miR-340*
+2563      tcgcta    -0.39     6.41e-01  1004                
+2564      actcgc    -0.39     6.41e-01  516                 
+2565      tccgtc    -0.39     6.41e-01  732       hsa-miR-184
+2566      tagaac    -0.39     6.41e-01  1699      hsa-miR-182*
+2567      cggcgg    -0.39     6.42e-01  2314                
+2568      tggcac    -0.39     6.42e-01  1616      hsa-miR-1227
+2569      gtgtca    -0.39     6.42e-01  798       hsa-miR-425,hsa-miR-514
+2570      gacctc    -0.40     6.43e-01  672                 
+2571      gaccaa    -0.40     6.43e-01  947       hsa-miR-133a,hsa-miR-133b
+2572      cctagt    -0.40     6.44e-01  1877                
+2573      gtcggg    -0.41     6.46e-01  1652                
+2574      cgagag    -0.41     6.47e-01  1205                
+2575      tgttcc    -0.41     6.47e-01  1006                
+2576      tccggt    -0.41     6.47e-01  1069                
+2577      actcac    -0.41     6.47e-01  784                 
+2578      cagatc    -0.42     6.52e-01  1208                
+2579      aagcga    -0.42     6.53e-01  2083                
+2580      ttggcg    -0.43     6.54e-01  871                 
+2581      cgtctc    -0.43     6.54e-01  1680      hsa-miR-139-3p
+2582      gctact    -0.43     6.54e-01  2728      hsa-miR-562
+2583      tgggcg    -0.43     6.54e-01  1656                
+2584      gcgca     -0.43     6.55e-01  806                 
+2585      cgcgcc    -0.45     6.63e-01  1315                
+2586      acgcgt    -0.45     6.63e-01  2110                
+2587      ggttgc    -0.45     6.63e-01  1004                
+2588      gcgtcc    -0.45     6.63e-01  1529                
+2589      tgacat    -0.45     6.64e-01  788                 
+2590      tgcgag    -0.46     6.68e-01  3779                
+2591      caatcg    -0.46     6.68e-01  1464                
+2592      cgtccg    -0.46     6.68e-01  1509                
+2593      caaacg    -0.46     6.68e-01  966       hsa-miR-1282
+2594      gcgact    -0.46     6.69e-01  2630                
+2595      cggaat    -0.46     6.69e-01  875                 
+2596      gcgtca    -0.48     6.76e-01  1436                
+2597      ctcggg    -0.48     6.76e-01  2356                
+2598      aagtca    -0.48     6.76e-01  782                 
+2599      cagtct    -0.49     6.79e-01  1839      hsa-miR-151-3p
+2600      acgaac    -0.49     6.78e-01  1578                
+2601      cggcaa    -0.49     6.78e-01  1427                
+2602      actcg     -0.49     6.80e-01  804                 
+2603      tcgcg     -0.50     6.82e-01  1529                
+2604      tttcgc    -0.50     6.83e-01  556                 
+2605      tctcgc    -0.50     6.85e-01  514                 
+2606      gcgcgc    -0.51     6.87e-01  1005                
+2607      catatc    -0.51     6.89e-01  1402      hsa-miR-190,hsa-miR-190b
+2608      gacacg    -0.51     6.89e-01  2253      hsa-miR-187
+2609      cgtagc    -0.52     6.89e-01  1984                
+2610      cggcgc    -0.52     6.90e-01  2892                
+2611      gcgtgt    -0.53     6.93e-01  1663                
+2612      ggaaca    -0.53     6.93e-01  1006                
+2613      cgtct     -0.53     6.94e-01  1682                
+2614      atcga     -0.53     6.95e-01  832                 
+2615      ctagtg    -0.54     6.97e-01  1833                
+2616      atcaac    -0.54     7.00e-01  2336                
+2617      ggttcc    -0.55     7.02e-01  1218                
+2618      tcatcg    -0.55     7.03e-01  1456                
+2619      tattcg    -0.56     7.04e-01  780                 
+2620      cgaaaa    -0.56     7.05e-01  2728                
+2621      gcaagc    -0.56     7.05e-01  1539                
+2622      cagttc    -0.57     7.10e-01  1217                
+2623      cgatga    -0.57     7.12e-01  2128      hsa-miR-136*
+2624      ctacgt    -0.58     7.15e-01  2960      hsa-miR-1277
+2625      ttcgca    -0.59     7.18e-01  1766                
+2626      gtgcat    -0.59     7.18e-01  2676      hsa-miR-501-3p,hsa-miR-502-3p
+2627      gcggaa    -0.59     7.18e-01  402                 
+2628      cggatc    -0.59     7.19e-01  829                 
+2629      ttgtcc    -0.60     7.24e-01  1452                
+2630      tcgta     -0.62     7.29e-01  796                 
+2631      tgacca    -0.62     7.31e-01  1712                
+2632      tcggtt    -0.62     7.31e-01  1355                
+2633      tgtggc    -0.62     7.30e-01  1456                
+2634      tcgcgt    -0.63     7.33e-01  1595                
+2635      gtccga    -0.63     7.33e-01  1906                
+2636      tgtcgc    -0.63     7.35e-01  2142      hsa-miR-1273
+2637      atcgta    -0.63     7.35e-01  1486                
+2638      gcggtt    -0.64     7.38e-01  1183                
+2639      cgcgtc    -0.64     7.39e-01  4646                
+2640      ccatag    -0.64     7.40e-01  1453                
+2641      agcgta    -0.65     7.42e-01  1213                
+2642      gggaat    -0.65     7.43e-01  1208                
+2643      tttcga    -0.65     7.44e-01  2250                
+2644      tgcgcc    -0.66     7.46e-01  1143                
+2645      gatcgt    -0.67     7.48e-01  1616                
+2646      cgaggt    -0.67     7.52e-01  1614                
+2647      gcgttg    -0.68     7.52e-01  556                 
+2648      ctattc    -0.68     7.53e-01  784                 
+2649      atcgga    -0.68     7.54e-01  1631                
+2650      cggcac    -0.68     7.54e-01  2118      hsa-miR-371-3p
+2651      cgcgcg    -0.69     7.56e-01  1005                
+2652      tccgag    -0.72     7.68e-01  1487                
+2653      tgtcgg    -0.72     7.70e-01  1941                
+2654      ccctag    -0.72     7.71e-01  917                 
+2655      taccac    -0.73     7.71e-01  1634                
+2656      ggtaga    -0.74     7.75e-01  1395                
+2657      tcacgt    -0.74     7.76e-01  1588                
+2658      tcaagc    -0.74     7.79e-01  1214                
+2659      ccgttc    -0.75     7.83e-01  1081      hsa-miR-887
+2660      gagtac    -0.77     7.90e-01  2675                
+2661      tgacga    -0.78     7.92e-01  517                 
+2662      tcgaca    -0.79     7.96e-01  406                 
+2663      cggctc    -0.79     7.97e-01  2496                
+2664      acgctt    -0.79     7.99e-01  2719                
+2665      tccgca    -0.80     8.00e-01  1312                
+2666      tagcg     -0.80     8.02e-01  524                 
+2667      tactca    -0.81     8.05e-01  1449                
+2668      gcgtcg    -0.81     8.06e-01  1652                
+2669      tccgac    -0.82     8.07e-01  688                 
+2670      ccgaaa    -0.83     8.12e-01  5319                
+2671      agacgt    -0.83     8.14e-01  701                 
+2672      gaaccg    -0.84     8.17e-01  409       hsa-miR-671-3p
+2673      tgcggt    -0.84     8.17e-01  1070                
+2674      tatccg    -0.84     8.17e-01  829                 
+2675      tcccgc    -0.85     8.18e-01  435                 
+2676      tcaacg    -0.85     8.18e-01  1158                
+2677      acgtct    -0.85     8.18e-01  4470                
+2678      atacga    -0.85     8.20e-01  1224                
+2679      gacgcc    -0.87     8.25e-01  994                 
+2680      tggtca    -0.88     8.29e-01  1461                
+2681      tatgac    -0.88     8.30e-01  1177                
+2682      gaaacg    -0.88     8.30e-01  1359                
+2683      catccg    -0.88     8.30e-01  757       hsa-miR-105*
+2684      tccgtt    -0.88     8.31e-01  1064      hsa-miR-191
+2685      tcaaag    -0.90     8.36e-01  463                 
+2686      tgcga     -0.90     8.37e-01  1201                
+2687      ggcata    -0.90     8.37e-01  1893                
+2688      aatcgt    -0.90     8.36e-01  742                 
+2689      cgaatt    -0.91     8.38e-01  4387      hsa-miR-10a*
+2690      cggtc     -0.91     8.39e-01  2403                
+2691      agcacg    -0.91     8.39e-01  903                 
+2692      accggg    -0.91     8.39e-01  158                 
+2693      gtcacg    -0.93     8.45e-01  2337                
+2694      cacgat    -0.93     8.47e-01  1847                
+2695      cgctat    -0.94     8.47e-01  1201                
+2696      ggcgtc    -0.94     8.49e-01  1532                
+2697      cgttgg    -0.94     8.49e-01  4261                
+2698      cgcgtg    -0.94     8.49e-01  4345                
+2699      tcgagg    -0.95     8.53e-01  5000                
+2700      acccta    -0.95     8.53e-01  2303                
+2701      cgcgtt    -0.95     8.53e-01  1300      hsa-miR-523
+2702      agacgc    -0.96     8.53e-01  409                 
+2703      gcggcg    -0.96     8.55e-01  4503                
+2704      ctctcg    -0.96     8.55e-01  2778                
+2705      gacttc    -0.97     8.57e-01  774                 
+2706      tgcgat    -0.98     8.59e-01  4993                
+2707      cgtcg     -0.99     8.62e-01  878                 
+2708      aactcg    -0.99     8.63e-01  2007                
+2709      aacgag    -1.01     8.70e-01  675                 
+2710      acgtac    -1.01     8.72e-01  4322                
+2711      tatacg    -1.02     8.73e-01  798                 
+2712      caacga    -1.02     8.73e-01  2082                
+2713      gttgcg    -1.03     8.75e-01  3001                
+2714      tctagg    -1.06     8.85e-01  2781                
+2715      caccgg    -1.09     8.95e-01  2365                
+2716      gtacgc    -1.10     8.98e-01  4981                
+2717      cgtaag    -1.12     9.06e-01  3506                
+2718      cagtcg    -1.13     9.07e-01  2308                
+2719      tacgcc    -1.15     9.11e-01  1122      hsa-miR-585
+2720      ccgcgc    -1.15     9.11e-01  993                 
+2721      gaatcg    -1.16     9.14e-01  2009                
+2722      gtctga    -1.19     9.24e-01  803                 
+2723      cacgtc    -1.21     9.28e-01  1875                
+2724      cgaacg    -1.21     9.28e-01  3709                
+2725      cgttcg    -1.21     9.29e-01  1595                
+2726      gtcgag    -1.22     9.31e-01  1925                
+2727      atagac    -1.24     9.36e-01  1879                
+2728      aacgtc    -1.25     9.37e-01  3927                
+2729      ttcgcc    -1.27     9.42e-01  597                 
+2730      tacgca    -1.28     9.44e-01  798                 
+2731      ctgcgc    -1.29     9.45e-01  1218                
+2732      tcacga    -1.29     9.45e-01  1071                
+2733      caactc    -1.29     9.46e-01  2691      hsa-miR-219-1-3p,hsa-miR-571
+2734      ctcgtg    -1.33     9.53e-01  2286                
+2735      tcgccg    -1.34     9.54e-01  1395                
+2736      atgcga    -1.37     9.61e-01  3156                
+2737      taccgt    -1.38     9.61e-01  1741                
+2738      agttcg    -1.38     9.61e-01  2009                
+2739      tcgtct    -1.46     9.74e-01  2592                
+2740      tcgtat    -1.47     9.76e-01  796       hsa-let-7d*
+2741      gtccgt    -1.49     9.78e-01  3773                
+2742      acgtc     -1.50     9.78e-01  4470                
+2743      ggacgc    -1.58     9.87e-01  267                 
+2744      cggtcg    -1.60     9.88e-01  2321                
+2745      cgaaca    -1.62     9.89e-01  245       hsa-miR-375
+2746      ttacgt    -1.69     9.93e-01  1170                
+2747      gtgcga    -1.76     9.96e-01  233                 
+2748      ctacgc    -1.87     9.98e-01  1923                
+2749      gcgaat    -1.89     9.98e-01  811                 

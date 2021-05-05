@@ -1,0 +1,396 @@
+---
+title: "eisa_unstimulated_decay.Rmd"
+author: "Rui Fu"
+date: "10/7/2020"
+output: html_document
+---
+
+
+```{r setup}
+# Import R packages that we will need in the analysis
+options(stringsAsFactors = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+library(FeatureReachR)
+library(ggrepel)
+library(Biostrings)
+library(transite)
+```
+
+```{r}
+load(here("data", "RNAseq", "clustGenes.R"))
+clustList <- myClust_annotated %>% pull(symbol) %>% split(myClust_annotated$cluster)
+load(here("data", "accessories", "clusterCols"))
+
+res_full <- read_tsv(here("fig4_PTR-H295R", "output", "eisa_call.csv.gz"))
+delta_up <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC > 0) %>% pull(gene) %>% unique()
+delta_down <- res_full %>% filter(FDR <= 0.01) %>% filter(logFC < 0) %>% pull(gene) %>% unique()
+delta_mix <- intersect(delta_down, delta_up)
+delta_non <- setdiff(res_full$gene %>% unique(), c(delta_up, delta_down))
+
+DE_utr3s_seqs <- readRDS(here("fig4_pTR-H295R", "output", "DE_utr3s_seqs.rds"))
+utr3s_seqs <- readRDS(here("fig4_pTR-H295R", "output", "utr3s_seqs.rds"))
+utr3s_seqs <- utr3s_seqs %>% left_join(myClust_annotated %>% select(name = symbol, cluster) %>%
+                                         mutate(cluster = as.character(cluster))) %>%
+  replace_na(list(cluster = "nonDE"))
+
+allseqs <- bind_rows(DE_utr3s_seqs, utr3s_seqs %>% filter(cluster == "nonDE")) %>% 
+  select(symbol = name, seq) %>%
+  filter(str_length(seq) >= 50) %>% 
+  filter(!str_detect(seq, "N")) %>% 
+  mutate(seq = as.character(seq))
+
+ctrlseqs <- utr3s_seqs %>% filter(cluster == "nonDE") %>% 
+  select(symbol = name, seq) %>%
+  filter(str_length(seq) >= 50) %>% 
+  filter(!str_detect(seq, "N")) %>% 
+  mutate(seq = as.character(seq)) %>% filter(!(symbol %in% c(delta_mix, delta_up, delta_down)))
+
+anno <- myClust_annotated %>% mutate(eisa = case_when(
+  symbol %in% delta_mix ~ "mix",
+  symbol %in% delta_up ~ "up",
+  symbol %in% delta_down ~ "down",
+  symbol %in% delta_non ~ "insig",
+  TRUE ~ "NA"
+)) %>% mutate(eisa = factor(eisa, levels = c("up", "down", "mix", "insig", "NA"))) %>% 
+  mutate(cluster = factor(cluster, levels = sort(as.character(unique(myClust_annotated$cluster))))) %>% 
+  select(symbol, cluster, eisa) %>% distinct()
+
+featureplot <- function(anno, allseqs, ctrlseqs, clustername, n = 6, seed = 5, sample = 1000) {
+  temp <- anno %>% left_join(allseqs) %>% filter(cluster %in% clustername) %>% na.omit()
+  temp_stab <- temp %>% filter(eisa == "up")
+  temp_destab <- temp %>% filter(eisa == "down")
+
+  stab <- temp_stab$seq %>% DNAStringSet()
+  destab <- temp_destab$seq %>% DNAStringSet()
+  set.seed(seed)
+  ctrl <- ctrlseqs %>% sample_n(sample) %>%
+    pull(seq) %>% DNAStringSet()
+  
+  print(length(destab))
+  print(length(ctrl))
+  kmer_stats <- kmer_compare(destab, ctrl, n) 
+  # destab_k <- generate_kmers(destab, n)
+  # ctrl_k <- generate_kmers(ctrl, n)
+  # enriched_kmers <- compute_kmer_enrichment(
+  #   destab_k,
+  #   ctrl_k,
+  #   permutation = F,
+  #   chisq_p_value_threshold = 0,
+  #   p_adjust_method = "none"
+  # ) %>% 
+  #   mutate(kmer = names(destab_k)) %>% 
+  #   filter(enrichment > 1, adj_p_value <= 0.01) %>% 
+  #   pull(kmer)
+  enriched_kmers <- kmer_stats %>%
+    arrange(pval) %>% 
+    # filter(pval <= 0.01) %>% 
+    # dplyr::slice(1:15) %>% 
+    filter(p_adj <= 0.1, log2FC > 0) %>%
+    pull(kmer) %>%
+    as.character()
+  print(enriched_kmers)
+  if (length(enriched_kmers) > 0 & length(destab) >= 7) {
+    myEnrich <- FeatureReachR::estimate_motif_from_kmer(kmer_list = enriched_kmers, 
+                                                        motif_set = "CISBPRNA_hs")
+    myEnrich$p_adj <- -log10(myEnrich$p_adj)
+    myEnrich$p_adj[is.infinite(myEnrich$p_adj)] <- 48
+    myEnrich$log2FC[is.infinite(myEnrich$log2FC)] <- 10
+    p_destab_CISBPRNA <- ggplot(data = myEnrich, aes(x = log2FC, y = p_adj)) +
+      geom_point(size=1) +
+    geom_text_repel(data=subset(myEnrich, myEnrich$log2FC > 2 & myEnrich$p_adj > -log10(0.05)),
+                aes(x = log2FC, y = p_adj, label=gsub(pattern = ".+_","",motif)), color="red", size=2) +
+      ylab(expression('-log'[10]~'p-value')) +
+      xlab('log'[2]~'fold enrichment') +
+      theme_classic() +
+      ggtitle(paste0(paste(clustername, collapse = "+"), ": ",length(enriched_kmers)))
+  } else {
+     p_destab_CISBPRNA <- ggplot() +
+      ylab(expression('-log'[10]~'p-value')) +
+      xlab('log'[2]~'fold enrichment') +
+      theme_classic() +
+      ggtitle(paste0(paste(clustername, collapse = "+"), ": ",length(enriched_kmers)))
+  }
+
+  # print(length(stab))
+  # print(length(ctrl))
+  # kmer_stats <- kmer_compare(stab, ctrl, n) 
+  # enriched_kmers <- kmer_stats %>% 
+  #   filter(p_adj < 0.2, log2FC > 1) %>% 
+  #   pull(kmer) %>% 
+  #   as.character()
+  # print(enriched_kmers)
+  # if (length(enriched_kmers) > 0 & length(stab) >= 7) {
+  #   myEnrich <- FeatureReachR::estimate_motif_from_kmer(kmer_list = enriched_kmers, 
+  #                                                       motif_set = "CISBPRNA_hs")
+  #   myEnrich$p_adj <- -log10(myEnrich$p_adj)
+  #   myEnrich$p_adj[is.infinite(myEnrich$p_adj)] <- 48
+  #   myEnrich$log2FC[is.infinite(myEnrich$log2FC)] <- 10
+  #   p_stab_CISBPRNA <- ggplot(data = myEnrich, aes(x = log2FC, y = p_adj)) +
+  #     geom_point(size=1) +
+  #   geom_text_repel(data=subset(myEnrich, myEnrich$log2FC > 2 & myEnrich$p_adj > -log10(0.05)),
+  #               aes(x = log2FC, y = p_adj, label=gsub(pattern = ".+_","",motif)), color="red", size=2) +
+  #     ylab(expression('-log'[10]~'p-value')) +
+  #     xlab('log'[2]~'fold enrichment') +
+  #     theme_classic()
+  # } else {
+  #    p_stab_CISBPRNA <- ggplot() +
+  #     ylab(expression('-log'[10]~'p-value')) +
+  #     xlab('log'[2]~'fold enrichment') +
+  #     theme_classic()
+  # }
+  
+  # cowplot::plot_grid(p_stab_CISBPRNA, p_destab_CISBPRNA)
+  p_destab_CISBPRNA
+}
+
+# p <- featureplot(anno, allseqs, ctrlseqs, 
+#                     clustername = c("as3"), #anno$cluster %>% unique(),#
+#                     n = 4, seed = 5, sample = 7813)
+pres <- sapply(
+  map(1:4, function(x) combn(c("as3", "as4", "aw2", "aw3"), x, simplify = F)) %>% unlist(recursive=FALSE),#anno$cluster %>% levels(),
+               function(x)
+                 featureplot(anno, allseqs, ctrlseqs, clustername = x, n = 5, seed = 123, sample = 2000),
+               simplify = FALSE)
+names(pres) <- sapply(map(1:4, function(x) combn(c("as3", "as4", "aw2", "aw3"), x, simplify = F)) %>% unlist(recursive=FALSE), function(x) paste(x, collapse = "+"))
+p <- cowplot::plot_grid(plotlist = pres, ncol = 1)
+ggsave(filename = here("fig4_PTR-H295R","plots","cluster_decay_RBPs_combined5_seed123.pdf"), plot = p, width = 4, height = 45)
+
+
+resother <- featureplot(anno, allseqs, ctrlseqs,
+                        clustername = c("as1", "as2", "as3", "as4", "aw2", "aw3"), n = 5, seed = 5, sample = 2000)
+ggsave(filename = here("fig4_PTR-H295R","plots","cluster_decay_RBPs_other_combined5_seed5.pdf"),
+       plot = resother, width = 4, height = 4)
+```
+
+
+
+```{r}
+case_genes <- anno %>% filter(cluster %in% c("as1","as2","as3","as4","aw2","aw3") & eisa=="down") %>% pull(symbol)
+
+case <- allseqs %>% filter(symbol %in% case_genes) %>% pull(seq) %>% DNAStringSet()
+
+case_genes_3 <- anno %>% filter(cluster %in% c("aw3") & eisa=="down") %>% pull(symbol)
+
+case3 <- allseqs %>% filter(symbol %in% case_genes_3) %>% pull(seq) %>% DNAStringSet()
+
+
+ctrl <- DNAStringSet(ctrlseqs$seq)
+
+
+CISBP_compare <- motif_compare(CISBPRNA_hs_PWM, case, ctrl)
+
+CISBP_compare_aw3 <- motif_compare(CISBPRNA_hs_PWM, case3, ctrl)
+
+RBNS_compare <- motif_compare(RBNS_PWM, case, ctrl)
+
+RBNS_compare_aw3 <- motif_compare(RBNS_PWM, case3, ctrl)
+
+
+ggplot(RBNS_compare, aes(x = log2FC, y = -log10(p_adj))) +
+    geom_point(color = ifelse(RBNS_compare$p_adj < .05, "red", "black")) +
+  theme_classic() +
+  geom_text_repel(aes(label=ifelse(p_adj < .01 ,
+                                   gsub("_.*","",motif),
+                             "")))
+
+ggplot(RBNS_compare_aw3, aes(x = log2FC, y = -log10(p_adj))) +
+    geom_point(color = ifelse(RBNS_compare_aw3$p_adj < .05, "red", "black")) +
+  theme_classic() +
+  geom_text_repel(aes(label=ifelse(p_adj < .01 ,
+                                   gsub("_.*","",motif),
+                             "")))
+
+
+ggplot(CISBP_compare, aes(x = log2FC, y = -log10(p_adj))) +
+    geom_point(color = ifelse(CISBP_compare$p_adj < .05, "red", "black")) +
+  theme_classic() +
+  geom_text_repel(aes(label=ifelse(p_adj < .05 ,
+                                   gsub("*.+_","",motif),
+                             "")))
+
+
+ggplot(CISBP_compare_aw3, aes(x = log2FC, y = -log10(p_adj))) +
+    geom_point(color = ifelse(CISBP_compare_aw3$p_adj < .05, "red", "black")) +
+  theme_classic() +
+  geom_text_repel(aes(label=ifelse(p_adj < .05 ,
+                                   gsub("*.+_","",motif),
+                             "")))
+
+
+case_down_genes <- anno %>% filter(eisa=="down") %>% pull(symbol)
+
+case_down <- allseqs %>% filter(symbol %in% case_down_genes) %>% pull(seq) %>% DNAStringSet()
+
+case_up_genes <- anno %>% filter(eisa=="up") %>% pull(symbol)
+
+case_up <- allseqs %>% filter(symbol %in% case_up_genes) %>% pull(seq) %>% DNAStringSet()
+
+
+CISBP_dif <- motif_compare(CISBPRNA_hs_PWM, case_up, case_down)
+
+
+ggplot(CISBP_dif, aes(x = log2FC, y = -log10(p_adj))) +
+    geom_point(color = ifelse(CISBP_dif$p_adj < .05, "red", "black")) +
+  theme_classic() +
+  geom_text_repel(aes(label=ifelse(p_adj < .05 & abs(log2FC) > .3,
+                      gsub("*.+_","",motif),"")
+                  )
+)
+
+
+
+```
+
+```{r}
+featurescan <- function(anno, allseqs, ctrlseqs, 
+                             clustername, eisadir = "down",
+                             PWM_list = CISBPRNA_hs_PWM) {
+  case_genes <- anno %>% filter(cluster %in% clustername & eisa == eisadir) %>% pull(symbol)
+  case <- allseqs %>% filter(symbol %in% case_genes) %>% pull(seq) %>% DNAStringSet()
+  ctrl <- DNAStringSet(ctrlseqs$seq)
+  CISBP_compare <- motif_compare(CISBPRNA_hs_PWM, case, ctrl)
+  RBNS_compare <- motif_compare(RBNS_PWM, case, ctrl)
+  list(CISBP_compare = CISBP_compare, RBNS_compare = RBNS_compare)
+}
+
+featureplot <- function(scanned, pcutoff = 0.01, motifs = "RBNS") {
+  if (motifs == "RBNS") {
+    stringreplace <- "_.*"
+  } else {
+    stringreplace <- "*.+_"
+  }
+  g1 <- ggplot(scanned, aes(x = log2FC, y = -log10(p_adj))) +
+    geom_point(color = ifelse(scanned$p_adj < pcutoff, "red", "black")) +
+    theme_classic() +
+    geom_text_repel(aes(label=ifelse(p_adj < pcutoff,
+                                   gsub(stringreplace,"",motif),
+                                   "")))
+  g1
+}
+
+# res <- featurescan(anno, allseqs, ctrlseqs, "aw3")
+res <- sapply(c("as3", "as4", "aw2", "aw3"), function(x) featurescan(anno, allseqs, ctrlseqs, x),
+       simplify = FALSE)
+
+saveRDS(res, here("fig4_PTR-H295R","tmp","motifcomps.rds"))
+
+y <- "aw3"
+g <- sapply(names(res[[y]]), function(x) featureplot(res[[y]][[x]], motifs = str_remove(x, "_compare")),
+       simplify = FALSE)
+
+ggsave(filename = here("fig4_PTR-H295R","plots","motifcompare_aw3_CISBP.pdf"), plot = g[[1]], width = 4, height = 4)
+ggsave(filename = here("fig4_PTR-H295R","plots","motifcompare_aw3_RBNS.pdf"), plot = g[[2]], width = 4, height = 4)
+
+resdf <- sapply(names(res), 
+       function(x) do.call(rbind, res[[x]]) %>% rownames_to_column("comp") %>% mutate(comp = str_remove(comp, "\\..+")),
+       simplify = FALSE) %>% 
+  do.call(rbind, .) %>% rownames_to_column("cluster") %>% mutate(cluster = str_remove(cluster, "\\..+")) %>% 
+  mutate(motif = ifelse(comp == "RBNS_compare", 
+                        str_remove(motif, "_.*"),
+                        str_remove(motif, ".+_")))
+
+resR <- resdf %>% filter(comp == "RBNS_compare")
+g2 <- ggplot(resR, aes(x = log2FC, y = -log10(p_adj))) +
+  facet_wrap(.~cluster) +
+  geom_point(color = ifelse(resR$p_adj < 0.01, "red", "black")) +
+  theme_classic() +
+  geom_text_repel(aes(label=ifelse(p_adj < 0.01, motif,"")))
+
+resC <- resdf %>% filter(comp == "CISBP_compare")
+g1 <- ggplot(resC, aes(x = log2FC, y = -log10(p_adj))) +
+  facet_wrap(.~cluster) +
+  geom_point(color = ifelse(resC$p_adj < 0.01, "red", "black")) +
+  theme_classic() +
+  geom_text_repel(aes(label=ifelse(p_adj < 0.01, motif,"")))
+
+ggsave(filename = here("fig4_PTR-H295R","plots","motifcompare_4clusters_CISBP.pdf"), plot = g1, width = 8, height = 8)
+ggsave(filename = here("fig4_PTR-H295R","plots","motifcompare_4cluster_RBNS.pdf"), plot = g2, width = 8, height = 8)
+
+```
+
+
+
+```{r}
+n <- 5
+clusters <- anno %>% left_join(allseqs)  %>% 
+  na.omit() %>%
+  filter(eisa == "down") %>% 
+  group_by(cluster) %>% 
+  filter(n() >= 12) %>% 
+  pull(cluster) %>% 
+  unique() %>% as.character()
+clusters <- c("as3", "as4", "aw2", "aw3")
+ks <- sapply(clusters,
+             function(x) generate_kmers(anno %>% left_join(allseqs) %>% filter(cluster %in% x) %>% na.omit() %>% filter(eisa == "down") %>% pull(seq), n),
+             simplify = F)
+ks$all <- generate_kmers(ctrlseqs %>% pull(seq), n)
+# as3_k <- generate_kmers(anno %>% left_join(allseqs) %>% filter(cluster %in% "as3") %>% na.omit() %>% filter(eisa == "down") %>% pull(seq), n)
+# as4_k <- generate_kmers(anno %>% left_join(allseqs) %>% filter(cluster %in% "as4") %>% na.omit() %>% filter(eisa == "down") %>% pull(seq), n)
+# aw2_k <- generate_kmers(anno %>% left_join(allseqs) %>% filter(cluster %in% "aw2") %>% na.omit() %>% filter(eisa == "down") %>% pull(seq), n)
+# aw3_k <- generate_kmers(anno %>% left_join(allseqs) %>% filter(cluster %in% "aw3") %>% na.omit() %>% filter(eisa == "down") %>% pull(seq), n)
+
+ks <- do.call(rbind, ks)#list(as3_k, as4_k, aw2_k, aw3_k))
+ks <- ks/rowSums(ks)
+# ComplexHeatmap::Heatmap(ks)
+# perform pca
+pca_data <- prcomp(ks %>% t()) 
+pca_data_info <- summary(pca_data) 
+pca_plot_data <- data.frame(pca_data$rotation) 
+pca_plot_data$ID <- rownames(pca_plot_data)
+p_pca <- ggplot(pca_plot_data, aes(x=-PC2, y=-PC1, label = ID)) +
+  geom_point(size=2) + 
+  geom_text_repel() +
+  theme_classic() + #xlim(.4,-.2) +
+  ylab(paste("PC1 (%",100*round(pca_data_info$importance[2,1], digits = 3),")", sep = "")) +
+  xlab(paste("PC2 (%",100*round(pca_data_info$importance[2,2], digits = 3),")", sep = ""))
+p_pca
+# p_pca <- p_pca +
+#   viridis::scale_color_viridis(discrete = T) +
+#   annotate("text", x = -labelPosition$mPC2, y = -labelPosition$mPC1, label = labelPosition$time) 
+# 
+# ggsave(plot = p_pca, filename = "fig2_H295R/plots/qcPCA.pdf", device = "pdf", units = "in", width = 6, height = 4, dpi = 320)
+```
+
+```{r}
+comp_motif <- function(df = allseqs,
+                       gene_vec,
+                       gene_vec2,
+                       col = "seq",
+                       cutoff = 20) {
+  enq <- df %>%
+    filter(symbol %in% gene_vec) %>%
+    pull(col) %>%
+    na.omit()
+  if (length(enq) == 0) {
+    return(NA)
+  }
+  enq <- enq[str_length(enq) >= cutoff]
+  enq <- enq[!str_detect(enq, "N")]
+  enq_res <- score_transcripts(enq, cache = FALSE)
+
+    bac <- df %>%
+      filter(symbol %in% gene_vec2) %>%
+      pull(col) %>%
+      na.omit()
+    bac <- bac[str_length(bac) >= cutoff]
+    bac <- score_transcripts(bac, cache = FALSE)
+    
+  res <- calculate_motif_enrichment(
+    enq_res$df,
+    bac$df,
+    enq_res$total_sites,
+    bac$total_sites,
+    length(enq)
+  )
+  # res$kmer <- str_replace_all(names(enq_res), "T", "U")
+  res %>% arrange(adj_p_value)
+}
+
+res <- comp_motif(allseqs,
+                  anno %>% filter(eisa == "down", cluster == "as4") %>% pull(symbol),
+                  ctrlseqs$symbol)
+saveRDS(res, "transitemotif_as4.rds")
+```

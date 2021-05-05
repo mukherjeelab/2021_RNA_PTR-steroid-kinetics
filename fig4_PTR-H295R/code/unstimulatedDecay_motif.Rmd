@@ -1,0 +1,183 @@
+---
+title: "eisa_unstimulated_decay.Rmd"
+author: "Neelanjan Mukherjee"
+date: "10/7/2020"
+output: html_document
+---
+
+
+```{r setup}
+# Import R packages that we will need in the analysis
+options(stringsAsFactors = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+ggplot2::theme_set(ggplot2::theme_classic())
+library(tidyverse)
+library(here)
+
+
+
+
+```
+
+
+
+
+
+
+```{r}
+library(FeatureReachR)
+library(ggrepel)
+
+cwords_unstim <- bind_rows(
+  read_table(here("fig4_PTR-H295R", "tmp","decay0.rnk.positive.0_78"), col_names = T)[,1:5],
+  read_table(here("fig4_PTR-H295R", "tmp","decay0.rnk.positive.0_56"), col_names = T)[,1:5]
+  )
+
+colnames(cwords_unstim) <- c("rank","word","zscore","fdr","ledge") 
+
+
+cwords_unstim$kmer <- nchar(cwords_unstim$word)
+
+ggplot(cwords_unstim, aes(y = zscore, x = factor(kmer), fill=factor(kmer))) +
+  geom_violin()
+
+
+
+destab <- cwords_unstim %>%
+  dplyr::filter(kmer=="7") %>%
+  arrange(-zscore) %>%
+  dplyr::slice_head(n = 1000) %>%
+  pull(word) %>%
+  toupper()
+
+myEnrich <- FeatureReachR::estimate_motif_from_kmer(kmer_list = destab, motif_set = "CISBPRNA_hs")
+myEnrich$p_adj <- -log10(myEnrich$p_adj)
+myEnrich$p_adj[is.infinite(myEnrich$p_adj)] <- 48
+myEnrich$log2FC[is.infinite(myEnrich$log2FC)] <- 10
+
+
+p_destab_CISBPRNA <- ggplot(data = myEnrich, aes(x = log2FC, y = p_adj)) +
+  geom_point(size=1) +
+geom_text_repel(data=subset(myEnrich, myEnrich$log2FC > 2 & myEnrich$p_adj > 10),
+            aes(x = log2FC, y = p_adj, label=gsub(pattern = ".+_","",motif)), color="red", size=2) +
+  ylab(expression('-log'[10]~'p-value')) +
+  xlab('log'[2]~'fold enrichment') +
+  theme_classic()
+
+
+ggsave(filename = here("fig4_PTR-H295R","plots","unstim_decay_RBPs.pdf"), plot = p_destab_CISBPRNA, width = 3, height = 3)
+
+
+
+stab <- cwords_unstim %>%
+  dplyr::filter(kmer=="7") %>%
+  arrange(zscore) %>%
+  dplyr::slice_head(n = 500) %>%
+  pull(word) %>%
+  toupper()
+
+myEnrich <- FeatureReachR::estimate_motif_from_kmer(kmer_list = stab, motif_set = "CISBPRNA_hs")
+myEnrich$p_adj <- -log10(myEnrich$p_adj)
+
+
+p_stab_CISBPRNA <- ggplot(data = myEnrich, aes(x = log2FC, y = p_adj)) +
+  geom_point(size=1) +
+geom_text_repel(data=subset(myEnrich, myEnrich$log2FC > 2 | myEnrich$p_adj > 1),
+            aes(x = log2FC, y = p_adj, label=gsub(pattern = ".+_","",motif)), color="red", size=2) +
+  ylab(expression('-log'[10]~'p-value')) +
+  xlab('log'[2]~'fold enrichment') +
+  theme_classic()
+
+
+ggsave(filename = here("fig4_PTR-H295R","plots","unstim_stabilize_RBPs.pdf"), plot = p_stab_CISBPRNA, width = 3, height = 3)
+
+
+
+
+
+
+
+```
+
+
+
+```{r cluster cword motifs, eval=FALSE}
+# library(FeatureReachR)
+# library(msa) 
+# library(stringdist)
+# library(ggdendro)
+# library(ggplot2)
+# # library(Biostrings)
+# # library(ggseqlogo)
+# library(DECIPHER)
+# library(motifStack)
+# 
+# 
+# 
+# my_words <- cwords_unstim %>%
+#   dplyr::filter(kmer=="7") %>%
+#   arrange(-zscore) %>%
+#   dplyr::slice_head(n = 1000) %>%
+#   pull(word) 
+# 
+# my_words <- cwords_unstim %>%
+#   dplyr::filter(kmer=="7" & zscore > 25) %>%
+#   pull(word) 
+# 
+# mySequences <- DNAStringSet(my_words)
+# myFirstAlignment <- msa(mySequences)
+# 
+# my_words_matrix <- stringdist::stringdistmatrix(a = myFirstAlignment, b = myFirstAlignment, method = "lv", useNames = T)
+# 
+# # my_words_matrix <- stringdist::stringdistmatrix(a = mySequences, b = mySequences, method = "lv", useNames = T) 
+# 
+# hc <- hclust(dist(my_words_matrix), method = "ward.D2")
+# 
+# nC <- 37
+# 
+# p_dend <- ggdendrogram(data = hc, labels = F, rotate = T, size=2 ) + 
+#   geom_hline(yintercept = nC, color="red") 
+# 
+# ggsave(plot = p_dend, filename = here("fig4_PTR-H295R","plots","unstimulated_motif_dend.pdf"), width = 2, height = 10)
+# p_dend
+# 
+# 
+# mycut <- cutree(hc, h = nC)
+# 
+# mymotifs <- vector(mode = "list", length = max(mycut))
+# 
+# for (i in 1:max(mycut)) {
+#   
+# tmp <- names(mycut[mycut==i])
+# seqs <- DNAStringSet(tmp)
+# 
+# 
+# test <- consensusMatrix(seqs)[1:4,3:ncol(consensusMatrix(seqs))]
+# rownames(test)[4] <- "U"
+# 
+# tmpmotif <- new("pcm", mat=as.matrix(test), name=paste("m",i, sep = "_"))
+# 
+# 
+# mymotifs[[i]] <- tmpmotif
+# 
+# 
+# 
+#   
+#   
+# }
+# 
+# cairo_pdf(filename = here("fig4_PTR-H295R", "plots", "unstimulated_stability_motifs.pdf"), onefile = T, height = 2)
+# for (i in 1:length(mymotifs)) {
+# plot(mymotifs[[i]], ic.scale=T, ylab="probability", fontface="plain")  
+# }
+# 
+# dev.off()
+# 
+# 
+# 
+# # cairo_pdf(filename = "~/Desktop/test.pdf", height = 20, width = 6)
+# # motifStack(mymotifs, layout="tree", ncex=.6, ic.scale=F)
+# # dev.off()
+
+
+```
